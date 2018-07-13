@@ -1,0 +1,370 @@
+[20180710]
+(C16 study FSC)
+1. Build img and flash it,
+2. Check fan control stack
+3. Check all code architecture
+4. Check HW arch
+5. Help to complete C18 new project.
+
+(C16 fix c16 neg temperature issue)
+https://bug.bmc-ks.xyz/view.php?id=393
+1. Update PSU's ANALOG_FORMAT to 2sComplement
+	- DONE : https://gerrit.bmc-ks.xyz/#/c/4979/
+
+
+[20180709]
+(G50_AIC)
+1. 為何會觸發Throttle event? -> 在checkthrottle塞msg看有沒call
+2. 為何會觸發POWER_GOOD# event? -> PSU 斷電, 正常Event
+
+
+[20180703]
+(G50_AIC)
+1. 清掉issue list
+	aic的issue list, Ken own: 9個,
+
+	待重現/待解 = 4個 (#1, 17, 19, 20)
+	#1 Peter will handle it
+	#17, 19, 20 Edward will handle, abnormal SEL: 
+
+		Check with SIT:
+		- NTP_Server_Sync_Failed                                    -> Connect to RMC and check it again.
+		- Entity_Absent_processor_x (1-8)                           -> Plugged GPU and check it again.
+		- Absent cable / interconnect x (1,3,5,7)                   -> Plugged cable and check it again.
+		- Absent add-in card (1,2,3)                                -> Plugged add-in card and check it again.
+		- Sensor Failure sensor number xx                           -> Plugged corresponding device and check it again.
+		- BMC Health asserted I2C Bus Recovery, bus 2, error code 3 -> What is the stress means?
+		- (POWER_GOOD#)												-> Only happened when DC off, becasue it means the PSU eveent is 
+																		caused by pbmus status_word power good bit, SIT should check if it happened again in current version.
+			
+																	-----> DC off時出現類似訊息, (POWER_GOOD#) 是pmbus status_word之1 bit, 如果psu event有一種以上原因failure, 會show (POWER_GOOD#-A_Reason-B_Reason..)
+																	[CODE] return ', PSU events: (%s)' % ', '.join(events)
+        - System Throttle asserted State Asserted 					-> Need to check if it happens when connect with rack!
+        															RM_THROTTLE_P & RM_THROTTLE_N through LAN3
+
+		Not problem:
+
+		- BMC_Health_asserted_No_MAC_Address_Programmed_Or_Checksum_Error_In_EEPROM -> ? 
+			root cause/solution : 無MAC, 只需要program EEPROM 0x2000 MAC bytes
+		- BMC_Health_asserted_Empty_FRU_FRU_X (0,1,2,4) -> ? 
+			root cause/solution : FRU沒有內容, 只需要program EEPROM即可
+
+	--------------
+	已解/消失/Known issue/重複 = 5個 (#2,3,16,21,22)
+		#2 Daniel solved, #3 Known issue, #21 Disappeared, #16,22 重複
+
+2. study FPGA update
+
+<study>
+3. 改版號 -> 需要git tag
+ok 4. Sensor message disable -> skeleton
+ok 5. 燒錄看看 /var/wcs/home cp to /run/initfs/ then reboot
+ok 6. Sensor list 怎麼看 -> redfish 
+7. dbus用法, 程式裡跑跑
+ok 8. 確定版本正確, 正確的話釐清為何sensor少 -> 版本正確, 0.6, 0.7是test build -> 版號 = 打tag到openbmc
+
+[20180627]
+(SCP)
+    scp edward@10.62.32.74:/home/edward/fox-g2/openbmc/build/tmp/deploy/images/zaius/flash-zaius ./flash-zaius
+    scp ./flash-g50-aic admin@192.168.1.110:/var/wcs/home/ 
+(Openbmc task 3)
+	Merge the webui feature to Zaius
+	1. Add the phospor-webui to 
+		openbmc/meta-ibm/meta-witherspoon/recipes-phosphor/packagegroups/packagegroup-obmc-apps.bbappend
+
+		!!! Encounter build problem, because we need to bump it to commit 6bcd6cff96ec88f71b93774418949f765d77411b !!
+
+	2. Bump phosphor-webui revision code to the latest version
+		openbmc/meta-phosphor/common/recipes-phosphor/webui/phosphor-webui.bb
+		https://github.com/openbmc/openbmc/issues/3200
+		https://github.com/openbmc/phosphor-webui/commit/6bcd6cff96ec88f71b93774418949f765d77411b
+	
+	3. commit af7cc0e6d1bc0819be9146b4b42235207e0426c3
+		不知道Max_size會不會造成64M image無法從web flash
+
+	>>>>>> 燒進機器來測測
+
+(Openbmc task 2)
+	1. study the history of foxconn-g2
+		Status: 正在爬gerrit,
+		Next:爬完 list出來, 大致了解系統樣貌
+
+[20180622]
+(Openbmc task 3)
+	Merge the webui feature to Zaius
+	1. Add the phospor-webui to 
+		openbmc/meta-ibm/meta-witherspoon/recipes-phosphor/packagegroups/packagegroup-obmc-apps.bbappend
+
+		!!! Encounter build problem, because we need to bump it to commit 6bcd6cff96ec88f71b93774418949f765d77411b !!
+
+	2. Bump phosphor-webui revision code to the latest version
+		openbmc/meta-phosphor/common/recipes-phosphor/webui/phosphor-webui.bb
+		https://github.com/openbmc/openbmc/issues/3200
+		https://github.com/openbmc/phosphor-webui/commit/6bcd6cff96ec88f71b93774418949f765d77411b
+	
+	3. commit af7cc0e6d1bc0819be9146b4b42235207e0426c3
+		不知道Max_size會不會造成64M image無法從web flash
+
+	>>>>>> 燒進機器來測測
+	
+
+(Openbmc task 2)
+	1. study the history of foxconn-g2
+		Status: 正在爬gerrit,
+		Next:爬完 list出來, 大致了解系統樣貌
+
+
+[20180621]
+
+(Openbmc task 2)
+	1. study the history of foxconn-g2
+		Status: 正在爬gerrit,
+		Next:爬完 list出來, 大致了解系統樣貌
+
+(Openbmc task 3)
+	1. Check why IBM witherspoon has webUI, when? how? what version?
+
+		-----------------------------------------------------------------------------------
+		Add the web UI to the Witherspoon image
+
+		This will install the required files into /usr/share/www.
+
+		This does not include any changes to serve these files.
+		commit cb7e2655250edf0a141815c94f4d23fa644f06ed
+		Change-Id: I23fa2662af3359cd674aa96c49483b7de648d232
+		Signed-off-by: Matt Spinler <spinler@us.ibm.com>
+		1 parent 06e83fa 
+
+		.../meta-ibm/meta-witherspoon/recipes-phosphor/packagegroups/packagegroup-obmc-apps.bbappend
+		-----------------------------------------------------------------------------------
+
+	2. Run QEMU and check if web is available,
+		Status: Now I can boot Palmetto-bmc machine with its image that I built, REST API is available, but no webui
+		Next: 	1. To build & load machine Witherspoon-bmc and check it again
+					!!!! 成功!!!!! 
+					1. https://127.0.0.1:2443/
+					2. ubuntu14.04 firefox不能show出來, 藥用chrome (apt-get install libnss3)
+				2. To add phosphor-webui to Palmetto-bmc's packagegroup-obmc-apps.bbappend, build and check again
+
+
+	3. Notes
+	-----------------------------------------------------------------------------------------------------------------------------------------		
+		qemu-system-arm -m 256 -M palmetto-bmc -nographic -drive file=flash-palmetto,format=raw,if=mtd -net nic -net user,hostfwd=:127.0.0.1:2222-:22,hostfwd=:127.0.0.1:2443-:443,hostname=qemu 
+		qemu-system-arm -m 256 -M palmetto-bmc -nographic -drive file=<path>/flash-palmetto,format=raw,if=mtd -net nic -net user,hostfwd=:127.0.0.1:2222-:22,hostfwd=:127.0.0.1:2443-:443,hostname=qemu 
+		qemu-system-arm -m 256 -M palmetto-bmc -nodefaults -nographic -serial stdio -net nic -net user,hostfwd=:127.0.0.1:2222-:22,hostname=qemu -drive file=./flash-palmetto,format=raw,if=mtd
+
+		[Successs]
+		./qemu-system-arm -m 256 -M palmetto-bmc -nographic -drive file=./obm.mtd,format=raw,if=mtd -net nic -net user,hostfwd=:127.0.0.1:2222-:22,hostfwd=:127.0.0.1:2443-:443,hostname=qemu
+
+
+
+		curl -c cjar -b cjar -k -H "Content-Type: application/json" -X POST https://localhost:2443/login -d "{\"data\": [ \"root\", \"0penBmc\" ] }"
+		curl -b cjar -k https://127.0.0.1:2443/xyz/openbmc_project/software/list
+	------------------------------------------------------------------------------------------------------------------------------------------	
+
+[20180615]
+(Openbmc task 2)
+1. study the history of foxconn-g2
+	Gerrit: branch:foxconn-g2 (https://gerrit.bmc-ks.xyz/q/branch:foxconn-g2,225)
+	Github: https://github.com/foxconn-bmc-ks/openbmc/tree/foxconn-g2
+[20180615]
+(OpenBMC training)
+1. Fork OpenBMC到我的github然後把.bb導向我的git
+	-> triying !
+	流程:
+	1. 已經clone https://github.com/openbmc/openbmc
+		確認: meta-phosphor/common/recipes-kernel/linux/linux-obmc_4.13.bb
+			* KBRANCH ?= "dev-4.13"
+			* SRCREV="aca92be80c008bceeb6fb62fd1d450b5be5d0a4f"
+			
+	---------------------CREATE_KERNEL_BRANCH------------------------------
+	2. 從github fork一份linux到私人: https://github.com/jayoaoa/linux
+	3. git clone https://github.com/jayoaoa/linux
+	4. cd linux
+	5. git checkout branch dev-4.13
+		* 進linux, 切到branch dev-4.13 
+	6. git branch --contains aca92be80c008bceeb6fb62fd1d450b5be5d0a4f 
+		* 確認obmc現用kernel版本有在branch,不然要載到暈然後發現版本錯誤
+	7. git branch ed_dev-4.13 
+		* create private branch
+	8. git checkout ed_dev-4.13
+		* 切換到private branch
+	9. git push --set-upstream ed_dev-4.13 
+		* 上傳branch
+
+	---------------------REDIRECT_KERNEL_SRC_URI--------------
+	10. cd ../openbmc/meta-phosphor/common/recipes-kernel/linux/
+	11. 改 KBRANCH
+		vim linux-obmc_4.13.bb
+		- KBRANCH ?= "dev-4.13" 
+		+ KBRANCH ?= "ed_dev-4.13" 
+		-> save
+	12.改 KSRC
+		vim linux-obmc.inc
+		- KSRC ?= "git://github.com/openbmc/linux;protocol=git;branch=${KBRANCH}"
+		+ KSRC ?= "git://github.com/jayoaoa/linux;protocol=git;branch=${KBRANCH}"
+		-> save
+
+	---------------------DOWNLOAD_SRC_FROM_PRIVATE_REPO---------
+	13. cd /home/edward/obmc/openbmc
+	14. export TEMPLATECONF=/home/edward/obmc/openbmc/meta-openbmc-machines/meta-openpower/meta-ingrasys/meta-zaius/conf/
+	15. . openbmc-env
+	16. devtool modify linux-obmc
+
+	---------------------PUSH_NEW_MODIFICATION---------
+	17. arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
+		enable i2c2 & i2c3 (test)
+	18. git add [Tab]
+	19. git commit -m "Enable i2c2 & i2c3"
+	20. git push
+	21. Confirm it on web https://github.com/jayoaoa/linux
+
+
+Question
+1. soruce code改完應該要做patch上傳嗎
+	No -> commit 到jayoaoa/linux
+2. 如果不做Patch, source coode位置在哪?
+	Workspace, 可以從jayoaoa解出來
+
+
+[20180614]
+(OpenBMC training)
+1. Fork OpenBMC到我的github然後把.bb導向我的git
+
+Question
+1. soruce code改完應該要做patch上傳嗎
+2. 如果不做Patch, source coode位置在哪?
+3. 
+
+(新進)
+1. 印表機設定 -> invalid user -> call who? 18676佳戰
+	有沒辦法用online storage可以在印表機現場抓檔? 以免一直跑上跑下 -> remote desk
+	Invalid user -> 設定黑白列印就ok
+	
+
+2. 申請supernote -> Service desk要先修改個資到自己的簽核群組才能開簽 -> 正在簽 
+-> 需要上傳同意的聯絡單並且簽到處級主管以上 -> 取消internet
+-> 經管課級主管會簽* -> 誰是經管課級 -> 等待簡訊密碼
+	找高雄HR問18201 或 天津王麗49263
+
+3. 
+
+
+[20180613]
+1. 我可以samba進build service開檔來改嗎, 效率高低
+2. 我應該在build server 做git的clone/push/commit最有效率嗎
+3. openbmc如何去修改一個功能到release?
+	git clone source code
+	branch???
+	configure env
+	bitbake obmc-...
+	----------------------------------------
+	devtool modify what I want
+
+	....
+
+	git commit
+	git push origin HEAD:refs/for/master
+
+
+
+[20180612]
+
+(new_web)
+https://file.bmc-ks.xyz
+帳號 tecfw-data
+密碼 |c<MYVxD
+
+https://bug.bmc-ks.xyz
+帳號 = edward
+密碼 = 14kWo{[3
+
+https://mail.bmc-ks.xyz
+帳號 edward@mail.bmc-ks.xyz
+密碼 = 14kWo{[3
+
+(task_1_clone openbmc & build)
+Build Server: 10.62.32.74
+Account: edward/edward1234
+Source: https://github.com/openbmc/openbmc
+Target: Machine zaius
+
+<1> 要跟Github建立SSH金鑰
+	Permission denied (publickey).
+	fatal: Could not read from remote repository.
+	git config --global user.name "jayoaoa"
+	git config --global user.email "jayoaoa@gmail.com" 
+	ssh-keygen -t rsa -C “jayoaoa@gmail.com”
+	pass -> empty
+
+	.ssh/id_rsa.pub 內容傳到github
+
+	github個人首頁: settings--->ssh and gpg keys-->new ssh key 添加即可。title自行命名
+
+<2> CLONE: git clone git@github.com:openbmc/openbmc.git
+<3> 設定TEMPLATECONF (絕對路徑)
+	export TEMPLATECONF=/home/edward/obmc/openbmc/meta-openbmc-machines/meta-openpower/meta-ingrasys/meta-zaius/conf
+
+<4> . openbmc-env
+<5> bitbake obmc-phosphor-image
+
+(task_2_learn workflow)
+SSH 帳號：edward
+SSH 密碼：14kWo{[3 -> edward1234
+DNS：10.62.32.71
+Samba帳號: edward
+Samba密碼: 14kWo{[3
+
+目前有三台 build container，SSH Host 都是 001.bmc-ks.xyz。
+Container Debian32-Wheezy 的 SSH Port = 2000
+Container Debian64-Stretch 的 SSH Port = 2001
+Container Ubuntu64-Xenial 的 SSH Port = 2002
+Gerrit 的網址 https://gerrit.bmc-ks.xyz
+Gitweb 的網址 https://gitweb.bmc-ks.xyz/
+設定文件在 https://data.bmc-ks.xyz/
+先跟著 "Setup Git Environment" 和 "Setup OpenGPG" 跑一遍
+
+Samba 比較麻煩，一定要在檔案總管按滑鼠右鍵，選「新增網路磁碟機」來新增
+
+Host 在 //002.bmc-ks.xyz/homes
+帳號 tecfw-data
+密碼 |c<MYVxD
+
+上面這個 samba 是高雄的共用資料夾，
+個人資料夾的 samba 位置在 //001.bmc-ks.xyz/homes
+用個人帳密登入
+
+
+(訂便當 or call 黃欣雅 18664)
+http://10.62.145.145/lunchOrder/Default.asp
+
+(上網+分機 call 19012)
+WIFI 
+SSID: 700301
+User: DC0055
+Pass: foxconn88
+分機: 18162
+
+有線設定
+services.msc -> 啟動wired autoconfig
+乙太網路 -> 內容 -> 驗證 -> PEAP -> 設定 -> [取消]透過驗證憑證來確認.... -> 下面設定 -> [不要勾]自動使用我的...
+		-> [確定] -> 閜面其他設定 -> 指定驗證模式選[使用者驗證] -> 旁邊按鈕按下 -> 輸入帳密 DC0055/foxconn88 -> [確定] -> done
+
+
+(提交個資)
+http://114.foxconn.com/HelpYourself.aspx
+
+()
+[20180611]
+(NewGuy)
+O 1. 申請電話機+網路
+	-> 打給18888問單子交到哪裡去 -> 發Mail給19012請他們上來裝電話搞好網路 -> DONE! 網路孔接線不良
+2. 申請SuperNotes帳號,上網帳號,mail
+	-> 6/14再來申請
+(Tech)
+1. Ask Ken for task.
+	tomorrow
+2. Create 14.04 desktop for openbmc env
+	ok
+3. Create qemu ast2500-evb environment
+4. Learn Openbmc
