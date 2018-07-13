@@ -1,0 +1,42 @@
+
+#Wip push
+ git push origin HEAD:refs/heads/wip/galvin/C18_tmp
+
+#Build Procedure:
+ git clean -fdx 
+make all
+
+#MDS -> open libipmipar.spc file
+Source: smb://data.bmc-ks.xyz/homes/6T-2/02-Tools/05-AMI MDS/3.7.10
+
+#path of ddf and cdf: 
+AMI-AST2500/build-system/MDS
+
+#Windows MDS install path, put ddf and cdf to it. 
+C:\Program Files (x86)\American Megatrends Inc\MDS
+
+#if you want to build specific file
+e.g. 
+1. make libodm-clean-build
+2. make images
+
+#libipmipar spx file path:
+smb://data.bmc-ks.xyz/tecfw-data/6T-1/disk2/Galvin/MDS/
+
+#要加Project config
+
+#Set C16 project name to FRU
+ 
+ipmitool -H 127.0.0.1 -U admin -P admin raw 0xa 0x10 0x0
+ipmitool -H 127.0.0.1 -U admin -P admin raw 0xa 0x12 0x0 0xC9 0x0 0x54 0x41 0x43 0x48 0x59 0x4f 0x4e 0x31 0x36 0x0
+ipmitool -H 127.0.0.1 -U admin -P admin raw 0xa 0x11 0x0 0xC9 0x0 0x14
+ipmitool -H 127.0.0.1 -U admin -P admin sensor list
+ipmitool -H 127.0.0.1 -U admin -P admin sel elist
+ipmitool -H 127.0.0.1 -U admin -P admin sdr list -v
+
+ipmitool -H 127.0.0.1 -U admin -P admin sensor list
+
+ssh awsks@10.62.32.77
+pw: awsks1234
+
+sudo minicom -s

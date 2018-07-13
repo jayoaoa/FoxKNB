@@ -1,0 +1,117 @@
+
+Ambient temperature chip:
+	LM75: 0-004a
+	temperature/ambient
+
+Fan LED control chip: 
+	PCA9535 bus=9, addr=0x20
+	OSS/openbmc/skeleton/pwrbutton/button_power_obj.c
+
+Power control: 	
+	1. OSS/openbmc/skeleton/pychassisctl/chassis_control.py
+
+BMC doesn't default on: 
+	1. meta-openbmc-machines/meta-openpower/meta-ingrasys/meta-zaius/recipes-phosphor/settings/phosphor-settings.bbappend
+	2. meta-openbmc-machines/meta-openpower/meta-ingrasys/meta-zaius/recipes-phosphor/settings/phosphor-settings/powerpolicy-default-ALWAYS_POWER_ON.override.yml
+
+Sensor define:
+	OSS/openbmc/skeleton/configs/Zaius.py
+
+ADC pin define:
+	OSS/openbmc/skeleton/configs/Zaius.py
+	/org/openbmc/sensors/P5VAUX:	/sys/devices/platform/ast_adc.0/adc0_value
+	/org/openbmc/sensors/P2V5AUX:	/sys/devices/platform/ast_adc.0/adc1_value
+	/org/openbmc/sensors/P3V3AUX:	/sys/devices/platform/ast_adc.0/adc2_value
+	/org/openbmc/sensors/P1V1AUX:	/sys/devices/platform/ast_adc.0/adc3_value
+	/org/openbmc/sensors/CPU0_VPP1:	/sys/devices/platform/ast_adc.0/adc4_value
+	/org/openbmc/sensors/CPU0_VPP2:	/sys/devices/platform/ast_adc.0/adc5_value
+	/org/openbmc/sensors/CPU1_VPP1:	/sys/devices/platform/ast_adc.0/adc6_value
+	/org/openbmc/sensors/CPU1_VPP2:	/sys/devices/platform/ast_adc.0/adc7_value
+	/org/openbmc/sensors/CPU0_VDDQ1:	/sys/devices/platform/ast_adc.0/adc8_value
+	/org/openbmc/sensors/CPU0_VDDQ2:	/sys/devices/platform/ast_adc.0/adc9_value
+	/org/openbmc/sensors/CPU1_VDDQ1:	/sys/devices/platform/ast_adc.0/adc10_value
+	/org/openbmc/sensors/CPU1_VDDQ2:	/sys/devices/platform/ast_adc.0/adc11_value
+	RESERVED:	/sys/devices/platform/ast_adc.0/adc12_value
+	/org/openbmc/sensors/P1V2AUX:	/sys/devices/platform/ast_adc.0/adc13_value
+
+PSU voltage monitor chip
+	UCD90160 :	0-0064 : max 16 rails
+    voltage/P12V':	'/sys/class/hwmon/hwmon0/in1_input'
+    voltage/P5V':	'/sys/class/hwmon/hwmon0/in2_input'
+    voltage/P3V3':	'/sys/class/hwmon/hwmon0/in3_input'
+    voltage/P1V8':	'/sys/class/hwmon/hwmon0/in4_input'
+    voltage/P1V05':	'/sys/class/hwmon/hwmon0/in5_input'
+    voltage/P1V0_SATA':	'/sys/class/hwmon/hwmon0/in6_input'
+    voltage/P0V7_CPU0':	'/sys/class/hwmon/hwmon0/in7_input'
+    voltage/P0V7_CPU1':	/sys/class/hwmon/hwmon0/in8_input'
+    voltage/P1V5_CPU':	/sys/class/hwmon/hwmon0/in9_input'
+    voltage/P1V0_CPU0':	/sys/class/hwmon/hwmon0/in10_input'
+    voltage/P1V0_CPU1':	/sys/class/hwmon/hwmon0/in11_input'
+    voltage/P0V8_CPU0':	/sys/class/hwmon/hwmon0/in12_input'
+    voltage/P0V8_CPU1':	/sys/class/hwmon/hwmon0/in13_input'
+]
+
+	
+Fan control chip:
+	NCT7906 : 6-002d, 6-002e
+	8 fan / 4 pwm
+
+Fan algorithm/control: (disabled?)
+	OSS/openbmc/skeleton/fan_algorithm/..
+
+Connect dbus method for features:
+	OSS/openbmc/skeleton/pysystemmgr/system_manager.py
+
+Actual monitoring code
+	OSS/openbmc/skeleton/pyhwmon/hwmon.py
+	e.g. 
+	if self.isAdcSensor(attribute) == True:
+		raw_value = raw_value + 1
+		if attribute.find("adc0_value") >= 0:
+			raw_value = raw_value * 0.00731
+		elif attribute.find("adc1_value") >= 0:
+			raw_value = raw_value * 0.0034
+		elif attribute.find("adc2_value") >= 0:
+			raw_value = raw_value * 0.0042
+		else:
+			raw_value = raw_value * 0.0017
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+Ken~
+我這幾天在看這些, 有時間的話我可以study更深入, 
+或是看有甚麼新的topic可以學~ thank you!!
+
+1. Basic git instruuction
+	clone, add, commit, pull, branch, checkout, merge, status, log, reset, diff
+
+2. Basic openbmc architecture 
+	Yocto, Bitbake, Openembedded, Recipes, Meta-, .bb, .bbappend, bblayers.conf...
+
+3. Modify kernel code & push it to private repo 
+	1. Fork kernel module to private repo 
+	2. Create kernel module branch of private repo 
+	3. Revise SRC_URI (KSRC+KBRANCH) of kernel module .bb file
+	4. Devtool modify linux-obmc, modify code, push back to private repo
+
+4. Check the most frequently used module for customize purpose
+	u-boot, skeleton, linux, phosphor-networkd, pyphosphor, 
+	phosphor-state-manager, phosphor-host-ipmid, phosphor-dbus-interfaces, 
+	phosphor-bmc-code-mgmt, phosphor-logging, phosphor-event, phosphor-hwmon, 
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+使用 git diff 查看 "全部" 檔案被修改的內容
+
+使用 git diff <file> 查看 "特定" 檔案被修改的內容
+使用 git diff --cached 查看 Changes to be committed 的修改內容
+使用 git add -A 加入全部的檔案
+使用 git commit -m <message> 來提交（不啟動文字編輯模式）
+使用 git show <commit_id> 來查看特定 patch 修改的內容
+
+Vim的複製、貼上、搜尋是簡單的指令，也是常用的指令：
+        選擇一段文字，可以在一般模式下鍵入大寫V，或者小寫v來選擇文字區塊。鍵入大寫V是游標經過一行就選擇一行，小寫v則是游標經過的位置就選擇起來。
+        選擇好文字區塊後，按下小寫y可以複製起選擇的文字，按下d可以刪除掉選取的文字。
+        在想要貼上文字的地方，按下p就可以貼上剛才複製好的文字。
+        如果要復原剛才的動作，可以在一般模式下鍵入u。
+        要搜尋字串，可以在一般模式下輸入"/"，並在斜線後方鍵入要搜尋的字串，並按下Enter。當找到一個符合的字串後，若要繼續往下搜尋，可以鍵入小寫n。
