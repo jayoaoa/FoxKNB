@@ -1,3 +1,42 @@
+[20180718]
+1. vim
+	開多檔+tab
+	剪下貼上
+	多行tab
+	jump to reference
+	jump to declaration
+	previous/next position
+
+2. no-op cmd是否有必要用? 是否要改? 
+	-> 目前已知 read temp sample code沒有使用no-op
+	
+3. Check 讀值不變的情況會keep多久?
+4. AIC sync the latest systemd patchs
+	
+[20180717]
+1. 為何寫5D會Delay這麼久? 
+	-> 不知,不過smbus應該要有timeout機制, 但是我們是用i2c emulate,所以怕影響到其他人, 需要再評估
+2. 為何Delay這個久沒有timeout? 還是有Timeout但設定太長?
+	-> i2c 本來就不timeout
+3. 為何Delay這麼久後會回傳錯誤資訊? 
+	-> 不知, 照理說GPU回傳1F, 資料應該要正確
+4. 為何BMC收到錯誤資訊會導致crash? 有沒辦法可避? ignore/retry
+	-> 目前確認, Error handle可處理, 不會造成crash,
+	
+5. 
+
+-> 
+1. 改過buffer size後還是有問題,拿新的波形來看
+2. 沒有其他device,排除arbitration,
+3. 希望可以detect timeout and abort transaction
+4. 
+
+
+-EAGAIN
+-EREMOTEIO
+-EBADMSG
+
+
 [20180710]
 (C16 study FSC)
 1. Build img and flash it,
