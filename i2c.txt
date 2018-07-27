@@ -1,0 +1,41 @@
+#送之前會先確定busy idle 不idle的話recovery, recovery失敗再reocvery一次,共兩次
+ret = ast_i2c_wait_bus_not_busy(bus);
+
+int timeout = 2; //TODO number
+
+ while (ast_i2c_read(bus, I2C_CMD_REG) & AST_I2CD_BUS_BUSY_STS) {
+     ast_i2c_bus_error_recover(bus);
+     g_i2c_recovery_writeBuff[bus->adap.nr] |= E_I2C_RECOVERY_PERFORMED;
+     if(timeout <= 0)
+         break;
+     timeout--;
+     msleep(2);
+}
+
+#IDLE
+	SDA=1 & SCL=1 -> IDLE!!
+	
+#MASTER LOCK情況
+	AST2500 I2CD14 AST_I2CD_SDA_LINE_STS == 1 and AST_I2CD_SCL_LINE_STS == 0
+	SDA=1 & SCL=0 -> Master拉住SCL LOW導致LOCK
+	Send:AST2500 I2CD14, AST_I2CD_M_STOP_CMD
+	
+#SLAVE DEAD情況
+	AST2500 I2CD14 AST_I2CD_SDA_LINE_STS == 0
+	SDA=0 -> SLAVE一直拉住SDA LOW
+	ast_i2c_dev_init
+	ast_i2c_issue_oob_command
+	
+	
+#i2c 每100us試retries次 
+
+for (i = adap->retries; i >= 0; i--) {
+     if (i != 0)
+         dev_dbg(&adap->dev, "Do retrying transmission [%d]\n",i);
+
+     ret = ast_i2c_do_msgs_xfer(bus, msgs, num);
+     if (ret != -EAGAIN)
+         goto out;
+
+     udelay(100);
+}

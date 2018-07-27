@@ -29,6 +29,7 @@
 	bitbake -f -c compile pyphosphor
 	bitbake -f -c compile fru-util
 	bitbake -f -c compile obmc-phosphor-event
+	bitbake -f -c compile linux-obmc
 	bitbake obmc-phosphor-image
 	
 	##Pull all
@@ -89,6 +90,7 @@
 	bitbake -f -c compile redfish
 	bitbake -f -c compile pyphosphor
 	bitbake -f -c compile fru-util
+	bitbake -f -c compile linux-obmc
 	bitbake obmc-phosphor-image
 	
 #git version code by tag
@@ -203,35 +205,122 @@ cd ~/c16/AMI-AST2500/src/libipmipar_Ash16/
 cp -f ast2500evb.* ~/c18/libipmipar_ast2500evb_ami-2.7.0-ARM-AST2500-AST2500EVB-AMI-src/package/data/
 
 #Enable/Disable ast2500 i2c device and set timeout dynamic
-	#Get i2c control status : MASTER_MODE=Enable
+#Get i2c control status : MASTER_MODE=Enable
 		devmem 0x1e78a140
 		0x00000001
-	#Get Clock reg: Timeout = 3 = devided by 1024k
+#Get Clock reg: Timeout = 3 = devided by 1024k
 		devmem 0x1e78a144
 		0x77777305
 		
 		
-	#Change Timeout to = 5ms = devided by 16k (timeout freq = 48MHz / (16K * (8+8)) = 192Hz = 5ms timeout)
-		#Disable i2c -> Set timeout -> Enable i2c
-		devmem 0x1e78a140 32 0x00000000
-		devmem 0x1e78a144 32 0x77777005
-		devmem 0x1e78a148 32 0x00000001
-		devmem 0x1e78a140 32 0x00000001
 
-	#stress i2c bus
-		while [ 1 ];do i2craw.exe -f 4 0x50 -r 255 -w '0x0 0x0'; sleep 1; done;
+#Change Timeout base clk 
+	325us : I2CD04 = 0x77777005 (timeout dur = 48MHz / 16K = 3kHz = 325us)
+	1.3us : I2CD04 = 0x77777105 (timeout dur = 48MHz / 64K = 768Hz = 1.3ms)
+	5.2ms : I2CD04 = 0x77777205 (timeout dur = 48MHz / 256K = 192Hz = 5.2ms)
+	20.8ms : I2CD04 = 0x77777305 (timeout dur = 48MHz / 1024K = 48Hz = 20.8ms)
+	# I2CD08 need to change, too.
+	
+#Disable i2c -> Set timeout -> Enable i2c (0x1e78a14X = i2c bus 4)
+	devmem 0x1e78a140 32 0x00000000
+	devmem 0x1e78a144 32 0x77777005
+	devmem 0x1e78a148 32 0x00000001
+	devmem 0x1e78a140 32 0x00000001
+
+#stress i2c bus
+	while [ 1 ];do i2craw.exe -f 4 0x50 -r 255 -w '0x0 0x0'; done;
+	while [ 1 ];do i2craw.exe -f 4 0x50 -r 1 -w '0x0 0x0'; sleep 1; done;
+	while [ 1 ];do i2craw.exe -f 4 0x50 -r 255 -w '0x0 0x0'; devmem 0x1e78a144; devmem 0x1e78a148; done;
+		
+#Change Timeout to = default
+#Disable i2c -> Set timeout -> Enable i2c
+	devmem 0x1e78a140 32 0x00000000
+	devmem 0x1e78a144 32 0x77777305
+	devmem 0x1e78a148 32 0x00000000
+	devmem 0x1e78a140 32 0x00000001
+
 
 		
-	#Change Timeout to = default
-		#Disable i2c -> Set timeout -> Enable i2c
-		devmem 0x1e78a140 32 0x00000000
-		devmem 0x1e78a144 32 0x77777305
-		devmem 0x1e78a148 32 0x00000000
 		
-	#Formula
-		#0x77777305 = 3 = 11b = 1024k = 3hz = 333ms timeout
-		#0x77777105 = 3 = 01b = 64k = 48hz = 21ms timeout
-		#0x77777005 = 3 = 01b = 16k = 192hz = 4ms timeout
+#List all i2c device	
+	ls /sys/class/i2c-adapter/i2c-0/
+	ls /sys/class/i2c-adapter/i2c-1/
+	ls /sys/class/i2c-adapter/i2c-2/
+	ls /sys/class/i2c-adapter/i2c-3/
+	ls /sys/class/i2c-adapter/i2c-4/
+	ls /sys/class/i2c-adapter/i2c-5/
+	ls /sys/class/i2c-adapter/i2c-6/
+	ls /sys/class/i2c-adapter/i2c-7/
+	ls /sys/class/i2c-adapter/i2c-8/
+	ls /sys/class/i2c-adapter/i2c-9/
+	ls /sys/class/i2c-adapter/i2c-10/
+	ls /sys/class/i2c-adapter/i2c-11/
+	ls /sys/class/i2c-adapter/i2c-12/
+	ls /sys/class/i2c-adapter/i2c-13/
+	ls /sys/class/i2c-adapter/i2c-14/
+	ls /sys/class/i2c-adapter/i2c-15/
+	ls /sys/class/i2c-adapter/i2c-16/
+	ls /sys/class/i2c-adapter/i2c-17/
+	ls /sys/class/i2c-adapter/i2c-18/
+	ls /sys/class/i2c-adapter/i2c-19/
+	ls /sys/class/i2c-adapter/i2c-20/
+	ls /sys/class/i2c-adapter/i2c-21/
+	ls /sys/class/i2c-adapter/i2c-22/
+	ls /sys/class/i2c-adapter/i2c-23/
+	ls /sys/class/i2c-adapter/i2c-24/
+	ls /sys/class/i2c-adapter/i2c-25/
+	ls /sys/class/i2c-adapter/i2c-26/
+	ls /sys/class/i2c-adapter/i2c-27/
+	ls /sys/class/i2c-adapter/i2c-28/
+	ls /sys/class/i2c-adapter/i2c-29/
+	ls /sys/class/i2c-adapter/i2c-30/
+	ls /sys/class/i2c-adapter/i2c-31/
+	ls /sys/class/i2c-adapter/i2c-32/
+	ls /sys/class/i2c-adapter/i2c-33/
+	ls /sys/class/i2c-adapter/i2c-34/
+	ls /sys/class/i2c-adapter/i2c-35/
+	ls /sys/class/i2c-adapter/i2c-36/
+	ls /sys/class/i2c-adapter/i2c-37/
+	ls /sys/class/i2c-adapter/i2c-38/
+	ls /sys/class/i2c-adapter/i2c-39/
 
-
-
+	cat /sys/class/i2c-adapter/i2c-0/name
+	cat /sys/class/i2c-adapter/i2c-1/name
+	cat /sys/class/i2c-adapter/i2c-2/name
+	cat /sys/class/i2c-adapter/i2c-3/name
+	cat /sys/class/i2c-adapter/i2c-4/name
+	cat /sys/class/i2c-adapter/i2c-5/name
+	cat /sys/class/i2c-adapter/i2c-6/name
+	cat /sys/class/i2c-adapter/i2c-7/name
+	cat /sys/class/i2c-adapter/i2c-8/name
+	cat /sys/class/i2c-adapter/i2c-9/name
+	cat /sys/class/i2c-adapter/i2c-10/name
+	cat /sys/class/i2c-adapter/i2c-11/name
+	cat /sys/class/i2c-adapter/i2c-12/name
+	cat /sys/class/i2c-adapter/i2c-13/name
+	cat /sys/class/i2c-adapter/i2c-14/name
+	cat /sys/class/i2c-adapter/i2c-15/name
+	cat /sys/class/i2c-adapter/i2c-16/name
+	cat /sys/class/i2c-adapter/i2c-17/name
+	cat /sys/class/i2c-adapter/i2c-18/name
+	cat /sys/class/i2c-adapter/i2c-19/name
+	cat /sys/class/i2c-adapter/i2c-20/name
+	cat /sys/class/i2c-adapter/i2c-21/name
+	cat /sys/class/i2c-adapter/i2c-22/name
+	cat /sys/class/i2c-adapter/i2c-23/name
+	cat /sys/class/i2c-adapter/i2c-24/name
+	cat /sys/class/i2c-adapter/i2c-25/name
+	cat /sys/class/i2c-adapter/i2c-26/name
+	cat /sys/class/i2c-adapter/i2c-27/name
+	cat /sys/class/i2c-adapter/i2c-28/name
+	cat /sys/class/i2c-adapter/i2c-29/name
+	cat /sys/class/i2c-adapter/i2c-30/name
+	cat /sys/class/i2c-adapter/i2c-31/name
+	cat /sys/class/i2c-adapter/i2c-32/name
+	cat /sys/class/i2c-adapter/i2c-33/name
+	cat /sys/class/i2c-adapter/i2c-34/name
+	cat /sys/class/i2c-adapter/i2c-35/name
+	cat /sys/class/i2c-adapter/i2c-36/name
+	cat /sys/class/i2c-adapter/i2c-37/name
+	cat /sys/class/i2c-adapter/i2c-38/name
+	cat /sys/class/i2c-adapter/i2c-39/name
