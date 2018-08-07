@@ -255,11 +255,14 @@
 #Change i2c timeout base clk 
 	
 	#Timeout calculation
-		325us : I2CD04 = 0x77777005 (timeout dur = 48MHz / 16K = 3kHz = 325us) -> too short !
-		1.3us : I2CD04 = 0x77777105 (timeout dur = 48MHz / 64K = 768Hz = 1.3ms) -> too short !
-		5.2ms : I2CD04 = 0x77777205 (timeout dur = 48MHz / 256K = 192Hz = 5.2ms) -> too short !
+		325us : I2CD04 = 0x77777005 (timeout dur = 48MHz / 16K = 3kHz = 325us)
+		1.3us : I2CD04 = 0x77777105 (timeout dur = 48MHz / 64K = 768Hz = 1.3ms)
+		5.2ms : I2CD04 = 0x77777205 (timeout dur = 48MHz / 256K = 192Hz = 5.2ms) 
 		20.8ms : I2CD04 = 0x77777305 (timeout dur = 48MHz / 1024K = 48Hz = 20.8ms) 
-		# I2CD08 need to change, too.
+		# I2CD08 need to change, too
+		# Property timeout of SMBUS is 25ms - 35ms, i2c doesn't defined timeout timing.
+		# i2c speed = 100kHz = 10us/bit 
+		# 1 byte data will takes about 110us : Start(1b) + Data(8b) + ACK(1b) + Stop(1b) = 110us
 		
 	#Enable/Disable ast2500 i2c device and set timeout dynamic
 		#Get i2c control status : MASTER_MODE=Enable
