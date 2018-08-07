@@ -1,0 +1,61 @@
+1. 發現GPU在stress時,做GPU i2c write-read temperature有時溫度一直不動,或讀回來資料異常 cnt=255, data=0xff 0xff 0xff .. 0xff
+2. 用Analyzer看, 發現write時timeout (>30ms <400 ms)導致read 出問題
+3. 猜測1: GPU受不了stress, too busy, 導致response timeout, -> 錯:同一bus其他device也會發生, 其他bus單純i2crw也會發生
+4. dbg message夾出, 問題發生在i2c driver context switch時間過久導致driver長時間沒反應
+5. 上github找到更新版的i2c driver code, 發現implementation有差異, 看來是可以解
+6. 仿照github上解法, 在write後不做complete, 不讓CPU去控制時間, 而是直接接續read section, 測試over night正常
+
+DONE
+
+issue:
+
+[orginal]
+
+msgs[2] //write + read
+for(i=0; 2)
+{
+	send_first_byte(msgs[0])
+	wait_complete()
+	2. 要等很久 (30ms~300ms)才會從send complete走到這, 但這時已ERROR.
+
+}
+
+irq_handle
+{
+
+	do_xfer_done()
+	{
+		if last byte
+		{
+			complete() //-----> 1. 問題發生點, write end後, send complete
+		}
+	}
+
+}
+
+
+[now]
+
+msgs[2] //write + read
+-for(i=0; 2)
+-{
+
+send_first_byte(msgs[0])
+wait_complete()
+
+
+-}
+
+irq_handle
+{
+
+	do_xfer_done()
+	{
+		if last byte
+		{
+			send_first_byte(msgs[1])
+			complete() //-----> 1. 問題發生點, write end後, send complete
+		}
+	}
+
+}

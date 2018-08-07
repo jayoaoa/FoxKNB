@@ -4,70 +4,6 @@
 #CP img
 	cp /var/wcs/home/image-bmc /run/initramfs/
 
-#G50-AIC build
-	PATH=/opt/git/v2.11.4/bin:$PATH
-	git clone ssh://BMC/OpenBMC
-	cd OpenBMC
-	git checkout origin/g50-aic
-	. ./bootstrap.sh
-	git submodule update
-	make clean
-	make rsync-latest-shared
-	
-	bitbake -c prepare_local_source skeleton
-	bitbake -c prepare_local_source redfish
-	bitbake -c prepare_local_source g50-aic-config
-	bitbake -c prepare_local_source linux-obmc
-	bitbake -c prepare_local_source pyphosphor
-	bitbake -c prepare_local_source fru-util
-	bitbake -c prepare_local_source obmc-phosphor-event
-
-	bitbake -f -c compile skeleton
-	bitbake -f -c compile redfish
-	bitbake -f -c compile g50-aic-config
-	bitbake -f -c compile linux-obmc
-	bitbake -f -c compile pyphosphor
-	bitbake -f -c compile fru-util
-	bitbake -f -c compile obmc-phosphor-event
-	bitbake -f -c compile linux-obmc
-	bitbake obmc-phosphor-image
-	
-	##Pull all
-	cd ~/f_g50_AIC/OpenBMC/src/fru-util/               
-	git pull origin          
-	cd ~/f_g50_AIC/OpenBMC/src/g50-aic-config/                  
-	git pull origin     
-	cd ~/f_g50_AIC/OpenBMC/src/linux-obmc/                 
-	git pull origin      
-	cd ~/f_g50_AIC/OpenBMC/src/obmc-phosphor-event/              
-	git pull origin
-	cd ~/f_g50_AIC/OpenBMC/src/pyphosphor/                  
-	git pull origin     
-	cd ~/f_g50_AIC/OpenBMC/src/redfish/                 
-	git pull origin         
-	cd ~/f_g50_AIC/OpenBMC/src/skeleton/             
-	git pull origin
-	cd ~/f_g50_AIC/OpenBMC/src/bitbake/meta-openbmc             
-	git pull origin
-	
-	##Diff all
-	cd ~/f_g50_AIC/OpenBMC/src/fru-util/               
-	git diff >> ~/123
-	cd ~/f_g50_AIC/OpenBMC/src/g50-aic-config/                  
-	git diff >> ~/123
-	cd ~/f_g50_AIC/OpenBMC/src/linux-obmc/                 
-	git diff >> ~/123
-	cd ~/f_g50_AIC/OpenBMC/src/obmc-phosphor-event/              
-	git diff >> ~/123
-	cd ~/f_g50_AIC/OpenBMC/src/pyphosphor/                  
-	git diff >> ~/123
-	cd ~/f_g50_AIC/OpenBMC/src/redfish/                 
-	git diff >> ~/123
-	cd ~/f_g50_AIC/OpenBMC/src/skeleton/             
-	git diff >> ~/123
-	cat ~/123
-	rm -f ~/123
-	
 #G50 build
 	PATH=/opt/git/v2.11.4/bin:$PATH
 	git clone ssh://BMC/OpenBMC
@@ -78,20 +14,86 @@
 	make clean
 	make rsync-latest-shared
 	
-	bitbake -c prepare_local_source skeleton
-	bitbake -c prepare_local_source redfish
-	bitbake -c prepare_local_source g50-config
-	bitbake -c prepare_local_source linux-obmc
 	bitbake -c prepare_local_source pyphosphor
 	bitbake -c prepare_local_source fru-util
 	bitbake -c prepare_local_source obmc-phosphor-event
+	bitbake -c prepare_local_source redfish
+	bitbake -c prepare_local_source g50-config
+	bitbake -c prepare_local_source linux-obmc
+	bitbake -c prepare_local_source skeleton
 
-	bitbake -f -c compile skeleton
-	bitbake -f -c compile redfish
 	bitbake -f -c compile pyphosphor
 	bitbake -f -c compile fru-util
+	bitbake -f -c compile obmc-phosphor-event
+	bitbake -f -c compile redfish
+	bitbake -f -c compile g50-config
 	bitbake -f -c compile linux-obmc
+	bitbake -f -c compile skeleton
 	bitbake obmc-phosphor-image
+	
+#G50-AIC build
+	PATH=/opt/git/v2.11.4/bin:$PATH
+	git clone ssh://BMC/OpenBMC
+	cd OpenBMC
+	git checkout origin/g50-aic
+	. ./bootstrap.sh
+	git submodule update
+	make clean
+	make rsync-latest-shared
+	
+	bitbake -c prepare_local_source pyphosphor
+	bitbake -c prepare_local_source fru-util
+	bitbake -c prepare_local_source obmc-phosphor-event
+	bitbake -c prepare_local_source redfish
+	bitbake -c prepare_local_source g50-aic-config
+	bitbake -c prepare_local_source linux-obmc
+	bitbake -c prepare_local_source skeleton
+
+	bitbake -f -c compile pyphosphor
+	bitbake -f -c compile fru-util
+	bitbake -f -c compile obmc-phosphor-event
+	bitbake -f -c compile redfish
+	bitbake -f -c compile g50-aic-config
+	bitbake -f -c compile linux-obmc
+	bitbake -f -c compile skeleton
+	bitbake obmc-phosphor-image
+	
+	##Pull all
+		cd ~/f_g50_AIC/OpenBMC/src/fru-util/               
+		git pull origin          
+		cd ~/f_g50_AIC/OpenBMC/src/g50-aic-config/                  
+		git pull origin     
+		cd ~/f_g50_AIC/OpenBMC/src/linux-obmc/                 
+		git pull origin      
+		cd ~/f_g50_AIC/OpenBMC/src/obmc-phosphor-event/              
+		git pull origin
+		cd ~/f_g50_AIC/OpenBMC/src/pyphosphor/                  
+		git pull origin     
+		cd ~/f_g50_AIC/OpenBMC/src/redfish/                 
+		git pull origin         
+		cd ~/f_g50_AIC/OpenBMC/src/skeleton/             
+		git pull origin
+		cd ~/f_g50_AIC/OpenBMC/src/bitbake/meta-openbmc             
+		git pull origin
+	
+	##Diff all
+		cd ~/f_g50_AIC/OpenBMC/src/fru-util/               
+		git diff >> ~/123
+		cd ~/f_g50_AIC/OpenBMC/src/g50-aic-config/                  
+		git diff >> ~/123
+		cd ~/f_g50_AIC/OpenBMC/src/linux-obmc/                 
+		git diff >> ~/123
+		cd ~/f_g50_AIC/OpenBMC/src/obmc-phosphor-event/              
+		git diff >> ~/123
+		cd ~/f_g50_AIC/OpenBMC/src/pyphosphor/                  
+		git diff >> ~/123
+		cd ~/f_g50_AIC/OpenBMC/src/redfish/                 
+		git diff >> ~/123
+		cd ~/f_g50_AIC/OpenBMC/src/skeleton/             
+		git diff >> ~/123
+		cat ~/123
+		rm -f ~/123
+	
 	
 #git version code by tag
 	git describe --abbrev=0
@@ -105,7 +107,7 @@
 	curl -b cjar -u admin:admin -X GET -H "Content-Type: application/json" -k https://<BMC_IP>/redfish/v1/Chassis/System/FRU/PDB
 	curl -b cjar -u admin:admin -X GET -H "Content-Type: application/json" -k https://<BMC_IP>/redfish/v1/Chassis/System/FRU/CM
 
-#Redfisg Master Write Read, Read I2C, Read FRU, Read EEPROM
+#Redfish Master Write Read, Read I2C, Read FRU, Read EEPROM
 
 	curl -k -u admin:admin -X POST -H 'Content-Type: application/json' -d '{"Bus":"4", "SlaveAddress":"0x50", "ReadCount":"255", "WriteData":"0x0 0x0"}' https://192.168.1.110/redfish/v1/Managers/System/Actions/Manager.MasterWriteRead
 
@@ -168,6 +170,40 @@
 
 
 
+	read psu mfr id (loop)
+		while [ 1 ];do i2craw.exe -f 1 0x58 -r 13 -w '0x99'; done;
+		while [ 1 ];do i2craw.exe -f 1 0x58 -r 255 -w '0x99'; done;
+	read 4 bytes (loop)
+		while [ 1 ];do i2craw.exe -f 12 0x58 -r 5 -w '0x9d'; done;
+	
+	##I2C master write-read stress
+		while [ 1 ];do i2craw.exe -f 4 0x50 -r 255 -w '0x0 0x0'; done;
+
+	##I2C master-write, master-read stress
+		while [ 1 ];do date; i2cset -y -f 1 0x70 0x01; i2cget -y -f 1 0x70; i2cset -y -f 1 0x70 0x02; i2cget -y -f 1 0x70; i2cset -y -f 1 0x70 0x04; i2cget -y -f 1 0x70; i2cset -y -f 1 0x70 0x08; i2cget -y -f 1 0x70; done;
+	
+	##stress i2c bus
+		while [ 1 ];do i2craw.exe -f 4 0x50 -r 255 -w '0x0 0x0'; done;
+		while [ 1 ];do i2craw.exe -f 4 0x50 -r 1 -w '0x0 0x0'; sleep 1; done;
+		while [ 1 ];do i2craw.exe -f 4 0x50 -r 255 -w '0x0 0x0'; devmem 0x1e78a144; devmem 0x1e78a148; done;
+	
+#obmc full sel
+	while [ 1 ];do eventctl.exe add Critical 0x08 0x11 0x6f 0x82; done;
+	
+#燒code: monitor file size / cp / reboot
+	while [ 1 ]; do sz=$(du -k /var/wcs/home/image-bmc | awk '{ print $1 }'); echo $sz; if [ $sz -eq '32768' ]; then sleep 1; cp /var/wcs/home/image-bmc /run/initramfs/; reboot; fi; done;
+
+## Disable watchdog
+	get val = devmem 0x1e78500c 32
+	val &= ~1
+	devmem 0x1e78500c 32 val
+	
+# Set WATCHDOG to 60sec
+	devmem 0x1e78500c 32 0x0
+	devmem 0x1e785004 32 0x03c00000
+	devmem 0x1e785008 32 0x4755
+	devmem 0x1e78500c 32 0x13
+	
 #Read NTP Address
 	ntp_eeprom.py --read-ntp
 
@@ -183,144 +219,65 @@
 
 
 #PSU/PMBUS status_word
-cat ./sys/devices/platform/ahb/ahb:apb/1e78a000.i2c/i2c-1/i2c-1/i2c-13/13-0058/hwmon/hwmon2/pmbus_status_word
+	cat ./sys/devices/platform/ahb/ahb:apb/1e78a000.i2c/i2c-1/i2c-1/i2c-13/13-0058/hwmon/hwmon2/pmbus_status_word
 
 #obmc_system_config.py
-cat ./usr/lib/python2.7/site-packages/obmc_system_config.py
+	cat ./usr/lib/python2.7/site-packages/obmc_system_config.py
 
 #GPG
-gpg --gen-key
-gpg --list-public-keys edward.sh.wu@mail.foxconn.com | grep -A 1 pub | sed -n 2p | awk '{print $1}'
-git config --global user.signingKey 7405D35558861CD5D0A60F86AA30D024FFB64CBC
-git config --global commit.gpgSign true
-git config --global push.gpgSign true
-gpg --export -a Edward
+	gpg --gen-key
+	gpg --list-public-keys edward.sh.wu@mail.foxconn.com | grep -A 1 pub | sed -n 2p | awk '{print $1}'
+	git config --global user.signingKey 7405D35558861CD5D0A60F86AA30D024FFB64CBC
+	git config --global commit.gpgSign true
+	git config --global push.gpgSign true
+	gpg --export -a Edward
 
 #Commit
-commit --amend --signoff
-push origin HEAD:refs/for/internal/C18-base
+	commit --amend --signoff
+	push origin HEAD:refs/for/internal/C18-base
 
 # Need to cp project pmc files to package
-cd ~/c16/AMI-AST2500/src/libipmipar_Ash16/
-cp -f ast2500evb.* ~/c18/libipmipar_ast2500evb_ami-2.7.0-ARM-AST2500-AST2500EVB-AMI-src/package/data/
+	cd ~/c16/AMI-AST2500/src/libipmipar_Ash16/
+	cp -f ast2500evb.* ~/c18/libipmipar_ast2500evb_ami-2.7.0-ARM-AST2500-AST2500EVB-AMI-src/package/data/
 
-#Enable/Disable ast2500 i2c device and set timeout dynamic
-#Get i2c control status : MASTER_MODE=Enable
-		devmem 0x1e78a140
-		0x00000001
-#Get Clock reg: Timeout = 3 = devided by 1024k
-		devmem 0x1e78a144
-		0x77777305
 		
-		
+#Error injection
+	Fan_Tach_1 set reading to 4000 RPM:
+	obmc_err_injection 17 reading_value 4000
 
-#Change Timeout base clk 
-	325us : I2CD04 = 0x77777005 (timeout dur = 48MHz / 16K = 3kHz = 325us)
-	1.3us : I2CD04 = 0x77777105 (timeout dur = 48MHz / 64K = 768Hz = 1.3ms)
-	5.2ms : I2CD04 = 0x77777205 (timeout dur = 48MHz / 256K = 192Hz = 5.2ms)
-	20.8ms : I2CD04 = 0x77777305 (timeout dur = 48MHz / 1024K = 48Hz = 20.8ms)
-	# I2CD08 need to change, too.
+#obmcutil
+	#Get certain sensor number
+		obmcutil getsensors -num 141
+	#obmc power cycle
+		while [ 1 ];do obmcutil poweroff; obmcutil poweron; sleep 15; done;
+
+
+#Change i2c timeout base clk 
 	
-#Disable i2c -> Set timeout -> Enable i2c (0x1e78a14X = i2c bus 4)
-	devmem 0x1e78a140 32 0x00000000
-	devmem 0x1e78a144 32 0x77777005
-	devmem 0x1e78a148 32 0x00000001
-	devmem 0x1e78a140 32 0x00000001
-
-#stress i2c bus
-	while [ 1 ];do i2craw.exe -f 4 0x50 -r 255 -w '0x0 0x0'; done;
-	while [ 1 ];do i2craw.exe -f 4 0x50 -r 1 -w '0x0 0x0'; sleep 1; done;
-	while [ 1 ];do i2craw.exe -f 4 0x50 -r 255 -w '0x0 0x0'; devmem 0x1e78a144; devmem 0x1e78a148; done;
+	#Timeout calculation
+		325us : I2CD04 = 0x77777005 (timeout dur = 48MHz / 16K = 3kHz = 325us) -> too short !
+		1.3us : I2CD04 = 0x77777105 (timeout dur = 48MHz / 64K = 768Hz = 1.3ms) -> too short !
+		5.2ms : I2CD04 = 0x77777205 (timeout dur = 48MHz / 256K = 192Hz = 5.2ms) -> too short !
+		20.8ms : I2CD04 = 0x77777305 (timeout dur = 48MHz / 1024K = 48Hz = 20.8ms) 
+		# I2CD08 need to change, too.
 		
-#Change Timeout to = default
-#Disable i2c -> Set timeout -> Enable i2c
-	devmem 0x1e78a140 32 0x00000000
-	devmem 0x1e78a144 32 0x77777305
-	devmem 0x1e78a148 32 0x00000000
-	devmem 0x1e78a140 32 0x00000001
-
-
+	#Enable/Disable ast2500 i2c device and set timeout dynamic
+		#Get i2c control status : MASTER_MODE=Enable
+			devmem 0x1e78a140
+			0x00000001
+		#Get Clock reg: Timeout = 3 = devided by 1024k
+			devmem 0x1e78a144
+			0x77777305
+	
+	#Disable i2c -> Set timeout -> Enable i2c (0x1e78a14X = i2c bus 4)
+		devmem 0x1e78a140 32 0x00000000
+		devmem 0x1e78a144 32 0x77777005
+		devmem 0x1e78a148 32 0x00000001
+		devmem 0x1e78a140 32 0x00000001
 		
-		
-#List all i2c device	
-	ls /sys/class/i2c-adapter/i2c-0/
-	ls /sys/class/i2c-adapter/i2c-1/
-	ls /sys/class/i2c-adapter/i2c-2/
-	ls /sys/class/i2c-adapter/i2c-3/
-	ls /sys/class/i2c-adapter/i2c-4/
-	ls /sys/class/i2c-adapter/i2c-5/
-	ls /sys/class/i2c-adapter/i2c-6/
-	ls /sys/class/i2c-adapter/i2c-7/
-	ls /sys/class/i2c-adapter/i2c-8/
-	ls /sys/class/i2c-adapter/i2c-9/
-	ls /sys/class/i2c-adapter/i2c-10/
-	ls /sys/class/i2c-adapter/i2c-11/
-	ls /sys/class/i2c-adapter/i2c-12/
-	ls /sys/class/i2c-adapter/i2c-13/
-	ls /sys/class/i2c-adapter/i2c-14/
-	ls /sys/class/i2c-adapter/i2c-15/
-	ls /sys/class/i2c-adapter/i2c-16/
-	ls /sys/class/i2c-adapter/i2c-17/
-	ls /sys/class/i2c-adapter/i2c-18/
-	ls /sys/class/i2c-adapter/i2c-19/
-	ls /sys/class/i2c-adapter/i2c-20/
-	ls /sys/class/i2c-adapter/i2c-21/
-	ls /sys/class/i2c-adapter/i2c-22/
-	ls /sys/class/i2c-adapter/i2c-23/
-	ls /sys/class/i2c-adapter/i2c-24/
-	ls /sys/class/i2c-adapter/i2c-25/
-	ls /sys/class/i2c-adapter/i2c-26/
-	ls /sys/class/i2c-adapter/i2c-27/
-	ls /sys/class/i2c-adapter/i2c-28/
-	ls /sys/class/i2c-adapter/i2c-29/
-	ls /sys/class/i2c-adapter/i2c-30/
-	ls /sys/class/i2c-adapter/i2c-31/
-	ls /sys/class/i2c-adapter/i2c-32/
-	ls /sys/class/i2c-adapter/i2c-33/
-	ls /sys/class/i2c-adapter/i2c-34/
-	ls /sys/class/i2c-adapter/i2c-35/
-	ls /sys/class/i2c-adapter/i2c-36/
-	ls /sys/class/i2c-adapter/i2c-37/
-	ls /sys/class/i2c-adapter/i2c-38/
-	ls /sys/class/i2c-adapter/i2c-39/
+	#Disable i2c -> restore to default -> Enable i2c
+		devmem 0x1e78a140 32 0x00000000
+		devmem 0x1e78a144 32 0x77777305
+		devmem 0x1e78a148 32 0x00000000
+		devmem 0x1e78a140 32 0x00000001
 
-	cat /sys/class/i2c-adapter/i2c-0/name
-	cat /sys/class/i2c-adapter/i2c-1/name
-	cat /sys/class/i2c-adapter/i2c-2/name
-	cat /sys/class/i2c-adapter/i2c-3/name
-	cat /sys/class/i2c-adapter/i2c-4/name
-	cat /sys/class/i2c-adapter/i2c-5/name
-	cat /sys/class/i2c-adapter/i2c-6/name
-	cat /sys/class/i2c-adapter/i2c-7/name
-	cat /sys/class/i2c-adapter/i2c-8/name
-	cat /sys/class/i2c-adapter/i2c-9/name
-	cat /sys/class/i2c-adapter/i2c-10/name
-	cat /sys/class/i2c-adapter/i2c-11/name
-	cat /sys/class/i2c-adapter/i2c-12/name
-	cat /sys/class/i2c-adapter/i2c-13/name
-	cat /sys/class/i2c-adapter/i2c-14/name
-	cat /sys/class/i2c-adapter/i2c-15/name
-	cat /sys/class/i2c-adapter/i2c-16/name
-	cat /sys/class/i2c-adapter/i2c-17/name
-	cat /sys/class/i2c-adapter/i2c-18/name
-	cat /sys/class/i2c-adapter/i2c-19/name
-	cat /sys/class/i2c-adapter/i2c-20/name
-	cat /sys/class/i2c-adapter/i2c-21/name
-	cat /sys/class/i2c-adapter/i2c-22/name
-	cat /sys/class/i2c-adapter/i2c-23/name
-	cat /sys/class/i2c-adapter/i2c-24/name
-	cat /sys/class/i2c-adapter/i2c-25/name
-	cat /sys/class/i2c-adapter/i2c-26/name
-	cat /sys/class/i2c-adapter/i2c-27/name
-	cat /sys/class/i2c-adapter/i2c-28/name
-	cat /sys/class/i2c-adapter/i2c-29/name
-	cat /sys/class/i2c-adapter/i2c-30/name
-	cat /sys/class/i2c-adapter/i2c-31/name
-	cat /sys/class/i2c-adapter/i2c-32/name
-	cat /sys/class/i2c-adapter/i2c-33/name
-	cat /sys/class/i2c-adapter/i2c-34/name
-	cat /sys/class/i2c-adapter/i2c-35/name
-	cat /sys/class/i2c-adapter/i2c-36/name
-	cat /sys/class/i2c-adapter/i2c-37/name
-	cat /sys/class/i2c-adapter/i2c-38/name
-	cat /sys/class/i2c-adapter/i2c-39/name
