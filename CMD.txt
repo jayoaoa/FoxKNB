@@ -284,3 +284,14 @@
 		devmem 0x1e78a148 32 0x00000000
 		devmem 0x1e78a140 32 0x00000001
 
+#Remove unused windows garbage, Enter Powershell with Administartor
+	##Execute below commands in Power Shell with admin right
+		Get-AppxPackage *bingsports* | Remove-AppxPackage
+		Get-AppxPackage *zunemusic* | Remove-AppxPackage
+		Get-AppxPackage *windowsmaps* | Remove-AppxPackage
+		Get-AppxPackage *solitairecollection* | Remove-AppxPackage
+		Get-AppxPackage *bingfinance* | Remove-AppxPackage
+		Get-AppxPackage *zunevideo* | Remove-AppxPackage
+		Get-AppxPackage *windowsphone* | Remove-AppxPackage
+		Get-AppxPackage *bingsports* | Remove-AppxPackage
+		Get-AppxPackage *xboxapp* | Remove-AppxPackage
