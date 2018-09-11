@@ -1,9 +1,275 @@
+[20180911]
+[VSTS #15507] Implement SSIF2
+[VSTS #15938] Update BMC Version to 2.05
+[VSTS #15507] Implement SSIF2 for CPU1
+[VSTS #15838] Update OneBMCTest
+
+Update version 的commit message依照Taco需求,要附上document
+ref: https://gerrit.bmc-ks.xyz/5275
+
+
+
+
+Alvis帳號不能繼續用 -> 可用Louis的!!
+popen要掃過 -> done
+
+1. System reset DIMM D0 has abnormal SEL
+	v0. reproduced by system reset everytime - only DIMMD0 - ok
+	v1. try to find root cause now. -> miss D0 in M3 sensor group -> ok
+	v2. unit test/root cause report - ok
+	3. commit to gerrit - ongoing
+	4. Push code to gitweb - ongoing
+	v5. create ms task and pull request - ok
+	
+	
+2. Help TP to use gerrit
+	- 教william gerrit
+
+
+[20180907]
+v 1. sync all C2050 QIS issues to Mantis - ok
+	Dolye & Alex help
+	
+v 2. merge lastest code to ks
+	1. commit to gerrit - ok
+	2. Push code to gitweb - ok
+	
+v 3. warm reset issue
+	Dolye & Alex help
+	0. unit test/root cause report - ok
+	1. commit to gerrit - ok
+	2. Push code to gitweb - ok
+	3. create ms task and pull request - ok
+	
+v 4. yafu stress
+	0. unit test/root cause report - ok
+	1. commit to gerrit - ok
+	2. Push code to gitweb - ok
+	3. create ms task and pull request - ok
+	
+5. BMC regenerates System GUID on each power cycle/reboot of BMC
+	0. cannot reproduce - wait Louis verify it. - still cannot reproduce. - hold
+	
+[20180903]
+wcs/hmoe, ami tftp, ami folder, ami path
+# creating sftp access folder 
+CreateDir /var/wcs/ 0755
+CreateDir /var/wcs/home 0777
+
+1. 把其他人的sighup handler關掉, 因為參考
+.svnspx-ex/packages/libipmiusb-src/spx/CHANGELOG:292:   The signal handler inside IPMImain should handle the signal by itself, but libipmiusb call InitSignals() to r then the signal who register by libipmiusb will not receive by IPMIMain.
+.svnspx-ex/packages/libipmiusb-src/spx/CHANGELOG:294:For example, if we send a SIGSEGV to IPMIMain, IPMImain should be terminated, but libipmiusb catch the signal an.
+.svnspx-ex/packages/libipmiusb-src/spx/INFO:30:Depends : ipmimain, usbe, CDDVD_HW_support
+.svnspx-ex/packages/libipmimsghndlr-src/.svn/pristine/ee/ee8fffb82f2d3fda351b739d4be7af429929bce4.svn-base:1961:        Fix for IPMIMain SIGSEGV.
+
+2. 每個人都PR_SET_NAME 來追蹤到底是哪個thread造成error
+-> 這樣有問題的PR就不叫IPMIMain -> 不會被SIGHUP -> 不會卡 -> 但還是會跑SIGHUP
+	!!!!! 抓到 PWMControl !!!!! 應該是popen回來時發現家已不在? 所以當釘子戶? 
+	-> Disabled setpwm/getpwm 跑18000s可, 改成funtion call試試
+	-> 改成function call了! 跑一整天pass
+	
+3. 看來CPU拔掉就不會發生,問題來自?USB or SSIF? -> FAN? -> PSGood!
+
+4. 順便測Yafu stress看看會不會發生
+
+[20180830]
+v 1. Mantis C2050權限, -> OK!
+v 2. C2050 source code control方式? -> follow MSFT
+v 3. Build過 -> VBOX can build/clone/commit/push it
+v 4. 試試不用ipmistack script 直接run? -> 掛!
+
+
+[20180829]
+
+
+- 不會是procmanager -> 
+	1. 拿掉register procmanager也出現 (check過process.conf無IPMIMain)
+	2. 因為在respawn時會有log
+	3. 在sighup以外的sig都會啟動(因為沒有deregister)
+- 不會是cron, 因為crontab沒有call IPMIMain
+- 把thread monitor拿掉一樣failed
+- 拿掉connect_singal就不會出現, 但把handler內的function disable掉,一樣出現
+---------------------------------------------------------------------------------------------------
+	!- 改成Sigterm看看是否出現 -> 目的非workaround,用來縮小問題出現在sighup或是all signal exit
+	connect, handler, ipmistack
+!- while迴圈如果不要做事,是否就pass? (monitor thread)	
+
+!- disable log rotate,看是否出現 -> 每分鐘一次, 是否剛好碰撞到?
+
+
+[20180827]
+X- 降版到1.16看看是不是會出現
+	->出現:那就繼續看connect_signal
+	X->不出現:那就好辦了X
+!- 改成Sigterm看看是否出現 -> 目的非workaround,用來縮小問題出現在sighup或是all signal exit
+	connect, handler, ipmistack
+- 不做daemonize呢?
+
+2. Ether要merge AWS C16的,
+	先比對看看差異多大, 不要太大的話可以直接merge -> 不大,merge完成
+
+
+---------------------------------------------
+發生時在sigterm等5秒,居然可以安全離開
+
+v 用inotify發現Open -> Access -> Open -> Access -> Close 多open了一次! but why
+v 用schd_debug看看會發生什麼事! -> 很明顯在ipmistack stop後立刻出現一個IPMIMain 但為何出現? 誰開啟的? 懷疑是free resource後
+v k98k99連做看是否重現 !!!!!!!!!!!!新發現可以!!!!!!!!!!!!! -> 難道跟exedaemon有關? -> no無關 ipmistack stop/start也會中
+v 離開前pid設1234 -> 會套用, 所以是在Parent死後才被建立 -> 不一定,在exit前check看看fake process起來沒
+
+退版看看是不是一樣
+x 有沒辦法用backtrace看到什麼？ 來不及
+!!!!!! 不free resource 會出現嗎 -> 跑! 08/23 -> 一樣出現! -> 拿掉connect_signal呢? -> pass 12hr
+
+-----------------------------------------
+12:36
+已build好,等開好可直燒開跑
+x 1. exit 1
+x 2. 直接離開main
+3. upnp 10800
+4. token 10800
+------------------------------------------
+1, 不掛SLP
+x 2. 不等start thread -> 死絕
+x 3. exit 1
+看看patch
+
+破壞register proc參數, 看看會不會停
+如果停-> 表示不是由proc啟動, 那為何會帶這些參數? -> 難道是ipmistack啟動的? -> 把wait thread那個砍掉 恢復正常的daemon
+
+如果永不停 > 500, 回到原code, 破壞register procmanager代的參數, 在跑一次,
+-> 永不停代表問題就是Procmanager, -> 
+[]
+
+
+1. DMS -> 可登入 沒prj
+2. 手動看看有沒法重現 (如果是順序導致錯亂) PGRP/Session不一樣?
+3. NVDIA回信 -> ok -> 要找出是誰reset!
+4. fill unit test table
+
+[20180817]
+(C2050)
+Warmreboot issue: warmreboot BMC every 40 sec for 40 - 200 times, IPMIMain will lock
+1. warmboot = INIT 4 -> INIT 9 -> K98ipmistack -> S22ipmistack
+2. 延長warmreboot to 90sec : 一樣掛
+3. 掛掉時killall -1 IPMIMain都砍不掉,要用kill -9 pid才行, 然後/etc/init.d/ipmistack start -> ok
+4. 目前發現關鍵是
+	ipmistack -> killall -1 IPMIMain -> SIGHUP Handler -> ProcMonitorDeRegister -> free_resources -> exit 
+	-> !!! 不知誰生出一個不同PID的ipmimain -> kill不掉 -> 導致沒辦法start新的
+
+	workaround : 在出錯時自己exit(0)
+
+NEXT: 
+1. 抓/proc/pid/stat內,看到PPID是剛被kill掉IPMIMain, 但是找不到為何會fork(?)出一個新的Process
+2. 被create出來的ipmimain沒有從頭開始跑? 不知道從何時開始跑?
+3. 看是不是AMI source code issue 還是台北/MSFT改到了?
+
+(Fill the Unit test plan)
+
+[20180816]
+1. 不regproc有用嗎? -> 一樣掛
+	-> 那如果不free_resource呢
+2. 是誰在exit後多Start了一個ipmimain
+	-> IPMIMain本身, 但應該是exit前就create了?
+3. 為何Start後不用從main開始跑? -> 這樣無法assign新sgpid -> 無法進到free...
+	
+4. 是誰發sighup給後面的(假的)ipmimain
+5. 假的process為何好像沒辦法exit? 可以自刪嗎?
+	-> 可以但發生當下要立刻exit,否則不知為何後面都不會被執行
+
+
+Next:
+	1. dbg mesg所有IPMIMain, 看spawn()後做了甚麼,以及是否活著
+		-> 加了msg後,無法重現
+	2. 看AMI有沒相關Packages
+	3. 需要查出是誰做spawn() -> 看來不是regproc
+		-> IPMIMain本身spawn
+	4. workaround -> 在SIGHUP加exit
+	X5. 在正常SIGHUP抓/proc/pid/stat -> 看看是不是有create一個process? -> 失敗因為耗時過長,會造成start失敗
+		-> 是:找到點,是在while的地方create嗎?還是free_resource? 
+		-> 不是:那就是在exit後,可是不合理因為PPID是IPMIMain
+		-> 如果無法重現,是不是因為在這加了dbug的關係?
+	6. 在不正常SIGHUP多印幾個printf -> 看看是時間還是某些getpid or others導致沒辦法執行完 -> 無法執行完
+		-> 時間:因為正在被kill嗎?
+		-> 某些動作ex:getpid:因為線程阻塞嗎
+	7. 
+[20180815]
+BMC warm reboot issue
+1. Increase to 90s -> still happened
+2. Normal case: 
+			1. Warm reboot BMC 
+			2. Enter run level 9
+			3. [rc9.d] stop IPMIMain process(A) -> Done
+			4. [rc9.d] start IPMIMain process(C) -> Done
+			5. IPMI session established
+3. Issue investigate: 
+			1. Warm reboot BMC 
+			2. Enter run level 9
+			3. [rc9.d] stop IPMIMain process(A) -> Done
+				-> !!! An IPMIMain process(B) was spawned with another PID immediately !!!
+				-> !!! The IPMIMain process(B) received SIGHUP, but not be killed !!!
+			4. [rc9.d] start IPMIMain process(C) -> Failure (Because IPMIMain(B) is already running) 
+			5. IPMI session disabled forever.
+3. Next action
+			1. Check why PID is not equal randomly -> No!!!! 是送第二次!
+				Q: Is a process PID guaranteed to stay the same as long as the process doesnt die?
+					Well...mostly.
+
+					As other posters have said any particular process will retain its PID indefinitely. 
+					Even through one or more instances of exec.
+
+					However, a programmer who wished to evade that guarantee on a unix box would have no 
+					trouble at all. He would simple fork, ignore HUP signals in the daughter and then kill 
+					the mother process. 
+					The result of which would be the daughter carrying on with a new PID and give the 
+					appearance that the process changed its PID.
+				
+			2. 為何SIGHUP送進去了但沒關掉IPMIMain? !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				不知道,都跑完free_resource了
+				-> No, 應該是關掉了但立刻被spawn
+			3. kill -9 再start ok, 但killall -1 IPMIMain殺不掉
+			
+[20180809]
+研究好C2050的Development control flow
+1. Code structure? 
+	1. 純AMI (PRJ+Package+Patch)
+	2. AMI+Source (PRJ+Package+Patch+Woukspace)
+	3. ?
+2. How to modify?
+	1. Linux local + 純AMI (MDS)
+	2. Source server + Source Insight + MDS pmc
+	3. ?
+3. How to buid
+	1. 純AMI (MDS)
+	2. Command line? (BUILD, PATCH cmd, REPACK cmd, etc + MDS pmc)
+	3. ?
+	
+4. How to control source code?
+	Must extract all source code and upload to git
+	-> Gerrit + Gitweb + Jenkins
+
+5. How to release?
+	1. Tradiitional way (Release note + FTP + mail)
+	2. Customer server / FTP
+	3. ?
+6. How to track issue?
+	1. Local server (https://bug.bmc-ks.xyz/my_view_page.php)
+	2. Customer tracking system
+	3. ?
+	
+7. How to assign task?	
+	1. Traditional way
+	2. https://bug.bmc-ks.xyz/my_view_page.php
+	
+[20180807]
+
 [20180806]
 GPU會出現Addr NAK,大約3900min持續2min, 燒dbg版看看pmbus會不會也出現這問題!!
 	get val = devmem 0x1e78500c 32
 	val &= ~1
 	devmem 0x1e78500c 32 val
 	kill pmbus_scanner/hwmon.py/
+	(0807) running from 17:13 (if happened, sts=0x2, index=0, pos=1)
 
 [20180802]
 1. 測i2c 單write/單read -> ok, 
@@ -11,7 +277,7 @@ GPU會出現Addr NAK,大約3900min持續2min, 燒dbg版看看pmbus會不會也�
 2. 測eeprom w/r 255bytes -> ok
 	while [ 1 ];do i2craw.exe -f 4 0x50 -r 255 -w '0x0 0x0'; done;
 2. 看GPU stress時是否還會重現
-	?
+	不會出現Timeout, pass, 但還是有看到Addr NAK問題, Running pmbus.
 3. 
 
 [20180730]
@@ -253,7 +519,17 @@ ok 8. 確定版本正確, 正確的話釐清為何sensor少 -> 版本正確, 0.6
 		curl -c cjar -b cjar -k -H "Content-Type: application/json" -X POST https://localhost:2443/login -d "{\"data\": [ \"root\", \"0penBmc\" ] }"
 		curl -b cjar -k https://127.0.0.1:2443/xyz/openbmc_project/software/list
 	------------------------------------------------------------------------------------------------------------------------------------------	
+	Merge the webui feature to Zaius
+	1. Add the phospor-webui to 
+		openbmc/meta-ibm/meta-witherspoon/recipes-phosphor/packagegroups/packagegroup-obmc-apps.bbappend
 
+		!!! Encounter build problem, because we need to bump it to commit 6bcd6cff96ec88f71b93774418949f765d77411b !!
+
+	2. Bump phosphor-webui revision code to the latest version
+		openbmc/meta-phosphor/common/recipes-phosphor/webui/phosphor-webui.bb
+		https://github.com/openbmc/openbmc/issues/3200
+		https://github.com/openbmc/phosphor-webui/commit/6bcd6cff96ec88f71b93774418949f765d77411b
+		
 [20180615]
 (Openbmc task 2)
 1. study the history of foxconn-g2
@@ -460,3 +736,33 @@ O 1. 申請電話機+網路
 	ok
 3. Create qemu ast2500-evb environment
 4. Learn Openbmc
+
+[DMS]
+    吳善恆,賬號:DC0055,密碼:XnuVlpPi
+
+[C2050]
+	C2050
+	-------------------------------------------
+	Louis 511-3133 
+	-------------------------------------------
+	minicom log
+	netfn : 6 
+	cmd : 3
+	bmc warm reset perform per 40 sec, ipmimain will hang in 40 cycle
+	EIP 422892
+	customer\kenlai
+	d5$K9MyAp5
+	-------------------------------------------
+	Release biweeky (Thursday)
+	吳善恆,賬號:DC0055,密碼:XnuVlpPi
+	--------------------------------------------
+	QIS
+	http://epbg.qis.efoxconn.com/qis/
+	user:IG1079
+	pass:kenlai1234
+	
+[香信]
+	DC0055/Edward1234
+	
+[H2U]
+	DC0055/Edward1234

@@ -1,0 +1,37 @@
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDFuXkApH+GdytXXqwuaJLHyPpa4ok++g7reH5ZMu8eYy6uvKuusFAT4vQCgb49nbLZ3MODRH8r8x7kiHf+PJ4h1AZQPDtVzhHspVIb4qhMX3uSzMBgi2ydWhlPGk45/aJuY260tzTBFv3btCOWBTOy3401rAkLRGAW0Ald64HW3kVf61iozQ6COluQDrG0/yVNDwkid1qKstxstI0xr/+KO6D5Ctlio1zbmI9rkExGRhbui1Gnk+6r/yiIUvoA+6Pr9wjzVVLn2xV2V4ZbzvlA+6WOiN7PZZlahfHFvpvR8gevb4/ayqPQBFykgBhM+q6n/OcnXEq0kFnoil6Pnlj7 daniel@ks-bmc-001
+
+1. 把gerrit的公鑰複製到微軟的git web 新增公鑰 
+微軟的git web新增公鑰的方法: 點右上角的名字 > sercurity > SSH pubilc key > Add 
+2. git clone ssh://csibmc@csibmc.visualstudio.com:22/G50/_git/redfish下載微軟的reposity 
+git clone的位址可以點微軟的git web的下載符號取得 
+3. 切換到master 然後git co -b new_repository, new_repository name要依照規則 bug就用bug/number
+4. git remote add foxconn https://github.com/foxconn-bmc-ks/linux.git 
+ git remote add foxconn ssh://BMC/OSS/openbmc/skeleton.git 
+5. git fetch foxconn 
+6. git cherry-pick 95e81975cdce1addbd2416d05aa30f8e6f6b6ffe 
+7. 到微軟的web點new pull requests新增pull request
+
+ 1. Set/Release Thermal Alert ,Get Power Brake state, Get Thermal Alert State shall be supported in M2 with CLI
+ 2. Remove 9443 listen
+ 3. Redfish enable take so long
+ 4. Fan sensor status health is OK in redfish without fan inserted.
+ 5. Event structure in log file
+ 6. pex9797 typo in code
+ 7. what is ttyS0
+ 8. Switch schema shall follow redfish schema.
+ 9. CPLD specification
+ 10. 0.5.0 release test report
+ 11. Rivest partners account
+ 12. Mask FPGA_ambtmp sensors
+   13. /redfish/v1/Chassis/System/2/PCIeDevices/8/Functions/1 is not working without device
+ 14. Check fan table profile implement
+
+
+
+1. git clone ssh://csibmc@csibmc.visualstudio.com:22/G50/_git/redfish 
+2. git co -b feature/99 
+3. git remote add foxconn ssh://BMC/OSS/openbmc/skeleton.git 
+4. git fetch foxconn 
+4. git cp 76066dbd6d05d1c51ce78231a2e1de876f71d8ba 
+5. git push -u origin feature/93 --no-signed 
+6. pull reques

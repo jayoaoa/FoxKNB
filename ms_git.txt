@@ -1,0 +1,10 @@
+1. 把gerrit的公鑰複製到微軟的git web 新增公鑰
+   微軟的git web新增公鑰的方法: 點右上角的名字 > sercurity > SSH pubilc key > Add
+2. git clone ssh://csibmc@csibmc.visualstudio.com:22/G50/_git/redfish下載微軟的reposity
+             ssh://csibmc@vs-ssh.visualstudio.com:22/G50/_ssh/redfish
+   git clone的位址可以點微軟的git web的下載符號取得
+3. 切換到master 然後git co -b new_repository, new_repository name要依照規則 bug就用bug/number
+4. git remote add foxconn https://github.com/foxconn-bmc-ks/linux.git
+5. git fetch  foxconn
+6. git cherry-pick 95e81975cdce1addbd2416d05aa30f8e6f6b6ffe
+7. 到微軟的web點new pull requests新增pull request

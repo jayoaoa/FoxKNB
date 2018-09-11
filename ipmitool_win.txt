@@ -1,0 +1,74 @@
+如何在 Windows OS 執行 IPMItool
+如果你只是單純的想在 Windows OS 上執行 IPMItool 的話, cygwin 應該是你最好的選擇.
+
+
+0. Compile 失敗記錄:
+0.1 ipmi_sunoem.c:1168:4: error: unknown type name 'fd_set'
+    我的 Windows 7 x64 系統上不會出現這個錯誤, Windows 10 x64 上有看到
+    Bug ID 440: 1.8.17 已解決這個問題
+0.2 Avast 免費家用版: 會造成錯誤
+0.3 沒有 include file: usb.c:43:21: fatal error: scsi/sg.h: No such file or directory
+    Bug ID 410: 說明請看 7.0,  v1.8.17 已解決這個問題
+
+
+1. 下載 32-bit 的安裝程式
+http://www.cygwin.com/setup-x86.exe
+
+2. 安裝時選擇下列的套件, 相依性套件 cygwin setup program 會幫你選好
+gcc-core
+make
+openssl-devel
+diff
+Fisher 2017/08/17 補充, Windows 10 / cygwin 64, 尚須
+autoconf
+automake
+m4
+libtool
+Puwen 2018/03/02 補充, 如果需要支援 ipmishell 
+libncurses-devel
+libreadline-devel
+3. 下載 IPMItool 的 source code 
+
+4. 開啟 [Cygwin Terminal] 後, 解壓縮 ipmitool-1.8.18.tar.bz2
+# tar -jxvf ipmitool-1.8.18.tar.bz2
+
+# cd ipmitool-1.8.18
+
+
+5. 設定要支援的 interface , 需要 disable usb 因為 cygwin 中沒有 kernel header files.
+# ./bootstrap
+# ./configure --enable-intf-lanplus --disable-intf-usb --enable-intf-serial --enable-ipmishell
+# LANG=C make
+
+
+6. 把下列目錄裡的檔案, 單獨複製到一個目錄即可在不同的 Windows 中使用
+ipmitool-1.8.18\src\.libs\ipmitool.exe
+C:\cygwin\bin\cygcrypto-1.0.0.dll
+C:\cygwin\bin\cyggcc_s-1.dll
+C:\cygwin\bin\cygncursesw-10.dll
+C:\cygwin\bin\cygreadline7.dll
+C:\cygwin\bin\cygwin1.dll
+C:\cygwin\bin\cygz.dll
+    PS. 根據參考網頁的說明, [ipmitool-1.8.XX\src\ipmitool.exe] is only a wrapper script
+
+7. 附註
+
+7.1 沒有 [--disable-intf-usb] 會出現的錯誤訊息
+
+without --disable-intf-usb
+Interfaces
+  lan : yes
+  lanplus : yes
+  open : no
+  free : no
+  imb : no
+  bmc : no
+  usb : yes
+  lipmi : no
+  serial : yes
+  dummy : no
+usb.c:43:21: fatal error: scsi/sg.h: No such file or directory
+
+
+7.2 Windows 7 64-bit compile 後的檔案在 Windows Server 2008 R2 Standard 64-bit with SP1 上的執行截圖
+

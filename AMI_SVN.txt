@@ -1,0 +1,61 @@
+
+[environment]
+	#py, pip
+	sudo apt install python-pip python-dev subversion python-subversion python-svn python-numpy
+	sudo pip install --upgrade pip
+	sudo pip install RBtools --ignore-installed six --user
+
+	#spxhelper
+	svn co https://svnsm.ami.com.tw/svn/SPX/projects-x/utils/svn/spxhelper --username VSVNFoxconn --password  Foxconn@PerfectQW33hx
+	sudo -H pip install spxhelper-2.0.0-cp27-cp27mu-linux_x86_64.whl
+	sudo chmod +x /usr/local/lib/python2.7/dist-packages/packspx.py
+	
+	#svnspx
+	svn co https://svnsm.ami.com.tw/svn/SPX/projects-x/utils/svn/svnspxex --username VSVNFoxconn --password  Foxconn@PerfectQW33hx
+	sudo -H pip install oemsvnspxex-2.2.0-cp27-cp27mu-linux_x86_64.whl
+	sudo chmod +x /usr/local/lib/python2.7/dist-packages/oemsvnspxex.py
+
+	export PATH=$PATH:/usr/local/lib/python2.7/dist-packages
+
+	#.spxconfig file (important!!!!! to check out packages)
+	vim .spxconfig
+	
+		#------------------[Edward] Copy & Paste Start--------------------
+		#
+		# Sample .spxconfig entries for svnspxex
+		#
+
+
+		#SVM_MASTER can be your local server
+		SVN_MASTER      = "svnsm.ami.com.tw"
+
+		SVN_REPOSITORY  = "svn/SPX"
+		SVN_REPO_ACCESS = "https://"
+
+		SVN_PKGS_PATH   = "/projects-x/core/packages"
+		DEF_PKG_INC     = "minor"
+
+		FULL_USERNAME   = "Foxconn"
+		EMAIL_ID        = "edward.sh.wu@mail.foxconn.com"
+
+		#SVN_USERNAME and SVN_PASSWORD are also used for Review board. So it should be same.
+		SVN_USERNAME    = "VSVNFoxconn"
+		SVN_PASSWORD    = "Foxconn@PerfectQW33hx"
+
+		# Security Note:
+		# If you don't want the plain password visibile here, Remove the
+		# SVN_PASSWORD entry.
+		# When using svnspxex, you need to specify the password using either
+		#     -pwd <password>  or just -pwd (which prompts for password)
+
+
+		# Note: There may be extra exbrries used bu other tools
+		#------------------[Edward] Copy & Paste End--------------------
+	Save
+	cp .spxconfig ~/
+	
+[config]
+svn co https://svnsm.ami.com.tw/svn/SPX/projects-x/legacy/customers/AMI_AST2500_RR11-5-Plus/configs --username VSVNFoxconn --password  Foxconn@PerfectQW33hx
+
+[packages]
+oemsvnspxex.py --co --sp="projects-x/legacy/customers/AMI_AST2500_RR11-5-Plus/packages" --workspace=packages/

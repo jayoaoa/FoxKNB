@@ -3,6 +3,10 @@
 
 #CP img
 	cp /var/wcs/home/image-bmc /run/initramfs/
+	
+#C2050	
+	git clone ssh://BMC/others/microsoft/c2050
+
 
 #G50 build
 	PATH=/opt/git/v2.11.4/bin:$PATH
@@ -168,7 +172,31 @@
 		Received:
 		  0x1 0x0 0x1 0xc 0x1b 0x0 0x0 0xd7 0x1 0xb 0x14 0xe0 0x4d 0x31 0x30 0x36 0x35 0x31 0x36 0x33 0x2d 0x30 0x30 0x31 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0xe0 0x58 0x58 0x58 0x58 0x58 0x58 0x58 0x58 0x58 0x2d 0x58 0x58 0x58 0x2d 0x47 0x5f 0x58 0x58 0x58 0x5f 0x58 0x58 0x58 0x58 0x5f 0x31 0x32 0x33 0x0 0x0 0x0 0x0 0xc8 0x33 0x2e 0x30 0x0 0x0 0x0 0x0 0x0 0xc3 0x42 0x0 0x0 0xc1 0x0 0x0 0x0 0x0 0xb4 0x1 0xf 0x19 0x0 0x0 0x0 0xd0 0x46 0x6f 0x78 0x63 0x6f 0x6e 0x6e 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0xc8 0x47 0x35 0x30 0x42 0x30 0x0 0x0 0x0 0xe0 0x58 0x58 0x58 0x58 0x58 0x58 0x58 0x58 0x58 0x2d 0x58 0x58 0x58 0x2d 0x47 0x5f 0x58 0x58 0x58 0x5f 0x58 0x58 0x58 0x58 0x5f 0x58 0x58 0x58 0x0 0x0 0x0 0x0 0xe0 0x4d 0x31 0x30 0x36 0x35 0x31 0x34 0x31 0x2d 0x30 0x30 0x31 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0xca 0x46 0x72 0x75 0x20 0x76 0x30 0x2e 0x30 0x39 0x0 0xc6 0x30 0x41 0x0 0x0 0x0 0x0 0xc1 0x0 0x0 0x7f 0x1 0x10 0x19 0xd0 0x46 0x78 0x78 0x63 0x6f 0x6e 0x6e 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0xc8 0x47 0x35 0x30 0x42 0x31 0x0 0x0 0x0 0xd0 0x4d 0x31 0x30 0x36 0x35 0x31 0x36 0x36 0x2d
 
+########################################################## Warmreset test ###################
 
+while [ 1 ];do date; top -b -d 1 -n 1; sleep 0.5; done;
+while [ 1 ];do date; ps fax; sleep 0.3; done;
+while [ 1 ];do echo "-----------"; cat /proc/uptime; cat /proc/*[0-9]*/stat | grep -e daemon -e IPMIMain -e processmanager -e S[0-9][0-9] -e K[0-9][0-9]; sleep 0.2; done;
+while [ 1 ];do echo "-----------"; date; ps xao pid,ppid,pgid,sid,args | grep -e daemon -e IPMIMain -e processmanager -e S[0-9][0-9] -e K[0-9][0-9]; sleep 0.2; done;
+while [ 1 ];do echo "-----------"; uptime; ps xao pid,ppid,pgid,sid,args | grep IPMIMain; sleep 0.2; done;
+
+while [ 1 ]; do echo "-----------"; cat /proc/uptime; /etc/init.d/ipmistack stop; /etc/init.d/execdaemon_init stop; /etc/init.d/execdaemon_init start; /etc/init.d/ipmistack start;  sleep 10; uptime; done;
+while [ 1 ]; do echo "-----------"; uptime; top -b -n 1 | head -n 20; sleep 0.3; done;
+
+while [ 1 ]; do echo "-----------"; cat /proc/uptime; /etc/init.d/ipmistack stop; sleep 1; /etc/init.d/ipmistack start;  sleep 10; cat /proc/uptime; done;
+while [ 1 ]; do echo "-----------"; cat /proc/uptime; cat /proc/sched_debug;  sleep 0.2; cat /proc/uptime; done;
+inotifywait -m --timefmt '%F %T' --format '%T %w %e' /usr/local/bin/IPMIMain &
+while [ 1 ]; do echo "-----------"; cat /proc/uptime; diff warning.log warning2.log; cp warning.log warning2.log; sleep 10; cat /proc/uptime; done;
+while [ 1 ]; do echo -n (cat /proc/uptime); done;
+
+while [ 1 ]; do echo "-----------"; cat /proc/uptime; /usr/local/bin/IPMIMain --daemonize --reg-with-procmgr; sleep 1; killall -1 IPMIMain;  sleep 10; cat /proc/uptime; done;
+while [ 1 ]; do echo "-----------"; cat /proc/uptime; /usr/local/bin/IPMIMain; sleep 1; killall -1 IPMIMain;  sleep 10; cat /proc/uptime; done;
+
+while [ 1 ]; do echo "-----------"; cat /proc/uptime; /etc/init.d/ipmistack stop; sleep 1; /etc/init.d/ipmistack start;  sleep 10; cat /proc/uptime; done;
+while [ 1 ]; do echo "-----------"; uptime; ps -AL; sleep 0.3; done;
+inotifywait -m --timefmt '%F %T' --format '%T %w %e' /usr/local/bin/IPMIMain &
+
+################################################################################################
 
 	read psu mfr id (loop)
 		while [ 1 ];do i2craw.exe -f 1 0x58 -r 13 -w '0x99'; done;
@@ -295,3 +323,169 @@
 		Get-AppxPackage *windowsphone* | Remove-AppxPackage
 		Get-AppxPackage *bingsports* | Remove-AppxPackage
 		Get-AppxPackage *xboxapp* | Remove-AppxPackage
+		
+#Build AMI RR11 by MDS
+	/MDS/3710/MDS/spx/utils/BuildPRJ/BuildPRJ.py /AMI_AST2500_RR11/configs/ast2500evb.PRJ /AMI_AST2500_RR11/packages/ /AMI_AST2500_RR11/workspace/ BUILD
+
+#C2050
+	#Build step
+		git clone https://azurecsi.visualstudio.com/C2050/_git/BMC
+		cd BMC/
+		mkdir packages/
+		cd scripts/
+		export PATH=$PATH:/MDS/402/MDS/spx/utils/BuildPRJ/
+		./SpxConv.sh -c /C2050/BMC/packages /C2050/BMC/source
+		BuildPRJ.py /C2050/BMC/configs/C2050_unsigned.PRJ /C2050/BMC/packages /C2050/BMC/workspace BUILD
+		
+		#Success Log
+		---------------------------------------------------
+					 Flash Memory Map
+		---------------------------------------------------
+		0x0000000 - 0x0050000 :     boot : Ver 1.0a
+		0x0050000 - 0x00d0000 :     conf : Ver 1.0a
+		0x00d0000 - 0x0150000 :     conf : Ver 1.0a
+		0x0150000 - 0x0c00000 :     root : Ver 1.0a
+		0x0c00000 - 0x0e60000 :  osimage : Ver 1.0a
+		0x0e60000 - 0x1ff0000 : *******FREE*******
+		0x1ff0000 - 0x2000000 :  ast2500 : Ver 2.02
+		---------------------------------------------------
+	
+	#Flash BMC
+		Yafuflash.exe -nw -ip 10.32.3.223 -u admin -p admin -f -non-interactive -mse 3 -netfn 0x34 C2050.BC.02.03.00_unsigned.bin
+		
+	#GIT Account
+		https://azurecsi.visualstudio.com/C2050/_git/BMC
+		alvis.hc.cheng@fii-foxconn.com
+		FoxconnC2050
+		
+		Web
+		louis.kc.chen@fii-foxconn.com
+		Louis@Aug22
+		GIT
+		louis.kc.chen@fii-foxconn.com
+		Louis@Aug01
+	#SSH
+		10.32.3.75 root/11111
+
+	#AMI get boot selector / bootselecotr / dual image
+		#Get boot selector
+		ipmitool -I lanplus -H 10.32.3.223 -U admin -P admin raw 0x34 0x8f 0x02
+		
+		#Get Activate IMG
+		ipmitool -I lanplus -H 10.32.3.223 -U admin -P admin raw 0x34 0x8f 0x07
+	
+		git clone ssh://data.bmc-ks.xyz/others/microsoft/c2050
+
+	#KS auto build
+		export PATH=$PATH:/MDS/402/MDS/spx/utils/BuildPRJ/
+		git clone ssh://BMC/others/microsoft/c2050
+		cd c2050/
+		rm -rf packages
+		mkdir packages
+		scripts/SpxConv.sh -c packages/ source/
+		BuildPRJ.py configs/C2050_unsigned.PRJ packages/ workspace/ REBUILD
+		BuildPRJ.py configs/C2050_unsigned.PRJ packages/ workspace/ REPACK packages/libipmipdk-1.0.0-ARM-AST2500-MtOlympus-src.spx
+		scripts/SpxConv.sh -x packages/ source/
+
+		
+#git remote cp 
+	git remote add msft https://azurecsi.visualstudio.com/C2050/_git/BMC
+	git fetch msft
+	git push origin HEAD:refs/for/master
+
+#git
+	#Pretty
+	git log --pretty=oneline
+	
+	#CP
+	git cherry-pick 5c97eeaa3716f2e91b3f00af39f47f0170697130
+	
+	#Change commit author
+	git commit --amend --author="Edward Wu <edward.sh.wu@mail.foxconn.com>"
+	
+	#push
+	git push origin HEAD:refs/for/master
+	
+	#edit git config
+	vim ~/.gitconfig
+	
+	#reset to original
+	git checkout -f origin/master
+
+	#rebase
+	git rebase -i 670a7a91880f3b36c641f0102543a71b08b165bb
+	
+	#sign-off
+	git commit --amend -s
+
+	#rebase continue
+	git rebase --continue
+
+		
+#edge server:
+	10.62.32.84
+	帳號: root
+	密碼: 111111
+	
+#AMI_SVN
+
+[environment]
+	#py, pip
+	sudo apt install python-pip python-dev subversion python-subversion python-svn python-numpy
+	sudo pip install --upgrade pip
+	sudo pip install RBtools --ignore-installed six --user
+
+	#spxhelper
+	svn co https://svnsm.ami.com.tw/svn/SPX/projects-x/utils/svn/spxhelper --username VSVNFoxconn --password  Foxconn@PerfectQW33hx
+	sudo -H pip install spxhelper-2.0.0-cp27-cp27mu-linux_x86_64.whl
+	sudo chmod +x /usr/local/lib/python2.7/dist-packages/packspx.py
+	
+	#svnspx
+	svn co https://svnsm.ami.com.tw/svn/SPX/projects-x/utils/svn/svnspxex --username VSVNFoxconn --password  Foxconn@PerfectQW33hx
+	sudo -H pip install oemsvnspxex-2.2.0-cp27-cp27mu-linux_x86_64.whl
+	sudo chmod +x /usr/local/lib/python2.7/dist-packages/oemsvnspxex.py
+
+	export PATH=$PATH:/usr/local/lib/python2.7/dist-packages
+
+	#.spxconfig file (important!!!!! to check out packages)
+	vim .spxconfig
+	
+		#------------------[Edward] Copy & Paste Start--------------------
+		#
+		# Sample .spxconfig entries for svnspxex
+		#
+
+
+		#SVM_MASTER can be your local server
+		SVN_MASTER      = "svnsm.ami.com.tw"
+
+		SVN_REPOSITORY  = "svn/SPX"
+		SVN_REPO_ACCESS = "https://"
+
+		SVN_PKGS_PATH   = "/projects-x/core/packages"
+		DEF_PKG_INC     = "minor"
+
+		FULL_USERNAME   = "Foxconn"
+		EMAIL_ID        = "edward.sh.wu@mail.foxconn.com"
+
+		#SVN_USERNAME and SVN_PASSWORD are also used for Review board. So it should be same.
+		SVN_USERNAME    = "VSVNFoxconn"
+		SVN_PASSWORD    = "Foxconn@PerfectQW33hx"
+
+		# Security Note:
+		# If you don't want the plain password visibile here, Remove the
+		# SVN_PASSWORD entry.
+		# When using svnspxex, you need to specify the password using either
+		#     -pwd <password>  or just -pwd (which prompts for password)
+
+
+		# Note: There may be extra exbrries used bu other tools
+		#------------------[Edward] Copy & Paste End--------------------
+	Save
+	cp .spxconfig ~/
+	
+[config]
+svn co https://svnsm.ami.com.tw/svn/SPX/projects-x/legacy/customers/AMI_AST2500_RR11-5-Plus/configs --username VSVNFoxconn --password  Foxconn@PerfectQW33hx
+
+[packages]
+oemsvnspxex.py --co --sp="projects-x/legacy/customers/AMI_AST2500_RR11-5-Plus/packages" --workspace=packages/

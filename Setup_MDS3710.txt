@@ -1,0 +1,30 @@
+1. Create vbox ubt 14.04 x64
+2. Load ubt 14.04 x64 ISO to vbox IDE drvie
+3. Install ubt
+4. switch to root -> auto login -> reboot
+	# sudo passwd root
+	# sduo -s
+	# cp ./50-ubuntu.conf /usr/share/lightdm/lightdm.conf.d/
+		[SeatDefaults]
+		user-session=ubuntu
+		autologin-user=root
+		greeter-session=unity-greeter
+		greeter-show-manual-login=true
+		allow-guest=false
+	#cp ./.profile /root/.profile	
+		# ~/.profile: executed by Bourne-compatible login shells.
+		if [ "$BASH" ]; then
+		  if [ -f ~/.bashrc ]; then
+			. ~/.bashrc
+		  fi
+		fi
+		tty -s && mesg n
+	#reboot
+
+5. Install samba and config it
+	sudo apt-get install samba
+	cp ./smb.conf /etc/samba/smb.conf 
+	sudo /etc/init.d/samba restart
+
+6. copy QuickSetupBMC to vbox (or download it from google drive)
+7. Install by MDS_64.sh
