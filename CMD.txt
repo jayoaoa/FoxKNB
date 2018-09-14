@@ -196,6 +196,7 @@ while [ 1 ]; do echo "-----------"; cat /proc/uptime; /etc/init.d/ipmistack stop
 while [ 1 ]; do echo "-----------"; uptime; ps -AL; sleep 0.3; done;
 inotifywait -m --timefmt '%F %T' --format '%T %w %e' /usr/local/bin/IPMIMain &
 
+while [ 1 ];do cat SystemDCCycle_20180912.log | grep -irn sub; sleep 5; clear; done;
 ################################################################################################
 
 	read psu mfr id (loop)
@@ -328,6 +329,9 @@ inotifywait -m --timefmt '%F %T' --format '%T %w %e' /usr/local/bin/IPMIMain &
 	/MDS/3710/MDS/spx/utils/BuildPRJ/BuildPRJ.py /AMI_AST2500_RR11/configs/ast2500evb.PRJ /AMI_AST2500_RR11/packages/ /AMI_AST2500_RR11/workspace/ BUILD
 
 #C2050
+	#HSC AC cycle: P12_AUX HSC
+		ipmitool -I lanplus -H 10.32.2.203 -U admin -P admin i2c bus=7 0x22 0x00 0xd9
+
 	#Build step
 		git clone https://azurecsi.visualstudio.com/C2050/_git/BMC
 		cd BMC/
@@ -486,6 +490,7 @@ inotifywait -m --timefmt '%F %T' --format '%T %w %e' /usr/local/bin/IPMIMain &
 	
 [config]
 svn co https://svnsm.ami.com.tw/svn/SPX/projects-x/legacy/customers/AMI_AST2500_RR11-5-Plus/configs --username VSVNFoxconn --password  Foxconn@PerfectQW33hx
-
+svn co https://svnsm.ami.com.tw/svn/SPX/projects-x/legacy/customers/Cavium-Saber-AST2500-RR11-6/configs --username VSVNFoxconn --password  Foxconn@PerfectQW33hx
 [packages]
 oemsvnspxex.py --co --sp="projects-x/legacy/customers/AMI_AST2500_RR11-5-Plus/packages" --workspace=packages/
+oemsvnspxex.py --co --sp="projects-x/legacy/customers/Cavium-Saber-AST2500-RR11-6/packages" --workspace=packages/

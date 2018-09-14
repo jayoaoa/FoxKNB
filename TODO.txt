@@ -1,3 +1,12 @@
+[20180913]
+1. DC cycle IPMB hang
+	-> it's not easy to reproduce!!
+		-> if reproduced
+		1. Check i2c register?
+		2. Check POST code & BIOS current view
+		3. Need to record i2c signal between BMC & CPU, to check state/voltage/quality
+		4. how to prove it's not BMC's issue
+		
 [20180911]
 [VSTS #15507] Implement SSIF2
 [VSTS #15938] Update BMC Version to 2.05
