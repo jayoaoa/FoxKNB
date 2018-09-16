@@ -1,3 +1,17 @@
+[20180914]
+(Flow)
+1. 壓Deu date
+2. status要合steve的規則
+
+(DC cycle IPMB issue)
+1. 可以touch /tmp/EnableM3Dbg 看看dbg
+2. 目前改成
+	1. power on後從等POST=0xFF變成一開就scan M3
+	2. 無限GetSelfTestResults
+	3. polling頻率從1s->10ms
+	預期M3被灌爆 死掉
+	然後即使不用DC cycle也能灌爆(因為DC cycle才會執行selftest,現在無限執行)
+
 [20180913]
 1. DC cycle IPMB hang
 	-> it's not easy to reproduce!!

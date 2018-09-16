@@ -197,6 +197,7 @@ while [ 1 ]; do echo "-----------"; uptime; ps -AL; sleep 0.3; done;
 inotifywait -m --timefmt '%F %T' --format '%T %w %e' /usr/local/bin/IPMIMain &
 
 while [ 1 ];do cat SystemDCCycle_20180912.log | grep -irn sub; sleep 5; clear; done;
+while [ 1 ];date; do ipmitool -I lanplus -H 10.32.2.203 -U admin -P admin sdr list | grep Temp_CPU; echo "-----------"; done;
 ################################################################################################
 
 	read psu mfr id (loop)
