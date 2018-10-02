@@ -1,0 +1,41 @@
+﻿/*layout*/
+.layout-button-up {
+  background: url('images/layout_arrows2.png') no-repeat -16px -16px;
+}
+.layout-button-down {
+  background: url('images/layout_arrows2.png') no-repeat -16px 0;
+}
+.layout-button-left {
+  background: url('images/layout_arrows2.png') no-repeat 0 0;
+}
+.layout-button-right {
+  background: url('images/layout_arrows2.png') no-repeat 0 -16px;
+}
+.layout-split-west {
+  border-right: 5px solid #6891c9;
+}
+.layout-header 
+{
+  background:url('images/menu.png') no-repeat;
+  height:35px;
+}
+
+/*accordion*/
+.accordion-collapse {
+  background: url('images/accordion_arrows2.png') no-repeat 0 0;
+}
+.accordion-expand {
+  background: url('images/accordion_arrows2.png') no-repeat -16px 0;
+}
+
+/*menubutton*/
+.m-btn-downarrow,
+.s-btn-downarrow {
+  background: url('images/menu_arrows2.png') no-repeat 0 center;
+}
+.m-btn-plain-active,
+.s-btn-plain-active {
+  border-color: #b7d2ff;
+  background-color: #eaf2ff;
+  color: #000000;
+}

@@ -1,6 +1,197 @@
+[20181001]
+
+	----------------------------------------------------------------------------------------------------------------------------------------
+	----------------------------------------------------------------------------------------------------------------------------------------
+	
+	P1 [I2C recovery]
+		1. 請威廉問SIT有沒辦法抓到waveform X
+		2. 用Louis的機器先跑看看(不過不能保證是SIT的環境) -> 待確認
+		-> Bus 0 = M.2 & PCIe slot
+		0xD4看起來有時出錯 -> 再跑一晚確定config看看 (Louis機台)
+		
+	P1 [IPMB stuck issue]
+		1. merge新code, 用ev2去跑 -> Pass -> 
+		2. 確定是哪個patch可解 改speed or SDA low timeout
+		3. speed -> 量量看是否100khz
+		-> 只留sda low timeout再跑一晚看看 (Louis機台) -> 失敗, 是不適因為print太多?
+		------> 拿掉print續測一天看看
+
+	----------------------------------------------------------------------------------------------------------------------------------------
+	----------------------------------------------------------------------------------------------------------------------------------------
+	P2 [P5V issue]
+		1. Once issue reproduced, to check if power on delay time is not enough
+		2. 借用Louis機器來跑 -> 無法重現 -> 尋找Full load機器
+		There is no power on delay in current source code, 
+		we can ask SIT to reproduce it by release version first, 
+		then provide a test build with power on delay to them to test again.
+		------> 轉HW
+		
+	P2 [FPGA_NIC temp NA]
+		1. 借用Louis機器來跑 -> 無法重現
+		2. 要問SIT有沒有memory test tool和full configuration -> 等mail -> 尋找Full load機器
+		Ask SIT help to reproduce it, and we can connect to the system and check if bus 0 has problem.
+		------> 轉SIT
+		
+	P2 [M.2 stress issue, HSC溫度突然噴高]
+		1. 問SIT要怎麼stress M.2 -> 等SIT mail, 在Louis機器跑
+		Ask SIT help to measure the HSC bus (i2c7) and reproduce it, then we can clarify if the issue is caused by device or BMC self easily.
+		------> 轉SIT
+	----------------------------------------------------------------------------------------------------------------------------------------
+	----------------------------------------------------------------------------------------------------------------------------------------
+		
+			
+	Steve:
+		v Provide the set process name to steve
+		
+	P3 [Update PSU]
+		1. 問SIT怎麼燒PSU firmware -> 等SIT mail
+
+	P3 [Battery low issue]
+		1. ev1去跑 -> 無法重現 -> 改在EV2跑
+		
+[20180928]
+	Willien:
+		?????1. 請威廉問SIT有沒辦法抓到waveform
+		v 2. 跟Thermal team確認threshold
+	Thomas:
+		1. M.2 stress issue, HSC溫度突然噴高
+			v a. 問SIT要怎麼stress M.2
+			b. 有沒SDR table
+		v 2. 要問SIT有沒有memory test tool和full configuration
+		v 3. 問SIT怎麼燒PSU firmware
+	
+	台北電腦:
+		1. 抓I2C bus 0 recovery波形
+		2. 看有沒P5V突波 (full load) -> No
+		3. 看有沒FPGA NIC Temp NA issue (FPGA NIC) -> No
+		
+	EV2:
+		1. DC cycle 看有沒有IPMB issue -> 沒, 看來有解
+	EV1:
+		1. Low battery test
+		
+	[P5V issue]
+		1. Once issue reproduced, to check if power on delay time is not enough
+		2. 借用Louis機器來跑 -> 無法重現 -> 尋找Full load機器
+		
+	[M.2 stress issue, HSC溫度突然噴高]
+		1. 問SIT要怎麼stress M.2
+		2. 有沒SDR table
+	
+	[FPGA_NIC temp]
+		1. 借用Louis機器來跑
+		2. 要問SIT有沒有memory test tool和full configuration
+		
+	[I2C recovery]
+		1. 請威廉問SIT有沒辦法抓到waveform
+		2. 用Louis的機器先跑看看(不過不能保證是SIT的環境)
+	
+	[IPMB stuck issue]
+		1. merge新code, 用ev2去跑
+	
+	[Update PSU]
+		1. 問SIT怎麼燒PSU firmware
+		
+	[Battery low issue]
+		1. ev1去跑
+
+	Assign好工作,架好機器,下班
+
+[20180928]
+(分配C2050 issue)
+	整理好分配表 -> ok 0928更新完
+	[Edward]
+		1. dccycle abnormal event -> Ed: check Saber code -> merge sda low patch.
+		2. Correct SDR -> Done 0928 
+	[Alex]
+		1. PSU update failure -> to learn how to update PSU
+	[Dolye]
+		1. Empty FRU
+		2. fw update SEL
+		3. Battery_Status Low
+(BMC/BIOS/CPLD update SEL)
+	-> Dolye will finish it next week
+
+[20180927]
+(分配C2050 issue)
+	[Edward]
+	[Alex]
+	[Dolye]
+(BMC/BIOS/CPLD update SEL)
+	-> Dolye will finish it next week
+(dccycle abnormal event) 
+	-> Ed: check Saber code 
+(Stress SSIF)
+	-> Wait for Alex -> today must setup done -> delay to Fri
+	
+	
+[20180926]
+
+v 把VFS上道Mantis
+v Mantis開一個新的code review task
+>> git branch 一個code review branch
+
+[20180925]
+v (Reply VSTS SPI2 issue) 
+	-> 跑出ps ax再來看是什麼還在run ************ -> rsync??
+v (CATERR LED push to commit)
+	-> 0926 or later -> merge willien's new code first -> ok
+(BMC/BIOS/CPLD update SEL)
+	-> Dolye will finish it next week ??????????
+(dccycle abnormal event) 
+	-> Ed: check Saber code 
+(Stress SSIF)
+	-> Wait for Alex -> today must setup done
+	
+	
+v (fan control失靈釐清)
+	-> 0920 -> Wait Louis clarify (Ed: 任一thermal na或者fan event都會全轉) -> Willien have solve it
+x (event狂發)
+	-> ????
+v (performance self) 
+	-> 0925 must finish -> ok
+v (review willien code) 
+	-> 0925 ok
+
+[20180921]
+v1. code要先統一 -> 0921 -> ok by Edward
+	- 205要先上gerrit review -> ok
+v3. 高優先的issue要先解
+
+v7. yafu有時失敗 -> 0921 -> ok by Edward
+	v2. Unit test plan -> 0924 (also update Mantis)
+	v 3. Implement feature & verify by self -> over weekend (0921/12:00 - 0925/08:00)
+	v 4. commit & review -> 0921
+	v5. create work item & pull request -> expect 0921
+v9. 架好測試環境 -> 0920 -> ok
+
+
+[20180918]
+(CATERR_LED)
+1. Feature define/Implement plan -> 0917 -> ok
+2. Unit test plan -> 0920 -> ok
+3. Implement feature & verify by self -> 0921 -> ok
+4. commit & review -> expect 0926
+5. create work item & pull request -> expect v2.07
+
+(BMC/BIOS/CPLD update SEL)
+1. Feature define/Implement plan -> 0917 -> ok by Doyle
+2. Unit test plan -> ?
+3. Implement feature -> ?
+4. commit & review -> ?
+5. create work item & pull request -> ?
+
+(DC cycle failed M3 failed issue)
+1. Reproduce -> will happen easier if stress CMD
+2. Find root cause -> ?
+4. commit & review -> ?
+5. create work item & pull request -> ?
+
+
+
 [20180914]
 (Flow)
-1. 壓Deu date
+1. 壓Due date
 2. status要合steve的規則
 
 (DC cycle IPMB issue)
@@ -9,8 +200,8 @@
 	1. power on後從等POST=0xFF變成一開就scan M3
 	2. 無限GetSelfTestResults
 	3. polling頻率從1s->10ms
-	預期M3被灌爆 死掉
-	然後即使不用DC cycle也能灌爆(因為DC cycle才會執行selftest,現在無限執行)
+	預期M3被灌爆 死掉 -> 沒被灌爆但出現率感覺提高不少 (一天4-6次)
+	然後即使不用DC cycle也能灌爆(因為DC cycle才會執行selftest,現在無限執行) -> 拿掉selftest一樣掛
 
 [20180913]
 1. DC cycle IPMB hang

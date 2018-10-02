@@ -1,0 +1,14 @@
+﻿a{ color: #333;  list-style: none; text-decoration:none;}
+ul,li{ list-style: none;text-decoration:none;}
+dl,dd{ list-style: none;text-decoration:none;}
+a:hover{ list-style: none; color: #F00;text-decoration:none;}
+i,em,b{font-style:normal;}
+a:focus{ outline:none;}
+img{ border: 0px;}
+
+.top_header{ float:right;}
+.top_header li{ float:left; line-height:40px; padding-left:30px; padding-right:30px; font-size:16px;}
+.top_header_li{ background:url(/content/images/sye.png) no-repeat center left;}
+.top_header_li1{ background:url(/content/images/suaoc.png) no-repeat center left;}
+.top_header_li2{ background:url(/content/images/banb.png) no-repeat center left;}
+.top_header_li3{ background:url(/content/images/fnah.png) no-repeat center left;}

@@ -1,0 +1,487 @@
+﻿//隨機數
+rnd.today = new Date();
+rnd.seed = rnd.today.getTime();
+
+function rnd() {
+    rnd.seed = (rnd.seed * 9301 + 49297) % 233280;
+    return rnd.seed / (233280.0);
+
+};
+
+function rand(number) {
+    return Math.ceil(rnd() * number);
+
+};
+
+//獲取時間
+function GetTime()
+{
+    var now= new Date(); 
+    var hour=now.getHours();
+    var minute=now.getMinutes();
+    var second=now.getSeconds(); 
+    
+    return hour + ':' + minute + ':' + second;
+}
+
+//獲取日期時間
+function GetDateTime() {
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth() + 1;
+    var day = now.getDate();
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+    var second = now.getSeconds();
+
+    return year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
+}
+
+//獲取日期時間差
+function GetDateDiff(startTime, endTime, diffType) {
+    //将xxxx-xx-xx的时间格式，转换为 xxxx/xx/xx的格式 
+    startTime = startTime.replace(/\-/g, "/");
+    endTime = endTime.replace(/\-/g, "/");
+    //将计算间隔类性字符转换为小写
+    diffType = diffType.toLowerCase();
+    var sTime = new Date(startTime);      //开始时间
+    var eTime = new Date(endTime);  //结束时间
+    //作为除数的数字
+    var divNum = 1;
+    switch (diffType) {
+        case "second":
+            divNum = 1000;
+            break;
+        case "minute":
+            divNum = 1000 * 60;
+            break;
+        case "hour":
+            divNum = 1000 * 3600;
+            break;
+        case "day":
+            divNum = 1000 * 3600 * 24;
+            break;
+        default:
+            break;
+    }
+    return parseInt((eTime.getTime() - sTime.getTime()) / parseInt(divNum));
+}
+
+//獲取QueryString的數組
+function getQueryString()
+{
+    var result = location.search.match(new RegExp("[\?\&][^\?\&]+=[^\?\&]+", "g"));
+    if (result == null)
+    {
+        return "";
+    }
+    for (var i = 0; i < result.length; i++)
+    {
+        result[i] = result[i].substring(1);
+    }
+    return result;
+}
+//根據QueryString參數名稱獲取值
+function getQueryStringByName(name)
+{
+    var result = location.search.match(new RegExp("[\?\&]" + name + "=([^\&]+)", "i"));
+    if (result == null || result.length < 1)
+    {
+        return "";
+    }
+    return result[1];
+}
+//根據QueryString參數索引獲取值
+function getQueryStringByIndex(index)
+{
+    if (index == null)
+    {
+        return "";
+    }
+    var queryStringList = getQueryString();
+    if (index >= queryStringList.length)
+    {
+        return "";
+    }
+    var result = queryStringList[index];
+    var startIndex = result.indexOf("=") + 1;
+    result = result.substring(startIndex);
+    return result;
+}
+
+//隱藏loading
+function HidePageLoading()
+{
+    //支持火狐/Safari/Google
+    $('#funPage', parent.document).unmask();
+    //支持IE
+    window.parent.$('#funPage').unmask();
+}
+
+//顯示信息
+function ShowMsg(msg, color, sec) {
+    var sec1 = sec * 1000;
+    var color1 = "";
+    switch(color)
+    {
+        case 'r':
+            color1 = "red";
+            break;
+        case 'g':
+            color1 = "green";
+            break;
+        case 'b':
+            color1 = "blue";
+            break;
+    }
+
+    $("#showMsg").html("<span style=\"font-size:14px;color:" + color1 + "\">" + msg + "</span>").show(300).delay(sec1).hide(300);
+}
+
+//json轉字符串
+function json2str(o) {
+    var arr = [];
+    var fmt = function (s) {
+        if (typeof s == 'object' && s != null) return json2str(s);
+        return /^(string|number)$/.test(typeof s) ? '"' + s + '"' : s;
+    }
+    for (var i in o) arr.push('"' + i + '":' + fmt(o[i]));
+    return '{' + arr.join(',') + '}';
+}
+
+function HashMap()
+{
+ /** Map 大小 **/
+ var size = 0;
+ /** 對象 **/
+ var entry = new Object();
+ 
+ /** 存 **/
+ this.put = function (key , value)
+ {
+     if(!this.containsKey(key))
+     {
+         size ++ ;
+     }
+     entry[key] = value;
+ }
+ 
+ /** 取 **/
+ this.get = function (key)
+ {
+     if( this.containsKey(key) )
+     {
+         return entry[key];
+     }
+     else
+     {
+         return null;
+     }
+ }
+ 
+ /** 刪除 **/
+ this.remove = function ( key )
+ {
+     if( delete entry[key] )
+     {
+         size --;
+     }
+ }
+ 
+ /** 是否包含 Key **/
+ this.containsKey = function ( key )
+ {
+     return (key in entry);
+ }
+ 
+ /** 是否包含 Value **/
+ this.containsValue = function ( value )
+ {
+     for(var prop in entry)
+     {
+         if(entry[prop] == value)
+         {
+             return true;
+         }
+     }
+     return false;
+ }
+ 
+ /** 所有 Value **/
+ this.values = function ()
+ {
+     var values = new Array(size);
+     for(var prop in entry)
+     {
+         values.push(entry[prop]);
+     }
+     return values;
+ }
+ 
+ /** 所有 Key **/
+ this.keys = function ()
+ {
+     var keys = new Array(size);
+     for(var prop in entry)
+     {
+         keys.push(prop);
+     }
+     return keys;
+ }
+ 
+ /** Map Size **/
+ this.size = function ()
+ {
+     return size;
+ }
+}
+
+//語言Hash表
+var mapLang = new HashMap();
+
+//語言(腳本中使用)
+function GetLang(key, bakLang)
+{
+    if(mapLang.get(key) == null)
+        return bakLang;
+    else
+        return mapLang.get(key);
+}
+
+//遮罩層
+(function($){
+	
+	$.fn.mask = function(label, delay){
+		$(this).each(function() {
+			if(delay !== undefined && delay > 0) {
+		        var element = $(this);
+		        element.data("_mask_timeout", setTimeout(function() { $.maskElement(element, label)}, delay));
+			} else {
+				$.maskElement($(this), label);
+			}
+		});
+	};
+	
+	/**
+	 * Removes mask from the element(s). Accepts both single and multiple selectors.
+	 */
+	$.fn.unmask = function(){
+		$(this).each(function() {
+			$.unmaskElement($(this));
+		});
+	};
+	
+	/**
+	 * Checks if a single element is masked. Returns false if mask is delayed or not displayed. 
+	 */
+	$.fn.isMasked = function(){
+		return this.hasClass("masked");
+	};
+
+	$.maskElement = function(element, label){
+	
+		//if this element has delayed mask scheduled then remove it and display the new one
+		if (element.data("_mask_timeout") !== undefined) {
+			clearTimeout(element.data("_mask_timeout"));
+			element.removeData("_mask_timeout");
+		}
+
+		if(element.isMasked()) {
+			$.unmaskElement(element);
+		}
+		
+		if(element.css("position") == "static") {
+			element.addClass("masked-relative");
+		}
+		
+		element.addClass("masked");
+		
+		var maskDiv = $('<div class="loadmask"></div>');
+		
+		//auto height fix for IE
+		if(navigator.userAgent.toLowerCase().indexOf("msie") > -1){
+			maskDiv.height(element.height() + parseInt(element.css("padding-top")) + parseInt(element.css("padding-bottom")));
+			maskDiv.width(element.width() + parseInt(element.css("padding-left")) + parseInt(element.css("padding-right")));
+		}
+		
+		//fix for z-index bug with selects in IE6
+		if(navigator.userAgent.toLowerCase().indexOf("msie 6") > -1){
+			element.find("select").addClass("masked-hidden");
+		}
+		
+		element.append(maskDiv);
+		
+		if(label !== undefined) {
+			var maskMsgDiv = $('<div class="loadmask-msg" style="display:none;"></div>');
+			maskMsgDiv.append('<div><img alt="" src="/Content/JeasyUI/themes/icons/loading.gif" align="middle" />&nbsp;' + label + '</div>');
+			element.append(maskMsgDiv);
+			
+			//calculate center position
+			maskMsgDiv.css("top", Math.round(element.height() / 2 - (maskMsgDiv.height() - parseInt(maskMsgDiv.css("padding-top")) - parseInt(maskMsgDiv.css("padding-bottom"))) / 2)+"px");
+			maskMsgDiv.css("left", Math.round(element.width() / 2 - (maskMsgDiv.width() - parseInt(maskMsgDiv.css("padding-left")) - parseInt(maskMsgDiv.css("padding-right"))) / 2)+"px");
+			
+			maskMsgDiv.show();
+		}
+		
+	};
+	
+	$.unmaskElement = function(element){
+		//if this element has delayed mask scheduled then remove it
+		if (element.data("_mask_timeout") !== undefined) {
+			clearTimeout(element.data("_mask_timeout"));
+			element.removeData("_mask_timeout");
+		}
+		
+		element.find(".loadmask-msg,.loadmask").remove();
+		element.removeClass("masked");
+		element.removeClass("masked-relative");
+		element.find("select").removeClass("masked-hidden");
+	};
+
+})(jQuery);
+
+//操作Cookie
+//$.cookie(id, null) 刪除cookie
+//$.cookie(id, val, {expires: 365});  設置cookie
+//$.cookie(id) 讀取cookie
+jQuery.cookie = function(name, value, options) {  
+      if (typeof value != 'undefined') {  
+                options = options || {};  
+                if (value === null) {  
+                          value = '';  
+                          options = $.extend({}, options);  
+                          options.expires = -1;  
+                }  
+                var expires = '';  
+                if (options.expires && (typeof options.expires == 'number' || options.expires.toUTCString)) {  
+                          var date;  
+                          if (typeof options.expires == 'number') {  
+                                    date = new Date();  
+                                    date.setTime(date.getTime() + (options.expires * 24 * 60 * 60 * 1000));  
+                          } else {  
+                                    date = options.expires;  
+                          }  
+                          expires = '; expires=' + date.toUTCString();  
+                          
+                }  
+                var path = options.path ? '; path=' + (options.path) : '';  
+                var domain = options.domain ? '; domain=' + (options.domain) : '';  
+                var secure = options.secure ? '; secure' : '';  
+                document.cookie = [name, '=', encodeURIComponent(value), expires, path, domain, secure].join('');  
+      } else {  
+                var cookieValue = null;  
+                if (document.cookie && document.cookie != '') {  
+                          var cookies = document.cookie.split(';');  
+                          for (var i = 0; i < cookies.length; i++) {  
+                                    var cookie = jQuery.trim(cookies[i]);  
+                                    if (cookie.substring(0, name.length + 1) == (name + '=')) {  
+                                              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));  
+                                              break;  
+                                    }  
+                          }  
+                }  
+                return cookieValue;  
+      }  
+};
+
+if ($.fn.validatebox) {
+    $.extend($.fn.validatebox.defaults.rules, {
+        strongPass: {
+            validator: function (value) {
+                var strongRegex = new RegExp("^(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*$", "g");
+
+                return strongRegex.test(value);
+            },
+            message: '新密碼不符合強度要求.'
+        }
+    });
+
+    $.extend($.fn.validatebox.defaults.rules, {
+        equals: {
+            validator: function (value, param) {
+                return value == $(param[0]).val();
+            },
+            message: '確認密碼與新密碼不符.'
+        }
+    });
+}
+
+
+function JeasyUiLang() {
+    var ck = $.cookie('CurrentLang');
+    var root = $.cookie('root');
+    if (root == null)
+        root = '';
+
+    if (ck != null) {
+        $.ajaxSetup({ async: false, cache: false });
+        switch (ck) {
+            case 'zh_CN':
+            case 'zh-CHS_M':
+            case 'zh-CHS':
+                $.getScript(root + "/Scripts/jeasyui/locale/easyui-lang-zh_CN.js");
+                break;
+            case 'zh_TW':
+            case 'zh-CHT_M':
+            case 'zh-CHT':
+                $.getScript(root + "/Scripts/jeasyui/locale/easyui-lang-zh_TW.js");
+                break;
+            case 'en':
+                $.getScript(root + "/Scripts/jeasyui/locale/easyui-lang-en.js");
+                break;
+            default:
+                $.getScript(root + "/Scripts/jeasyui/locale/easyui-lang-en.js");
+                break;
+        }
+        $.ajaxSetup({ async: true });
+    }
+    else {
+        $.getScript(root + "/Scripts/jeasyui/locale/easyui-lang-en.js");
+    }
+}
+
+function Dateformatter(date) {
+    var y = date.getFullYear();
+    var m = date.getMonth() + 1;
+    var d = date.getDate();
+    return y + '/' + (m < 10 ? ('0' + m) : m) + '/' + (d < 10 ? ('0' + d) : d);
+}
+
+function Dateparser(s) {
+    if (!s) return new Date();
+    var ss = (s.split('/'));
+    var y = parseInt(ss[0], 10);
+    var m = parseInt(ss[1], 10);
+    var d = parseInt(ss[2], 10);
+    if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
+        return new Date(y, m - 1, d);
+    } else {
+        return new Date();
+    }
+}
+
+function DateTimeformatter(date) {
+    var y = date.getFullYear();
+    var m = date.getMonth() + 1;
+    var d = date.getDate();
+    var h = date.getHours();
+    var mm = date.getMinutes();
+    return y + '/' + (m < 10 ? ('0' + m) : m) + '/' + (d < 10 ? ('0' + d) : d) + ' ' + (h < 10 ? ('0' + h) : h) + ':' + (mm < 10 ? ('0' + mm) : mm);
+}
+
+//日期時間，參數s的格式為“yyyy/mm/dd hh:mm”的字符串
+function DateTimeparser(s) {
+    if (!s) return new Date();
+    var tt = (s.split(' '));
+    var y = tt[0].split('/')[0];
+    var m = tt[0].split('/')[1] - 1;
+    var d = tt[0].split('/')[2];
+    var h = tt[1].split(':')[0];
+    var mm = tt[1].split(':')[1];
+
+    if (!isNaN(y) && !isNaN(m) && !isNaN(d) && !isNaN(h) && !isNaN(mm)) {
+        return new Date(y, m, d, h, mm, 0, 0);
+    } else {
+        return new Date();
+    }
+}

@@ -1,0 +1,70 @@
+﻿
+   .lblColumn
+    {
+      /*background: url('../StyleImages/lblColumn.jpg') repeat-x ;*/
+      text-align:center;
+      height:30px;
+    }
+   .lblData
+    {
+      /*background: url('../StyleImages/lblData.jpg') repeat-x ;*/
+      text-align:center;
+      height:30px;
+    }                                                                                                                                                                                
+   .lblNextData
+    {
+      /*background: url('../StyleImages/lblNextData.jpg') repeat-x ;*/
+      text-align:center;
+      height:30px;
+    }
+   .lblTips
+    {
+      text-align:left;
+      width:150px;
+      height:30px;
+      background: url('../StyleImages/lblTips.jpg') repeat-x ;
+      color:white;
+    }
+    .btnSave
+    {
+      text-align:left;
+      width:150px;
+      height:30px;
+      background: url('../StyleImages/disk.png') repeat-x ;
+      color:white;
+    }
+    .SupervisorCouldKeyIn
+    {
+      color:#000000;
+      background-color:#FFFFCC;
+    }
+    .editTextArea
+    {
+      color:#000000;
+      background-color:#FFFFCC;
+    }
+     .A_007radioScore
+   {
+      color:#000000;
+      background-color:#FFFFCC;
+   }
+    .A_002radioScore
+   {
+      color:#000000;
+      background-color:#FFFFCC;
+   } 
+     .G_00015radioScore
+   {
+      color:#000000;
+      background-color:#FFFFCC;
+   }
+       .G_00017radioScore
+   {
+      color:#000000;
+      background-color:#FFFFCC;
+   } 
+   /*.itemClass
+   {
+     color:#000000;
+     background-color:#FFFFCC;
+   }*/

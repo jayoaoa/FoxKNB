@@ -1,0 +1,156 @@
+﻿//當前選擇的功能
+var selFunNode;
+
+//accordion標題
+var accordionTitles = "";
+
+//創建系統模組
+function CreateSysModule() {
+    var randomCode = Math.random(1000);
+    $.getJSON('/SystemSafety/Main/GetUserModule', function (mod) {
+        var btnList = '';
+        var modCode;
+
+        if (mod) {
+            $.each(mod, function (i) {
+                if (i == 0) {
+                    modCode = mod[i].ModuleCode;
+                }
+
+                btnList = btnList + '<a href="#" onclick="CreateSysFun(\''
+                + mod[i].ModuleCode + '\');return false;"><span style="font-family: \'Microsoft YaHei\',微软雅黑; font-size: 24px;">'
+                + GetLang(mod[i].ModuleLanguageKey, mod[i].ModuleName) + '</span></a>';
+                
+                if (i + 1 != mod.length) {
+                    btnList = btnList + '<span style="font-family: \'Microsoft YaHei\',微软雅黑; font-size: 24px;color:#3c75bc;">&nbsp;&nbsp;|&nbsp;&nbsp;</span>';
+                }
+
+            });
+
+            $("#sysModule").html(btnList);
+
+            //默認模組
+            CreateSysFun(modCode);
+        }
+    });
+}
+
+//創建模組功能
+function CreateSysFun(modCode) {
+
+    $.getJSON('/SystemSafety/Main/GetUserPFunction?modCode=' + modCode, function (fun) {
+        var funName;
+
+        //刪除accordion
+        var titles = accordionTitles.split(',');
+        for (var i = 0; i < titles.length; i++) {
+            if (titles[i] != '')
+                $('#sysFun').accordion('remove', titles[i]);
+        }
+
+        //初始化計數
+        accordionTitles = "";
+
+        $.each(fun, function (i) {
+            if (i == 0)
+                funName = GetLang(fun[i].FunLanguageKey, fun[i].FunName);
+
+            //動態添加功能
+            $('#sysFun').accordion('add', {
+                id: 'fun' + fun[i].FunCode,
+                title: GetLang(fun[i].FunLanguageKey, fun[i].FunName),
+                content: '<ul id="tt' + modCode
+	                + '" class="easyui-tree" style="padding:5px;" data-options="url:\'/SystemSafety/Main/GetUserFunction?modCode=' + modCode
+                    + '&pFunCode=' + fun[i].FunCode
+	                + '\',animate: false,'
+	                + 'onClick: function(node){ openFun(node.id, node.text, node.attributes.FunLinkUrl, node.attributes.FunIcon); }"></ul>',
+                iconCls: fun[i].FunIcon,
+                selected: false
+            });
+
+            accordionTitles = accordionTitles + GetLang(fun[i].FunLanguageKey, fun[i].FunName) + ',';
+        });
+
+        //選擇
+        $('#sysFun').accordion('select', funName);
+
+        $('#body_layout').layout('expand', 'west');
+    });
+}
+
+function openFun(id, text, url, icon) {
+    
+    $('#funPage').panel({
+        title: text,
+        iconCls:icon
+    });
+
+    $('#funPage').mask(GetLang('Mess1', '正在加載【') + text + GetLang('Mess2', '】, 請稍候...'));
+
+    //POST方式
+    //$("#rndCode").val(rand(1000000));
+    //$('#frmFunPage').attr("action", url).submit();
+
+    //GET方式
+    $('#ifmFunPage').attr("src", url);
+}
+
+//添加到收藏夾
+function BookMark() {  
+    try {
+        window.external.addFavorite('http://10.62.196.170/', GetLang('Mess5', 'Foxconn績效考核管理系統'));
+    }
+    catch (e) {
+        try {
+            window.sidebar.addPanel(GetLang('Mess5', 'Foxconn績效考核管理系統'), 'http://10.62.196.170/', "");
+        }
+        catch (e) {
+            alert(GetLang('Mess10', '抱歉,您所使用的浏览器无法完成此操作.\n\n加入收藏失败,请进入新网站后使用Ctrl+D进行添加'));
+        }
+    }
+}
+
+//退出系統
+function ExitSystem() {
+    if (confirm(GetLang('Mess4', '確定退出嗎?'))) {
+        $('#frmExit').submit();
+    }
+}
+
+//設置首頁
+function SetHomePage() {
+    var obj = this;
+    var url = 'http://10.62.196.170/';
+
+    try {
+        obj.style.behavior = 'url(#default#homepage)';
+        obj.setHomePage(url);
+    } catch (e) {
+        if (window.netscape) {
+            try {
+                netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
+            } catch (e) {
+                alert(GetLang('Mess11', "抱歉,此操作被浏览器拒绝！\n\n请在浏览器地址栏输入[about:config]并回车然后将[signed.applets.codebase_principal_support]设置为[true]"));
+            }
+        } else {
+            alert(GetLang('Mess12', "抱歉,您所使用的浏览器无法完成此操作.\n\n您需要手动将【") + url + GetLang('Mess13', "】设置为首页."));
+        }
+    }
+}
+
+$(function () {
+
+    //修改導航欄樣式
+    $('#body_layout').layout('panel', 'west').panel({
+        headerCls: 'layout-header'
+    });
+
+    $.ajaxSetup({ async: false, cache: false });
+    //JS多語言
+    $.getScript('/SystemSafety/Main/GetJsLanguage');
+    $.ajaxSetup({ async: true });
+
+    //創建系統模組
+    CreateSysModule();
+
+});

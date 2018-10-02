@@ -1,0 +1,155 @@
+This guideline is copying 120G data to a Bigger Disk
+
+1. "fdisk -l" check your disk is availabe, sda is host OS(ubuntu), sdb is target SSD
+
+#fdisk -l
+
+...
+Disk /dev/sda: 465.8 GiB, 500107862016 bytes, 976773168 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 4096 bytes
+I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+Disklabel type: gpt
+Disk identifier: 793818D5-EA51-4A58-9DBC-E9720932EC98
+
+Device         Start       End   Sectors   Size Type
+/dev/sda1       2048   1050623   1048576   512M EFI System
+/dev/sda2    1050624 960192511 959141888 457.4G Linux filesystem
+/dev/sda3  960192512 976771071  16578560   7.9G Linux swap
+
+
+Disk /dev/sdb: 489.1 GiB, 525112713216 bytes, 1025610768 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: dos
+Disk identifier: 0x779ce7c2
+
+Device     Boot Start        End    Sectors  Size Id Type
+/dev/sdb1        2048 1025607679 1025605632  489G  7 HPFS/NTFS/exFAT
+
+
+2. "fdisk /dev/sdb" enter fdisk to use this util-linux
+
+#fdisk /dev/sdb
+
+Welcome to fdisk (util-linux 2.27.1).
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+
+Command (m for help):
+
+3. enter "g" to use this disk as gpt partition table
+
+Command (m for help): g
+Created a new GPT disklabel (GUID: C33228FD-9B00-4CD1-93D3-4CA04B58D539).
+
+4. enter "n" to create first partion, then push enter unitl need to input Last sector, then write "411647"
+
+Command (m for help): n
+Partition number (1-128, default 1): 
+First sector (2048-1025610734, default 2048): 
+Last sector, +sectors or +size{K,M,G,T,P} (2048-1025610734, default 1025610734): 411647
+
+Created a new partition 1 of type 'Linux filesystem' and of size 200 MiB.
+
+5. enter "n" to create second partion, then push enter unitl need to input Last sector, then write "2508799"
+
+Command (m for help): n
+Partition number (2-128, default 2): 
+First sector (411648-1025610734, default 411648): 
+Last sector, +sectors or +size{K,M,G,T,P} (411648-1025610734, default 1025610734): 2508799
+
+Created a new partition 2 of type 'Linux filesystem' and of size 1 GiB.
+
+6. enter "n" to create third partion, then push enter unitl need to input Last sector, then write "234441614"
+
+Command (m for help): n        
+Partition number (3-128, default 3): 
+First sector (2508800-1025610734, default 2508800): 
+Last sector, +sectors or +size{K,M,G,T,P} (2508800-1025610734, default 1025610734): 234441614
+
+Created a new partition 3 of type 'Linux filesystem' and of size 110.6 GiB.
+
+
+7. type "print" to see the result as below, check size should be 200M, 1G, 110.6G
+
+Command (m for help): print    
+Disk /dev/sdb: 489.1 GiB, 525112713216 bytes, 1025610768 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: C33228FD-9B00-4CD1-93D3-4CA04B58D539
+
+Device       Start       End   Sectors   Size Type
+/dev/sdb1     2048    411647    409600   200M Linux filesystem
+/dev/sdb2   411648   2508799   2097152     1G Linux filesystem
+/dev/sdb3  2508800 234441614 231932815 110.6G Linux filesystem
+
+8. Define partition type: enter "t"->1->1, enter "t"->2->11, enter "t"->3->20
+
+Command (m for help): t
+Partition number (1-3, default 3): 1
+Hex code (type L to list all codes): 1
+
+Changed type of partition 'EFI System' to 'EFI System'.
+
+Command (m for help): t
+Partition number (1-3, default 3): 2
+Hex code (type L to list all codes): 11
+
+Changed type of partition 'Microsoft basic data' to 'Microsoft basic data'.
+
+Command (m for help): t
+Partition number (1-3, default 3): 3
+Hex code (type L to list all codes): 20
+
+Changed type of partition 'EFI System' to 'Linux filesystem'.
+
+9. type "print" to see the result like below:
+
+Command (m for help): print
+Disk /dev/sdb: 489.1 GiB, 525112713216 bytes, 1025610768 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: C33228FD-9B00-4CD1-93D3-4CA04B58D539
+
+Device       Start       End   Sectors   Size Type
+/dev/sdb1     2048    411647    409600   200M EFI System
+/dev/sdb2   411648   2508799   2097152     1G Microsoft basic data
+/dev/sdb3  2508800 234441614 231932815 110.6G Linux filesystem
+
+
+10. Enter "w" to save and exit, then fdisk -l to see sdb result
+
+Command (m for help): w
+The partition table has been altered.
+Calling ioctl() to re-read partition table.
+Syncing disks.
+
+#fdisk -l
+
+Disk /dev/sdb: 489.1 GiB, 525112713216 bytes, 1025610768 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: C33228FD-9B00-4CD1-93D3-4CA04B58D539
+
+Device       Start       End   Sectors   Size Type
+/dev/sdb1     2048    411647    409600   200M EFI System
+/dev/sdb2   411648   2508799   2097152     1G Microsoft basic data
+/dev/sdb3  2508800 234441614 231932815 110.6G Linux filesystem
+
+
+11. use dd to burn image into partition, use command below
+# dd if=EFI_System.img of=/dev/sdb1
+# dd if=MS_Basic.img of=/dev/sdb2
+# dd if=File_system.img of=/dev/sdb3
+
+
+

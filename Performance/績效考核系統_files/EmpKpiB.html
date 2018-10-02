@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)http://10.62.196.170/Kpi/EmpKpiB -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>
+        員工績效考核-附表B
+    </title>
+    <link href="./easyui.css" rel="stylesheet">
+<link href="./color.css" rel="stylesheet">
+<link href="./icon.css" rel="stylesheet">
+<link href="./common.css" rel="stylesheet">
+
+    <script src="./jquery.min.js.下載"></script>
+<script src="./jquery.easyui.min.js.下載"></script>
+<script src="./easyui-lang-zh_TW.js.下載"></script>
+<script src="./common.js.下載"></script>
+
+    <script type="text/javascript">
+
+        //UI多語言
+        JeasyUiLang();
+    </script>
+    <script src="./EmpKpiB.js.下載" type="text/javascript"></script>
+    <link href="./LabelColumn.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div id="tabManage" class="easyui-tabs tabs-container easyui-fluid" data-options="plain:true" style="width: 1312px; height: 390px;">
+        
+        
+        
+        
+    <div class="tabs-header tabs-header-plain" style="width: 1312px;"><div class="tabs-scroller-left" style="display: none;"></div><div class="tabs-scroller-right" style="display: none;"></div><div class="tabs-wrap" style="margin-left: 0px; margin-right: 0px; width: 1312px;"><ul class="tabs" style="height: 26px;"><li class="tabs-first"><a href="javascript:;" class="tabs-inner" style="height: 25px; line-height: 25px;"><span class="tabs-title">人員基本信息</span><span class="tabs-icon"></span></a></li><li class=""><a href="javascript:;" class="tabs-inner" style="height: 25px; line-height: 25px;"><span class="tabs-title">歷年考核資料</span><span class="tabs-icon"></span></a></li><li class="tabs-selected"><a href="javascript:;" class="tabs-inner" style="height: 25px; line-height: 25px;"><span class="tabs-title">員工自評信息</span><span class="tabs-icon"></span></a></li><li class="tabs-last"><a href="javascript:;" class="tabs-inner" style="height: 25px; line-height: 25px;"><span class="tabs-title">主管評語</span><span class="tabs-icon"></span></a></li></ul></div></div><div class="tabs-panels" style="height: 360px; width: 1310px;"><div class="panel panel-htop" style="display: none; width: 1310px;"><div title="" style="width: 1310px; height: 361px;" class="panel-body panel-body-noheader panel-body-noborder">
+            <form id="frmSearch" method="post">
+                <input id="hidempNo" name="hidempNo" value="DC0055" type="hidden">
+                <input id="hidStatus" name="hidStatus" value="2" type="hidden">
+                <input id="hidassignId" value="8" type="hidden">
+                <input id="hidlevelFalg" value="N" type="hidden">
+                <input type="hidden" id="hidhcatCode" value="H10002">
+                <input type="hidden" id="hidPersonLevelId" value="493027">
+            </form>
+            <div style="height: 210px; width: 100%; overflow: auto; ">
+                <table style="width: 100%; height: 210px;" cellpadding="0" cellspacing="0">
+                    <tbody><tr>
+                        <td valign="top">
+                            <table style="width: 100%;" border="1" cellspacing="0" cellpadding="0">
+                                <tbody><tr>
+                                    <td class="lblColumn">
+                                        &nbsp; <span id="lblEmpNo" style="color:black">工號</span>
+                                    </td>
+                                    <td class="lblColumn">
+                                        &nbsp; <span id="lbDepartment" style="color:black">部門名稱</span>
+                                    </td>
+                                    <td class="lblColumn">
+                                        &nbsp; <span id="lblHireDate" style="color:black">到職日</span>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td class="lblData">
+                                        &nbsp; <span id="lblEmpNoData">DC0055</span>
+                                    </td>
+                                    <td class="lblData">
+                                        &nbsp; <span id="lbDepartmentData">Foxconn-&gt;FG-&gt;CESBG-&gt;EPBG RD-&gt;SRD3/FW Development</span>
+                                    </td>
+                                    <td class="lblData">
+                                        &nbsp; <span id="lblHireDateData">2018/06/11</span>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td class="lblColumn">
+                                        &nbsp; <span id="lblEmpName" style="color:black">受評人</span>
+                                    </td>
+                                    <td class="lblColumn">
+                                        &nbsp; <span id="lblClassName" style="color:black">資位</span>
+                                    </td>
+                                    <td class="lblColumn">
+                                        &nbsp; <span id="lblDegree" style="color:black">學歷</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="lblData">
+                                        &nbsp; <span id="lblEmpNameData">吳善恆</span>
+                                    </td>
+                                    <td class="lblData">
+                                        &nbsp; <span id="lblClassNameData">師3</span>
+                                    </td>
+                                    <td class="lblData">
+                                        &nbsp; <span id="lblDegreeData"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="lblColumn">
+                                        &nbsp; <span id="lblEnglishName" style="color:black">英文名稱</span>
+                                    </td>
+                                    <td class="lblColumn">
+                                        &nbsp; <span id="lblJobName" style="color:black">職稱</span>
+                                    </td>
+                                    <td class="lblColumn">
+                                        &nbsp; <span id="lblSection" style="color:black">科系</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="lblData">
+                                        &nbsp; <span id="lblEnglishNameData"></span>
+                                    </td>
+                                    <td class="lblData">
+                                        &nbsp; <span id="lblJobNameData">工程師</span>
+                                    </td>
+                                    <td class="lblData">
+                                        &nbsp; <span id="lblSectionData"></span>
+                                    </td>
+                                </tr>
+                            </tbody></table>
+                        </td>
+                    </tr>
+                </tbody></table>
+            </div>
+            <div class="lblTips">
+                <table style="width: 100%; height: 10px" cellpadding="0" cellspacing="0">
+                    <tbody><tr>
+                        <td>
+                            &nbsp; <span id="lblTipsAtt">考勤</span>
+                        </td>
+                    </tr>
+                </tbody></table>
+            </div>
+            <div style="overflow-x:hidden;width:100%;">
+                <table>
+                    <tbody><tr>
+                        <td style="width:400px;">
+                            <div class="panel datagrid panel-htop easyui-fluid" style="width: 400px;"><div class="datagrid-wrap panel-body panel-body-noheader" title="" style="width: 398px;"><div class="datagrid-view" style="width: 398px; height: 198px;"><div class="datagrid-view1" style="width: 30px;"><div class="datagrid-header" style="width: 30px; height: 24px;"><div class="datagrid-header-inner" style="display: block;"><table class="datagrid-htable" border="0" cellspacing="0" cellpadding="0" style="height: 25px;"><tbody><tr class="datagrid-header-row"><td rowspan="0"><div class="datagrid-header-rownumber"></div></td></tr></tbody></table></div></div><div class="datagrid-body" style="width: 30px; margin-top: 0px;"><div class="datagrid-body-inner"><table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0"><tbody><tr id="datagrid-row-r7-1-0" datagrid-row-index="0" class="datagrid-row  " style="height: 25px;"><td class="datagrid-td-rownumber"><div class="datagrid-cell-rownumber">1</div></td></tr><tr id="datagrid-row-r7-1-1" datagrid-row-index="1" class="datagrid-row  " style="height: 25px;"><td class="datagrid-td-rownumber"><div class="datagrid-cell-rownumber">2</div></td></tr><tr id="datagrid-row-r7-1-2" datagrid-row-index="2" class="datagrid-row  " style="height: 25px;"><td class="datagrid-td-rownumber"><div class="datagrid-cell-rownumber">3</div></td></tr><tr id="datagrid-row-r7-1-3" datagrid-row-index="3" class="datagrid-row  " style="height: 25px;"><td class="datagrid-td-rownumber"><div class="datagrid-cell-rownumber">4</div></td></tr><tr id="datagrid-row-r7-1-4" datagrid-row-index="4" class="datagrid-row  " style="height: 25px;"><td class="datagrid-td-rownumber"><div class="datagrid-cell-rownumber">5</div></td></tr><tr id="datagrid-row-r7-1-5" datagrid-row-index="5" class="datagrid-row  " style="height: 25px;"><td class="datagrid-td-rownumber"><div class="datagrid-cell-rownumber">6</div></td></tr><tr id="datagrid-row-r7-1-6" datagrid-row-index="6" class="datagrid-row  " style="height: 25px;"><td class="datagrid-td-rownumber"><div class="datagrid-cell-rownumber">7</div></td></tr></tbody></table></div></div><div class="datagrid-footer" style="width: 30px;"><div class="datagrid-footer-inner" style="display: none;"></div></div></div><div class="datagrid-view2" style="width: 368px;"><div class="datagrid-header" style="width: 368px; height: 24px;"><div class="datagrid-header-inner" style="display: block;"><table class="datagrid-htable" border="0" cellspacing="0" cellpadding="0" style="height: 25px;"><tbody><tr class="datagrid-header-row"><td field="ItemDesc"><div class="datagrid-cell datagrid-cell-c7-ItemDesc" style="text-align: center;"><span>假別名稱</span><span class="datagrid-sort-icon"></span></div></td><td field="Numbers"><div class="datagrid-cell datagrid-cell-c7-Numbers" style="text-align: center;"><span>次數</span><span class="datagrid-sort-icon"></span></div></td></tr></tbody></table></div></div><div class="datagrid-body" style="width: 368px; margin-top: 0px; overflow-x: hidden;"><table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0"><tbody><tr id="datagrid-row-r7-2-0" datagrid-row-index="0" class="datagrid-row  " style="height: 25px;"><td field="ItemDesc"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c7-ItemDesc">事假</div></td><td field="Numbers"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c7-Numbers">0天</div></td></tr><tr id="datagrid-row-r7-2-1" datagrid-row-index="1" class="datagrid-row  " style="height: 25px;"><td field="ItemDesc"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c7-ItemDesc">忘刷卡</div></td><td field="Numbers"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c7-Numbers">0次</div></td></tr><tr id="datagrid-row-r7-2-2" datagrid-row-index="2" class="datagrid-row  " style="height: 25px;"><td field="ItemDesc"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c7-ItemDesc">其它假</div></td><td field="Numbers"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c7-Numbers">0天</div></td></tr><tr id="datagrid-row-r7-2-3" datagrid-row-index="3" class="datagrid-row  " style="height: 25px;"><td field="ItemDesc"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c7-ItemDesc">病假</div></td><td field="Numbers"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c7-Numbers">0天</div></td></tr><tr id="datagrid-row-r7-2-4" datagrid-row-index="4" class="datagrid-row  " style="height: 25px;"><td field="ItemDesc"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c7-ItemDesc">早退</div></td><td field="Numbers"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c7-Numbers">0次</div></td></tr><tr id="datagrid-row-r7-2-5" datagrid-row-index="5" class="datagrid-row  " style="height: 25px;"><td field="ItemDesc"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c7-ItemDesc">曠工</div></td><td field="Numbers"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c7-Numbers">0天</div></td></tr><tr id="datagrid-row-r7-2-6" datagrid-row-index="6" class="datagrid-row  " style="height: 25px;"><td field="ItemDesc"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c7-ItemDesc">遲到</div></td><td field="Numbers"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c7-Numbers">0次</div></td></tr></tbody></table></div><div class="datagrid-footer" style="width: 368px;"><div class="datagrid-footer-inner" style="display: none;"></div></div></div><table id="dgList" class="easyui-datagrid datagrid-f" style="display: none;" data-options="rownumbers:true,border:true,fitColumns:false,singleSelect:true,collapsible:true">
+                                <thead>
+                                    <tr>
+                                        <th data-options="field:&#39;ItemDesc&#39;,width:150,align:&#39;center&#39;" style="width: 180px;">假別名稱</th>
+                                        <th data-options="field:&#39;Numbers&#39;,width:150,align:&#39;center&#39;" style="width: 180px; ">次數</th>
+                                    </tr>
+                                </thead>
+                            </table><style type="text/css" easyui="true">
+.datagrid-header-rownumber{width:29px}
+.datagrid-cell-rownumber{width:29px}
+.datagrid-cell-c7-ItemDesc{width:171px}
+.datagrid-cell-c7-Numbers{width:171px}
+</style></div></div></div>
+                        </td>
+                        <td style="width:400px;">
+                            <div class="panel datagrid panel-htop easyui-fluid" style="width: 400px;"><div class="datagrid-wrap panel-body panel-body-noheader" title="" style="width: 398px;"><div class="datagrid-view" style="width: 398px; height: 66px;"><div class="datagrid-view1" style="width: 30px;"><div class="datagrid-header" style="width: 30px; height: 24px;"><div class="datagrid-header-inner" style="display: block;"><table class="datagrid-htable" border="0" cellspacing="0" cellpadding="0" style="height: 25px;"><tbody><tr class="datagrid-header-row"><td rowspan="0"><div class="datagrid-header-rownumber"></div></td></tr></tbody></table></div></div><div class="datagrid-body" style="width: 30px; margin-top: 0px;"><div class="datagrid-body-inner"><table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0"><tbody><tr id="datagrid-row-r9-1-0" datagrid-row-index="0" class="datagrid-row  " style="height: 25px;"><td class="datagrid-td-rownumber"><div class="datagrid-cell-rownumber">1</div></td></tr></tbody></table></div></div><div class="datagrid-footer" style="width: 30px;"><div class="datagrid-footer-inner" style="display: none;"></div></div></div><div class="datagrid-view2" style="width: 368px;"><div class="datagrid-header" style="width: 368px; height: 24px;"><div class="datagrid-header-inner" style="display: block;"><table class="datagrid-htable" border="0" cellspacing="0" cellpadding="0" style="height: 25px;"><tbody><tr class="datagrid-header-row"><td field="ItemDesc"><div class="datagrid-cell datagrid-cell-c9-ItemDesc" style="text-align: center;"><span>出差名稱</span><span class="datagrid-sort-icon"></span></div></td><td field="Numbers"><div class="datagrid-cell datagrid-cell-c9-Numbers" style="text-align: center;"><span>天數</span><span class="datagrid-sort-icon"></span></div></td></tr></tbody></table></div></div><div class="datagrid-body" style="width: 368px; margin-top: 0px;"><table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0"><tbody><tr id="datagrid-row-r9-2-0" datagrid-row-index="0" class="datagrid-row  " style="height: 25px;"><td field="ItemDesc"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c9-ItemDesc">海外出差天數</div></td><td field="Numbers"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c9-Numbers">0天</div></td></tr></tbody></table></div><div class="datagrid-footer" style="width: 368px;"><div class="datagrid-footer-inner" style="display: none;"></div></div></div><table id="dgListOut" class="easyui-datagrid datagrid-f" style="display: none;" data-options=" rownumbers:true,border:true,fitcolumns:false,singleselect:true,collapsible:true">
+                                <thead>
+                                    <tr class="lbldata">
+                                        <th data-options="field:&#39;ItemDesc&#39;,width:100,align:&#39;center&#39;" style="width:245px;">出差名稱</th>
+                                        <th data-options="field:&#39;Numbers&#39;,width:100,align:&#39;center&#39;" style="width: 245px;">天數</th>
+                                    </tr>
+                                </thead>
+                            </table><style type="text/css" easyui="true">
+.datagrid-header-rownumber{width:29px}
+.datagrid-cell-rownumber{width:29px}
+.datagrid-cell-c9-ItemDesc{width:236px}
+.datagrid-cell-c9-Numbers{width:236px}
+</style></div></div></div>
+                        </td>
+                    </tr>
+                </tbody></table>
+            </div>
+            <div class="lblTips">
+                <table style="width: 100%; height: 10px" cellpadding="0" cellspacing="0">
+                    <tbody><tr>
+                        <td>
+                            &nbsp; <span id="lblTipsAtt">獎懲</span>
+                        </td>
+                    </tr>
+                </tbody></table>
+            </div>
+            <div style="overflow-x:hidden;width:100%;">
+                <table>
+                    <tbody><tr>
+                        <td style="width:400px;">
+                            <div class="panel datagrid panel-htop easyui-fluid" style="width: 400px;"><div class="datagrid-wrap panel-body panel-body-noheader" title="" style="width: 398px;"><div class="datagrid-view" style="width: 398px; height: 99px;"><div class="datagrid-view1" style="width: 30px;"><div class="datagrid-header" style="width: 30px; height: 24px;"><div class="datagrid-header-inner" style="display: block;"><table class="datagrid-htable" border="0" cellspacing="0" cellpadding="0" style="height: 25px;"><tbody><tr class="datagrid-header-row"><td rowspan="0"><div class="datagrid-header-rownumber"></div></td></tr></tbody></table></div></div><div class="datagrid-body" style="width: 30px; margin-top: 0px;"><div class="datagrid-body-inner"><table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0"><tbody><tr id="datagrid-row-r8-1-0" datagrid-row-index="0" class="datagrid-row  " style="height: 25px;"><td class="datagrid-td-rownumber"><div class="datagrid-cell-rownumber">1</div></td></tr><tr id="datagrid-row-r8-1-1" datagrid-row-index="1" class="datagrid-row  " style="height: 25px;"><td class="datagrid-td-rownumber"><div class="datagrid-cell-rownumber">2</div></td></tr><tr id="datagrid-row-r8-1-2" datagrid-row-index="2" class="datagrid-row  " style="height: 25px;"><td class="datagrid-td-rownumber"><div class="datagrid-cell-rownumber">3</div></td></tr></tbody></table></div></div><div class="datagrid-footer" style="width: 30px;"><div class="datagrid-footer-inner" style="display: none;"></div></div></div><div class="datagrid-view2" style="width: 368px;"><div class="datagrid-header" style="width: 368px; height: 24px;"><div class="datagrid-header-inner" style="display: block;"><table class="datagrid-htable" border="0" cellspacing="0" cellpadding="0" style="height: 25px;"><tbody><tr class="datagrid-header-row"><td field="ItemDesc"><div class="datagrid-cell datagrid-cell-c8-ItemDesc" style="text-align: center;"><span>獎勵記錄</span><span class="datagrid-sort-icon"></span></div></td><td field="Numbers"><div class="datagrid-cell datagrid-cell-c8-Numbers" style="text-align: center;"><span>次數</span><span class="datagrid-sort-icon"></span></div></td></tr></tbody></table></div></div><div class="datagrid-body" style="width: 368px; margin-top: 0px; overflow-x: hidden;"><table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0"><tbody><tr id="datagrid-row-r8-2-0" datagrid-row-index="0" class="datagrid-row  " style="height: 25px;"><td field="ItemDesc"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c8-ItemDesc">大功</div></td><td field="Numbers"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c8-Numbers">0次/0分   (1次加6分)</div></td></tr><tr id="datagrid-row-r8-2-1" datagrid-row-index="1" class="datagrid-row  " style="height: 25px;"><td field="ItemDesc"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c8-ItemDesc">嘉獎</div></td><td field="Numbers"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c8-Numbers">0次/0分   (1次加0.5分)</div></td></tr><tr id="datagrid-row-r8-2-2" datagrid-row-index="2" class="datagrid-row  " style="height: 25px;"><td field="ItemDesc"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c8-ItemDesc">小功</div></td><td field="Numbers"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c8-Numbers">0次/0分   (1次加2分)</div></td></tr></tbody></table></div><div class="datagrid-footer" style="width: 368px;"><div class="datagrid-footer-inner" style="display: none;"></div></div></div><table id="dgListJCPlus" class="easyui-datagrid datagrid-f" style="display: none;" data-options="rownumbers:true,border:true,fitColumns:false,singleSelect:true,collapsible:true,onDblClickRow:function(index,row){aa(index,row);}">
+                                <thead>
+                                    <tr>
+                                        <th data-options="field:&#39;ItemDesc&#39;,width:150,align:&#39;center&#39;" style="width: 180px;">獎勵記錄</th>
+                                        <th data-options="field:&#39;Numbers&#39;,width:150,align:&#39;center&#39;" style="width: 180px;">次數</th>
+                                    </tr>
+                                </thead>
+                            </table><style type="text/css" easyui="true">
+.datagrid-header-rownumber{width:29px}
+.datagrid-cell-rownumber{width:29px}
+.datagrid-cell-c8-ItemDesc{width:171px}
+.datagrid-cell-c8-Numbers{width:171px}
+</style></div></div></div>
+                        </td>
+                        <td style="width:400px;">
+                            <div class="panel datagrid panel-htop easyui-fluid" style="width: 400px;"><div class="datagrid-wrap panel-body panel-body-noheader" title="" style="width: 398px;"><div class="datagrid-view" style="width: 398px; height: 116px;"><div class="datagrid-view1" style="width: 30px;"><div class="datagrid-header" style="width: 30px; height: 24px;"><div class="datagrid-header-inner" style="display: block;"><table class="datagrid-htable" border="0" cellspacing="0" cellpadding="0" style="height: 25px;"><tbody><tr class="datagrid-header-row"><td rowspan="0"><div class="datagrid-header-rownumber"></div></td></tr></tbody></table></div></div><div class="datagrid-body" style="width: 30px; margin-top: 0px;"><div class="datagrid-body-inner"><table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0"><tbody><tr id="datagrid-row-r11-1-0" datagrid-row-index="0" class="datagrid-row  " style="height: 25px;"><td class="datagrid-td-rownumber"><div class="datagrid-cell-rownumber">1</div></td></tr><tr id="datagrid-row-r11-1-1" datagrid-row-index="1" class="datagrid-row  " style="height: 25px;"><td class="datagrid-td-rownumber"><div class="datagrid-cell-rownumber">2</div></td></tr><tr id="datagrid-row-r11-1-2" datagrid-row-index="2" class="datagrid-row" style="height: 25px;"><td class="datagrid-td-rownumber"><div class="datagrid-cell-rownumber">3</div></td></tr></tbody></table></div></div><div class="datagrid-footer" style="width: 30px;"><div class="datagrid-footer-inner" style="display: none;"></div></div></div><div class="datagrid-view2" style="width: 368px;"><div class="datagrid-header" style="width: 368px; height: 24px;"><div class="datagrid-header-inner" style="display: block;"><table class="datagrid-htable" border="0" cellspacing="0" cellpadding="0" style="height: 25px;"><tbody><tr class="datagrid-header-row"><td field="ItemDesc"><div class="datagrid-cell datagrid-cell-c11-ItemDesc" style="text-align: center;"><span>獎勵記錄</span><span class="datagrid-sort-icon"></span></div></td><td field="Numbers"><div class="datagrid-cell datagrid-cell-c11-Numbers" style="text-align: center;"><span>次數</span><span class="datagrid-sort-icon"></span></div></td></tr></tbody></table></div></div><div class="datagrid-body" style="width: 368px; margin-top: 0px;"><table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0"><tbody><tr id="datagrid-row-r11-2-0" datagrid-row-index="0" class="datagrid-row  " style="height: 25px;"><td field="ItemDesc"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c11-ItemDesc">小過</div></td><td field="Numbers"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c11-Numbers">0次/0分   (1次減2分)</div></td></tr><tr id="datagrid-row-r11-2-1" datagrid-row-index="1" class="datagrid-row  " style="height: 25px;"><td field="ItemDesc"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c11-ItemDesc">警告</div></td><td field="Numbers"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c11-Numbers">0次/0分   (1次減0.5分)</div></td></tr><tr id="datagrid-row-r11-2-2" datagrid-row-index="2" class="datagrid-row" style="height: 25px;"><td field="ItemDesc"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c11-ItemDesc">大過</div></td><td field="Numbers"><div style="text-align:center;height:auto;" class="datagrid-cell datagrid-cell-c11-Numbers">0次/0分   (1次減6分)</div></td></tr></tbody></table></div><div class="datagrid-footer" style="width: 368px;"><div class="datagrid-footer-inner" style="display: none;"></div></div></div><table id="dgListJC" class="easyui-datagrid datagrid-f" style="display: none;" data-options=" rownumbers:true,border:true,fitcolumns:false,singleselect:true,collapsible:true">
+                                <thead>
+                                    <tr class="lbldata">
+                                        <th data-options="field:&#39;ItemDesc&#39;,width:100,align:&#39;center&#39;" style="width:245px;">獎勵記錄</th>
+                                        <th data-options="field:&#39;Numbers&#39;,width:100,align:&#39;center&#39;" style="width: 245px;">次數</th>
+                                    </tr>
+                                </thead>
+                            </table><style type="text/css" easyui="true">
+.datagrid-header-rownumber{width:29px}
+.datagrid-cell-rownumber{width:29px}
+.datagrid-cell-c11-ItemDesc{width:236px}
+.datagrid-cell-c11-Numbers{width:236px}
+</style></div></div></div>
+                        </td>
+                    </tr>
+
+                </tbody></table>
+            </div>
+            <div style="width:100%;height:100px">
+                <table cellpadding="0" cellspacing="0">
+                    <tbody><tr>
+                        <td></td>
+                    </tr>
+                </tbody></table>
+            </div>
+        </div></div><div class="panel panel-htop" style="display: none; width: 1310px;"><div title="" style="width: 1310px; height: 361px;" class="panel-body panel-body-noheader panel-body-noborder">
+            <form id="frmSearch" method="post">
+                <input id="hidempNo" name="hidempNo" value="DC0055" type="hidden">
+                <table style="width: 390px; height: 100%;" cellspacing="5" cellpadding="5">
+                    <tbody><tr>
+                        <td>年度名稱</td>
+                        <td align="left">
+                            <select id="YearCode" class="easyui-combobox combobox-f combo-f textbox-f" style="width: 200px; height: 30px; padding: 2px; display: none;" data-options="valueField:&#39;YearCode&#39;,textField:&#39;YearName&#39;,multiple:false,panelHeight:&#39;200&#39;" textboxname="YearCode" comboname="YearCode">
+                                <option value="2017_TW">2018年度臺灣績效考核</option>
+<option value="2016_TW">2017年度臺灣績效考核</option>
+<option value="2015_TW">2016年度臺灣績效考核</option>
+<option value="2014_TW">2015年度台灣績效考核</option>
+<option value="2013_TW">2014年度台灣績效考核</option>
+<option value="2012_TW">2013年度臺灣績效考核</option>
+<option value="2011_TW">2012年度臺灣績效考核</option>
+<option value="2010_TW">2011年度臺灣績效考核</option>
+<option value="2009_TW">2010年度臺灣績效考核</option>
+
+                            </select><span class="textbox combo" style="width: 194px; height: 28px;"><span class="textbox-addon textbox-addon-right" style="right: 0px; top: 0px;"><a href="javascript:;" class="textbox-icon combo-arrow" icon-index="0" tabindex="-1" style="width: 18px; height: 28px;"></a></span><input id="_easyui_textbox_input1" type="text" class="textbox-text validatebox-text" autocomplete="off" tabindex="" placeholder="" style="padding: 0px 2px; margin: 0px 18px 0px 0px; height: 28px; line-height: 28px; width: 172px;"><input type="hidden" class="textbox-value" name="YearCode" value="2017_TW"></span>
+
+                        </td>
+                        <td>
+                            <a id="btnSearch" href="http://10.62.196.170/Kpi/EmpKpiB#" class="easyui-linkbutton l-btn l-btn-small" data-options="plain:false, iconCls:&#39;icon-search&#39;" onclick="Search()" group=""><span class="l-btn-left l-btn-icon-left"><span class="l-btn-text">查詢</span><span class="l-btn-icon icon-search">&nbsp;</span></span></a>
+                        </td>
+                    </tr>
+                </tbody></table>
+            </form>
+            <div class="lblTips">
+                <table style="width: 100%;" cellpadding="0" cellspacing="0">
+                    <tbody><tr>
+                        <td>
+                            &nbsp; <span id="lblTipsAtt">自評信息</span>
+                        </td>
+                    </tr>
+                    </tbody></table>
+</div>
+            <div style="overflow-x: hidden; width: 100%;">
+                <table style="width:100%;">
+                    <tbody><tr>
+                        <td style="width:100%;">
+                            <div class="panel datagrid panel-htop easyui-fluid" style="width: 1306px;"><div class="datagrid-wrap panel-body panel-body-noheader" title="" style="width: 1304px;"><div class="datagrid-view" style="width: 1304px; height: 27px;"><div class="datagrid-view1" style="width: 30px;"><div class="datagrid-header" style="width: 30px; height: 24px;"><div class="datagrid-header-inner" style="display: block;"><table class="datagrid-htable" border="0" cellspacing="0" cellpadding="0" style="height: 25px;"><tbody><tr class="datagrid-header-row"><td rowspan="0"><div class="datagrid-header-rownumber"></div></td></tr></tbody></table></div></div><div class="datagrid-body" style="width: 30px; margin-top: 0px;"><div class="datagrid-body-inner"></div></div><div class="datagrid-footer" style="width: 30px;"><div class="datagrid-footer-inner" style="display: none;"></div></div></div><div class="datagrid-view2" style="width: 1274px;"><div class="datagrid-header" style="width: 1274px; height: 24px;"><div class="datagrid-header-inner" style="display: block;"><table class="datagrid-htable" border="0" cellspacing="0" cellpadding="0" style="height: 25px;"><tbody><tr class="datagrid-header-row"><td field="Item0"><div class="datagrid-cell datagrid-cell-c5-Item0" style="text-align: center;"><span>主要任務/項目/職責或部門KPI</span><span class="datagrid-sort-icon"></span></div></td><td field="Item1"><div class="datagrid-cell datagrid-cell-c5-Item1" style="text-align: center;"><span>權重</span><span class="datagrid-sort-icon"></span></div></td><td field="Item2"><div class="datagrid-cell datagrid-cell-c5-Item2" style="text-align: center;"><span>達成狀況及工作成果</span><span class="datagrid-sort-icon"></span></div></td><td field="Item3"><div class="datagrid-cell datagrid-cell-c5-Item3" style="text-align: center;"><span>自我評估分數</span><span class="datagrid-sort-icon"></span></div></td></tr></tbody></table></div></div><div class="datagrid-body" style="width: 1274px; margin-top: 0px; overflow-x: hidden;"><table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0"><tbody><tr id="datagrid-row-r5-2-0" class="" style="height: 1px; border-color: transparent; background: transparent;"><td field="Item0" style="height: 1px; border-color: transparent; background: transparent;"><div style="text-align: center; white-space: normal; height: 1px; border-color: transparent; background: transparent;" class="datagrid-cell datagrid-cell-c5-Item0"></div></td><td field="Item1" style="height: 1px; border-color: transparent; background: transparent;"><div style="text-align: center; white-space: normal; height: 1px; border-color: transparent; background: transparent;" class="datagrid-cell datagrid-cell-c5-Item1"></div></td><td field="Item2" style="height: 1px; border-color: transparent; background: transparent;"><div style="text-align: center; white-space: normal; height: 1px; border-color: transparent; background: transparent;" class="datagrid-cell datagrid-cell-c5-Item2"></div></td><td field="Item3" style="height: 1px; border-color: transparent; background: transparent;"><div style="text-align: center; white-space: normal; height: 1px; border-color: transparent; background: transparent;" class="datagrid-cell datagrid-cell-c5-Item3"></div></td></tr></tbody></table></div><div class="datagrid-footer" style="width: 1274px;"><div class="datagrid-footer-inner" style="display: none;"></div></div></div><table id="dgListKpiData" class="easyui-datagrid datagrid-f" style="display: none;" data-options="rownumbers:true,border:true,fitColumns:false,singleSelect:true,collapsible:true,nowrap:false">
+                                <thead>
+                                    <tr>
+                                        <th data-options="field:&#39;Item0&#39;,width:350,align:&#39;center&#39;" style="width: 350px;">主要任務/項目/職責或部門KPI</th>
+                                        <th data-options="field:&#39;Item1&#39;,width:50,align:&#39;center&#39;" style="width: 150px;">權重</th>
+                                        <th data-options="field:&#39;Item2&#39;,width:350,align:&#39;center&#39;" style="width: 350px;">達成狀況及工作成果</th>
+                                        <th data-options="field:&#39;Item3&#39;,width:50,align:&#39;center&#39;" style="width: 150px;">自我評估分數</th>
+                                    </tr>
+                                </thead>
+                            </table><style type="text/css" easyui="true">
+.datagrid-header-rownumber{width:29px}
+.datagrid-cell-rownumber{width:29px}
+.datagrid-cell-c5-Item0{width:341px}
+.datagrid-cell-c5-Item1{width:141px}
+.datagrid-cell-c5-Item2{width:341px}
+.datagrid-cell-c5-Item3{width:141px}
+</style></div></div></div>
+                        </td>
+                </tr></tbody></table>
+            </div>
+            <div class="lblTips">
+                <table width="100%" cellpadding="0" cellspacing="0">
+                    <tbody><tr>
+                        <td>
+                            &nbsp; <span id="lblTipsAtt">主管評語 </span>
+                        </td>
+                    </tr>
+                </tbody></table>
+            </div>
+            <div style="overflow-x:hidden;width:1200px;">
+                <table>
+                    <tbody><tr>
+                        <td style="width:1180px;">
+                            <div class="panel datagrid panel-htop easyui-fluid" style="width: 1180px;"><div class="datagrid-wrap panel-body panel-body-noheader" title="" style="width: 1178px;"><div class="datagrid-view" style="width: 1178px; height: 44px;"><div class="datagrid-view1" style="width: 30px;"><div class="datagrid-header" style="width: 30px; height: 24px;"><div class="datagrid-header-inner" style="display: block;"><table class="datagrid-htable" border="0" cellspacing="0" cellpadding="0" style="height: 25px;"><tbody><tr class="datagrid-header-row"><td rowspan="0"><div class="datagrid-header-rownumber"></div></td></tr></tbody></table></div></div><div class="datagrid-body" style="width: 30px; margin-top: 0px;"><div class="datagrid-body-inner"><table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0"><tbody></tbody></table></div></div><div class="datagrid-footer" style="width: 30px;"><div class="datagrid-footer-inner" style="display: none;"></div></div></div><div class="datagrid-view2" style="width: 1148px;"><div class="datagrid-header" style="width: 1148px; height: 24px;"><div class="datagrid-header-inner" style="display: block;"><table class="datagrid-htable" border="0" cellspacing="0" cellpadding="0" style="height: 25px;"><tbody><tr class="datagrid-header-row"><td field="empProject"><div class="datagrid-cell datagrid-cell-c10-empProject" style="text-align: center;"><span>項目</span><span class="datagrid-sort-icon"></span></div></td><td field="empSupervisor"><div class="datagrid-cell datagrid-cell-c10-empSupervisor" style="text-align: center;"><span>主管評語</span><span class="datagrid-sort-icon"></span></div></td></tr></tbody></table></div></div><div class="datagrid-body" style="width: 1148px; margin-top: 0px;"><table class="datagrid-btable" cellspacing="0" cellpadding="0" border="0"><tbody><tr id="datagrid-row-r10-2-0" class="" style="height: 1px; border-color: transparent; background: transparent;"><td field="empProject" style="height: 1px; border-color: transparent; background: transparent;"><div style="text-align: center; white-space: normal; height: 1px; border-color: transparent; background: transparent;" class="datagrid-cell datagrid-cell-c10-empProject"></div></td><td field="empSupervisor" style="height: 1px; border-color: transparent; background: transparent;"><div style="text-align: center; white-space: normal; height: 1px; border-color: transparent; background: transparent;" class="datagrid-cell datagrid-cell-c10-empSupervisor"></div></td></tr></tbody></table></div><div class="datagrid-footer" style="width: 1148px;"><div class="datagrid-footer-inner" style="display: none;"></div></div></div><table id="dgListSupervisor" class="easyui-datagrid datagrid-f" style="display: none;" data-options="rownumbers:true,border:true,fitColumns:false,singleSelect:true,collapsible:true,nowrap:false,onDblClickRow:function(index,row){aa(index,row);}">
+                                <thead>
+                                    <tr>
+                                        <th data-options="field:&#39;empProject&#39;,width:590,align:&#39;center&#39;" style="width: 300px;">項目</th>
+                                        <th data-options="field:&#39;empSupervisor&#39;,width:590,align:&#39;center&#39;" style="width: 880px;">主管評語</th>
+                                    </tr>
+                                </thead>
+                            </table><style type="text/css" easyui="true">
+.datagrid-header-rownumber{width:29px}
+.datagrid-cell-rownumber{width:29px}
+.datagrid-cell-c10-empProject{width:291px}
+.datagrid-cell-c10-empSupervisor{width:871px}
+</style></div></div></div>
+                        </td>
+
+                    </tr>
+
+                </tbody></table>
+            </div>
+
+        </div></div><div class="panel panel-htop" style="display: block; width: 1310px;"><div title="" style="padding: 10px; width: 1290px; height: 341px;" id="pnlBtnList" class="panel-body panel-body-noheader panel-body-noborder">
+            <div class="panel panel-htop easyui-fluid" style="display: block; width: 1290px;"><div class="easyui-panel panel-body panel-body-noheader" style="padding: 5px; overflow: auto; width: 1278px; height: 329px;" align="center" title="">
+                <table style="display: none">
+                    <tbody><tr>
+                        <td>
+                          
+                        </td>
+                    </tr>
+                </tbody></table>
+                <div style="overflow: auto;">
+
+                    <div style="overflow: auto;">
+                        <table>
+                            <tbody><tr>
+                                <td width="100px">
+                                    <table>
+                                        <tbody><tr>
+                                            <td width="60px">
+                                                <img src="./bt_zp01.gif" width="15" height="13">
+                                                <strong><span id="ctl00_contentEdit_lblTotalScore">總分</span> </strong>
+                                            </td>
+                                            <td>
+                                                <input name="ctl00$contentEdit$lbScore" type="text" id="ctl00_contentEdit_lbScore" readonly="true" style="border-width: 0px; border-style: None; width: 30px;">
+                                            </td>
+                                        </tr>
+                                    </tbody></table>
+                                </td>
+                                <td width="20px">
+                                    <img src="./bt_zp02.gif" width="15" height="13">
+                                </td>
+                                <td>
+                                    <strong><span id="ctl00_contentEdit_lblRewardScore">獎懲分</span> </strong>
+                                </td>
+                                <td width="30" align="left">
+                                    <span id="lb_system">0</span>
+                                </td>
+                                <td width="20px">
+                                    <img src="./bt_zp03.gif" width="15" height="13">
+                                </td>
+                                <td>
+                                    <strong><span id="ctl00_contentEdit_lbManagerName">自評評分</span></strong>
+                                </td>
+                                
+                                <td width="40px" align="left">
+                                    <input name="ctl00$contentEdit$allRate" type="text" id="ctl00_contentEdit_allRate" readonly="true" style="border-width: 0px; border-style: None; width: 30px;">
+                                </td>
+                                <td width="20px">
+                                    <img src="./bt_zp04.gif" width="15" height="13">
+                                </td>
+                                <td>
+                                    <div align="left">
+                                        <strong><span id="ctl00_contentEdit_lblHcatName">績效表名稱</span></strong>
+                                    </div>
+                                </td>
+                                <td width="120px">
+                                    <span id="ctl00_contentEdit_lbHcatCode">員工績效考核-附表B</span>
+                                </td>
+                                <td width="20px"></td>
+                                <td width="65px">
+                                    <strong></strong>
+                                </td>
+                                <td width="50px" align="left"></td>
+                                <td width="65px">
+                                    <strong></strong>
+                                </td>
+                                <td align="left"></td>
+                                <td>
+                                    <strong></strong>
+                                </td>
+                                <td align="left"></td>
+                            </tr>
+                        </tbody></table>
+                    </div>
+                </div>
+                <div id="scrollDiv" style="overflow: auto;">
+                    <div>
+                    </div>
+                    <div id="ctl00_contentEdit_divDetailH" align="left" style="width: 800px;">
+                        <table id="A_001">
+                            <tbody><tr>
+                                <th align="left">
+                                    A.執行力   <font align="left" color="RED">*</font>
+                                </th>
+                                <th align="right">
+                                     評分比率:70%
+                                </th>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <table id="detailH_A_001" class="detailGroup" border="1" cellpadding="0" cellspacing="0">
+                                        <tbody><tr>
+                                            <th id="B_001" height="50px">
+                                                <font> 主要任務/項目/職責或部門KPI  </font>
+                                            </th>
+                                            <th id="B_002">
+                                                <font>      權重    </font>
+                                            </th>
+                                            <th id="B_003">
+                                                <font>   達成狀況及工作成果 </font>
+                                            </th>
+                                            <th id="B_036_8" class="assignField" disable="disable">
+                                                <font>  自評評分 </font>
+                                            </th>
+                                        </tr>
+                                        <tr>
+                                            <td id="B_001_0" align="left" valign="top">
+                                                <textarea id="txt_B_001_0" style="width: 250px; height: 100px;" onkeyup="JqueryCheckInputMaxLength(&#39;txt_B_001_0&#39;,&#39;spand_B_001_0&#39;);" class="editTextArea" readonly="readonly" name="2589882">Support G50 project</textarea>
+
+                                                    <br>
+                                                    <span id="spand_B_001_0" style="color: red"></span>
+                                                </td>
+                                                <td id="B_002_0" align="left" valign="top">
+                                                    <input id="txt_B_002_0" value="10" type="text" style="width: 60px; height: 25px;" onkeypress="KeyPress(event);" onkeyup="JqueryCreateDropDownList(&#39;txt_B_002_0&#39;,0,&#39;A_001&#39;,70,1);JquerySumDDlScore();jqueryCalculateSumAll();" class="RateClass editTextArea" readonly="readonly" name="2589884">
+                                                </td>
+                                                <td id="B_003_0" align="left" valign="top">
+                                                    <textarea id="txt_B_003_0" style="width: 250px; height: 100px;" onkeyup="JqueryCheckInputMaxLength(&#39;txt_B_003_0&#39;,&#39;spand_B_003_0&#39;);" class="editTextArea" readonly="readonly" name="2589883">1. Help to analyze issue and debug</textarea>
+                                                        <br>
+                                                        <span id="spand_B_003_0" style="color: red"></span>
+                                                    </td>
+                                                    <td class="assignField" align="left" valign="top" id="B_036_8_281630_0" disable="disable">
+                                                        <select id="select_B_036_0" style="width: 60px" class="ddl_A_001" onchange="JquerySumDDlScore(&#39;A_001&#39;,1);jqueryCalculateSumAll();" name="2589885">
+                                                            <option value="6">6</option>
+                                                            <option value="7">7</option><option value="6">6</option><option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option><option value="0">0</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td id="B_001_1" align="left" valign="top">
+                                                        <textarea id="txt_B_001_1" style="width: 250px; height: 100px;" onkeyup="JqueryCheckInputMaxLength(&#39;txt_B_001_1&#39;,&#39;spand_B_001_1&#39;);" class="editTextArea" readonly="readonly" name="2589886">Support C2050 project</textarea>
+                                                            <br>
+                                                            <span id="spand_B_001_1" style="color: red"></span>
+                                                        </td>
+                                                        <td id="B_002_1" align="left" valign="top">
+                                                            <input id="txt_B_002_1" value="90" type="text" style="width: 60px; height: 25px;" onkeypress="KeyPress(event);" onkeyup="JqueryCreateDropDownList(&#39;txt_B_002_1&#39;,1,&#39;A_001&#39;,70,1);JquerySumDDlScore();jqueryCalculateSumAll();" class="RateClass editTextArea" readonly="readonly" name="2589888">
+                                                        </td>
+                                                        <td id="B_003_1" align="left" valign="top">
+                                                            <textarea id="txt_B_003_1" style="width: 250px; height: 100px;" onkeyup="JqueryCheckInputMaxLength(&#39;txt_B_003_1&#39;,&#39;spand_B_003_1&#39;);" class="editTextArea" readonly="readonly" name="2589887">1. Implement new feature
+2. Issue analysis and debug 
+3. Code reeview</textarea>
+                                                                <br>
+                                                                <span id="spand_B_003_1" style="color: red"></span>
+                                                            </td>
+                                                            <td class="assignField" align="left" valign="top" id="B_036_8_281630_1" disable="disable">
+                                                                <select id="select_B_036_1" style="width: 60px" class="ddl_A_001" onchange="JquerySumDDlScore(&#39;A_001&#39;,1);jqueryCalculateSumAll();" name="2589889">
+                                                                    <option value="60">60</option>
+                                                                    <option value="63">63</option><option value="62">62</option><option value="61">61</option><option value="60">60</option><option value="59">59</option><option value="58">58</option><option value="57">57</option><option value="56">56</option><option value="55">55</option><option value="54">54</option><option value="53">53</option><option value="52">52</option><option value="51">51</option><option value="50">50</option><option value="49">49</option><option value="48">48</option><option value="47">47</option><option value="46">46</option><option value="45">45</option><option value="44">44</option><option value="43">43</option><option value="42">42</option><option value="41">41</option><option value="40">40</option><option value="39">39</option><option value="38">38</option><option value="37">37</option><option value="36">36</option><option value="35">35</option><option value="34">34</option><option value="33">33</option><option value="32">32</option><option value="31">31</option><option value="30">30</option><option value="29">29</option><option value="28">28</option><option value="27">27</option><option value="26">26</option><option value="25">25</option><option value="24">24</option><option value="23">23</option><option value="22">22</option><option value="21">21</option><option value="20">20</option><option value="19">19</option><option value="18">18</option><option value="17">17</option><option value="16">16</option><option value="15">15</option><option value="14">14</option><option value="13">13</option><option value="12">12</option><option value="11">11</option><option value="10">10</option><option value="9">9</option><option value="8">8</option><option value="7">7</option><option value="6">6</option><option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option><option value="0">0</option>
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td id="B_001_2" align="left" valign="top">
+                                                                <textarea id="txt_B_001_2" style="width: 250px; height: 100px;" onkeyup="JqueryCheckInputMaxLength(&#39;txt_B_001_2&#39;,&#39;spand_B_001_2&#39;);" class="editTextArea" readonly="readonly" name="2589890"></textarea>
+                                                                    <br>
+                                                                    <span id="spand_B_001_2" style="color: red"></span>
+                                                                </td>
+                                                                <td id="B_002_2" align="left" valign="top">
+                                                                    <input id="txt_B_002_2" value="" type="text" style="width: 60px; height: 25px;" onkeypress="KeyPress(event);" onkeyup="JqueryCreateDropDownList(&#39;txt_B_002_2&#39;,2,&#39;A_001&#39;,70,1);JquerySumDDlScore();jqueryCalculateSumAll();" class="RateClass editTextArea" readonly="readonly" name="2589892">
+                                                                </td>
+                                                                <td id="B_003_2" align="left" valign="top">
+                                                                    <textarea id="txt_B_003_2" style="width: 250px; height: 100px;" onkeyup="JqueryCheckInputMaxLength(&#39;txt_B_003_2&#39;,&#39;spand_B_003_2&#39;);" class="editTextArea" readonly="readonly" name="2589891"></textarea>
+                                                                        <br>
+                                                                        <span id="spand_B_003_2" style="color: red"></span>
+                                                                    </td>
+                                                                    <td class="assignField" align="left" valign="top" id="B_036_8_281630_2" disable="disable">
+                                                                        <select id="select_B_036_2" style="width: 60px" class="ddl_A_001" onchange="JquerySumDDlScore(&#39;A_001&#39;,1);jqueryCalculateSumAll();" name="2589893">
+                                                                            <option value="">請選擇</option>
+                                                                            
+                                                                        </select>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td id="B_001_3" align="left" valign="top">
+                                                                        <textarea id="txt_B_001_3" style="width: 250px; height: 100px;" onkeyup="JqueryCheckInputMaxLength(&#39;txt_B_001_3&#39;,&#39;spand_B_001_3&#39;);" class="editTextArea" readonly="readonly" name="2589894"></textarea>
+                                                                            <br>
+                                                                            <span id="spand_B_001_3" style="color: red"></span>
+                                                                        </td>
+                                                                        <td id="B_002_3" align="left" valign="top">
+                                                                            <input id="txt_B_002_3" value="" t="" type="text" style="width: 60px; height: 25px;" onkeypress="KeyPress(event);" onkeyup="JqueryCreateDropDownList(&#39;txt_B_002_3&#39;,3,&#39;A_001&#39;,70,1);JquerySumDDlScore();jqueryCalculateSumAll();" class="RateClass editTextArea" readonly="readonly" name="2589896">
+                                                                        </td>
+                                                                        <td id="B_003_3" align="left" valign="top">
+                                                                            <textarea id="txt_B_003_3" style="width: 250px; height: 100px;" onkeyup="JqueryCheckInputMaxLength(&#39;txt_B_003_3&#39;,&#39;spand_B_003_3&#39;);" class="editTextArea" readonly="readonly" name="2589895"></textarea>
+                                                                                <br>
+                                                                                <span id="spand_B_003_3" style="color: red"></span>
+                                                                            </td>
+                                                                            <td class="assignField" align="left" valign="top" id="B_036_8_281630_3" disable="disable">
+                                                                                <select id="select_B_036_3" style="width: 60px" class="ddl_A_001" onchange="JquerySumDDlScore(&#39;A_001&#39;,1);jqueryCalculateSumAll();" name="2589897">
+                                                                                    <option value="">請選擇</option>
+                                                                                    
+                                                                                </select>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td id="B_001_4" align="left" valign="top">
+                                                                                <textarea id="txt_B_001_4" style="width: 250px; height: 100px;" onkeyup="JqueryCheckInputMaxLength(&#39;txt_B_001_4&#39;,&#39;spand_B_001_4&#39;);" class="editTextArea" readonly="readonly" name="2589898"></textarea>
+                                                                                    <br>
+                                                                                    <span id="spand_B_001_4" style="color: red"></span>
+                                                                                </td>
+                                                                                <td id="B_002_4" align="left" valign="top">
+                                                                                    <input id="txt_B_002_4" value="" t="" type="text" style="width: 60px; height: 25px;" onkeypress="KeyPress(event);" onkeyup="JqueryCreateDropDownList(&#39;txt_B_002_4&#39;,4,&#39;A_001&#39;,70,1);JquerySumDDlScore();jqueryCalculateSumAll();" class="RateClass editTextArea" readonly="readonly" name="2589900">
+                                                                                </td>
+                                                                                <td id="B_003_4" align="left" valign="top">
+                                                                                    <textarea id="txt_B_003_4" style="width: 250px; height: 100px;" onkeyup="JqueryCheckInputMaxLength(&#39;txt_B_003_4&#39;,&#39;spand_B_003_4&#39;);" class="editTextArea" readonly="readonly" name="2589899"></textarea>
+                                                                                        <br>
+                                                                                        <span id="spand_B_003_4" style="color: red"></span>
+                                                                                    </td>
+                                                                                    <td class="assignField" align="left" valign="top" id="B_036_8_281630_4" disable="disable">
+                                                                                        <select id="select_B_036_4" style="width: 60px" class="ddl_A_001" onchange="JquerySumDDlScore(&#39;A_001&#39;,1);jqueryCalculateSumAll();" name="2589901">
+                                                                                            <option value="">請選擇</option>
+                                                                                            
+                                                                                        </select>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </tbody></table>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="3" align="right">
+                                                                            <input id="xiaoji_A_001" value="66" type="text" disabled="disabled" style="width: 80px" class="txtGroupSumScore">
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody></table>
+                                                            </div>
+                                                            <div id="divDetailS" align="left" style="width: 800px;">
+                                                            </div>
+                                                            <div id="divDetailV" align="left" style="width: 800px;">
+                                                            </div>
+                                                            <div style="height: 110px" align="center">
+                                                                <table style="width: 100% " align="center">
+                                                                    <tbody><tr align="center">
+                                                                        <td>
+                                                                            <a onclick="return jquerySaveContent(false, true, 2);" style="width: 148px; height: 48px;" id="saveDraftButton" class="easyui-linkbutton l-btn l-btn-small l-btn-plain l-btn-disabled l-btn-plain-disabled" data-options="plain:true, iconCls:&#39;icon-disk&#39;" group=""><span class="l-btn-left l-btn-icon-left" style="margin-top: 12px;"><span class="l-btn-text">&nbsp;暫存</span><span class="l-btn-icon icon-disk">&nbsp;</span></span></a>
+                                                                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
+                                                                            <a onclick="return jquerySaveContent(true, true, 2);" style="width: 148px; height: 48px;" id="saveButton" class="easyui-linkbutton l-btn l-btn-small l-btn-plain l-btn-disabled l-btn-plain-disabled" data-options="plain:true, iconCls:&#39;icon-ok&#39;" group=""><span class="l-btn-left l-btn-icon-left" style="margin-top: 12px;"><span class="l-btn-text">&nbsp;提交</span><span class="l-btn-icon icon-ok">&nbsp;</span></span></a>
+                                                                            <input name="ctl00$contentEdit$ddlSelectedValue" type="hidden" id="ctl00_contentEdit_ddlSelectedValue">
+                                                                        </td>
+
+
+                                                                    </tr>
+                                                                    <tr align="center">
+                                                                        <td height="25" colspan="5">
+                                                                            <span id="lblInfomation" style="display: inline-block; background-color: White;
+                            border-color: #CCCCCC; border-width: 1px; border-style: Dotted; height: 40%;
+                            width: 100%;"></span>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody></table>
+                                                            </div>
+                                                        </div>
+
+                                                        <div style="width:100%;height:400px">
+                                                            <table cellpadding="0" cellspacing="0">
+                                                                <tbody><tr>
+                                                                    <td></td>
+                                                                </tr>
+                                                            </tbody></table>
+                                                        </div>
+                                                    </div></div>
+                                                </div></div><div class="panel panel-htop" style="display: none; width: 1310px;"><div title="" id="divsuperviosrtitle" style="padding: 10px; width: 1290px; height: 341px;" class="panel-body panel-body-noheader panel-body-noborder">
+            <div class="panel panel-htop easyui-fluid" style="display: block; width: 1290px;"><div class="easyui-panel panel-body panel-body-noheader" style="padding: 5px; overflow: auto; width: 1278px; height: 688px;" id="divSuperviosrComment" title="">
+                <table style="width: 100%;">
+                    <tbody><tr>
+                        <td width="100%">
+                            <div id="ManagerAdvice">
+                                <table id="A_003">
+                                    <tbody><tr>
+                                        <th align="left">
+                                            執行力改善方向
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">
+                                            <table id="detailV_A_003" class="detailGroup" border="1" cellpadding="0" cellspacing="0">
+                                                <tbody><tr>
+                                                    <td width="150px" rowspan="2">
+                                                        執行力改善方向
+
+                                                    </td>
+                                                </tr><tr>
+                                                    <td id="B_015">
+                                                        <textarea id="txt_B_015_0" style="width: 500px; height: 200px;" readonly="readonly">所達成之成果，符合職位所設立之職責及工作目標，績效中等</textarea>
+                                                    </td>
+                                                </tr>
+                                            </tbody></table>
+                                </td></tr></tbody></table>
+                                <table id="A_009">
+                                    <tbody><tr>
+                                        <th align="left">
+                                            工作特質評核
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">
+                                            <table id="detailV_A_009" class="detailGroup" border="1" .="" cellpadding="0" cellspacing="0">
+                                                <tbody><tr>
+                                                    <td width="150px" rowspan="2">
+                                                        請針對「個性、責任心、努力程度」最佳及最需改善各２項具體提供發展意見
+                                                    </td>
+                                                </tr><tr>
+                                                    <td id="B_019">
+                                                        <textarea id="txt_B_019_0" style="width: 600px; height: 133px;" readonly="readonly">團隊合作特質表現突出
+溝通表達特質表現突出</textarea>
+                                                    </td>
+                                                </tr>
+                                            </tbody></table>
+                                </td></tr></tbody></table>
+                                <table id="A_011">
+                                    <tbody><tr>
+                                        <th align="left">
+                                            主管綜評
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">
+                                            <table id="detailV_A_011" class="detailGroup" border="1" cellpadding="0" cellspacing="0">
+                                                <tbody><tr>
+                                                    <td width="150px" rowspan="2">
+                                                         現職適性與未來動向發展
+                                                    </td>
+                                                </tr><tr>
+                                                    <td id="B_023">
+                                                        <textarea id="txt_B_023_0" style="width: 600px; height: 133px;" readonly="readonly">不變：留任現職</textarea>
+                                                    </td>
+                                                </tr>
+                                            </tbody></table>
+                                        </td>
+                                    </tr>
+                                </tbody></table>
+                                <table id="A_006">
+                                    <tbody><tr>
+                                        <th align="left">
+                                             D.總評
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">
+                                            <table id="detailV_A_006" class="detailGroup" border="1" cellpadding="0" cellspacing="0">
+                                                <tbody><tr>
+                                                    <td width="150px" rowspan="2">
+                                                        各項表現之優缺點
+                                                    </td>
+                                                </tr><tr>
+                                                    <td id="B_014">
+                                                        <textarea id="txt_B_014_0" style="width: 500px; height: 200px;" readonly="readonly">專業能力強</textarea>
+                                                    </td>
+                                                </tr>
+                                            </tbody></table>
+                                </td></tr></tbody></table>
+                                <table id="AjustMentManagerAdvice">
+                                    <tbody><tr>
+                                        <th align="left">
+                                            核准主管評語
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">
+                                            <table id="detailV_A_011" class="detailGroup" border="1" cellpadding="0" cellspacing="0">
+                                                <tbody><tr>
+                                                    <td width="150px" rowspan="2">
+                                                        核准主管評語
+                                                    </td>
+                                                </tr><tr>
+                                                    <td id="B_023">
+                                                        <textarea id="txt_B_5_0" style="width: 600px; height: 133px;" readonly="readonly"></textarea>
+                                                    </td>
+                                                </tr>
+                                            </tbody></table>
+                                        </td>
+                                    </tr>
+                                </tbody></table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" align="center">
+                            <a name="btn_approve" onclick="EmpApprove();" style="width: 148px; height: 48px;" id="btn_approve" class="easyui-linkbutton l-btn l-btn-small l-btn-plain" data-options="plain:true,iconCls:&#39;icon-disk&#39;" group=""><span class="l-btn-left l-btn-icon-left" style="margin-top: 12px;"><span class="l-btn-text">同意</span><span class="l-btn-icon icon-disk">&nbsp;</span></span></a>
+                            <a name="btn_Interview" onclick="OpenEmpInterview();" style="width: 148px; height: 48px;" id="btn_Interview" class="easyui-linkbutton l-btn l-btn-small l-btn-plain" data-options="plain:true,iconCls:&#39;icon-disk&#39;" group=""><span class="l-btn-left l-btn-icon-left" style="margin-top: 12px;"><span class="l-btn-text">意見反饋</span><span class="l-btn-icon icon-disk">&nbsp;</span></span></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td height="500px" colspan="4">
+                            <a class="cssbutton" onclick="" href="http://10.62.196.170/Kpi/EmpKpiB#"></a><a class="cssbutton" onclick="" href="http://10.62.196.170/Kpi/EmpKpiB#">
+                            </a>
+                            <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                                <tbody><tr>
+                                    <td width="50%" height="30" bgcolor="cornsilk">
+                                        <div align="center">
+                                            <font face="新細明體" color="red">
+                                                <span id="lblInfomation" style="display: inline-block;
+                                    background-color: Cornsilk; border-color: #FFC080; border-width: 1px; border-style: Dotted;
+                                    height: 40%; width: 100%;"></span>
+                                            </font>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody></table>
+                        </td>
+                    </tr>
+                </tbody></table>
+            </div></div>
+        </div></div></div></div>
+    <div id="winNewPage" style="width: 1000px; height: 350px; padding: 5px;">
+
+
+</div><div class="panel combo-p panel-htop" style="position: absolute; z-index: 10; display: none;"><div class="combo-panel panel-body panel-body-noheader" title="" id=""><div id="_easyui_combobox_i1_0" class="combobox-item combobox-item-selected">2018年度臺灣績效考核</div><div id="_easyui_combobox_i1_1" class="combobox-item">2017年度臺灣績效考核</div><div id="_easyui_combobox_i1_2" class="combobox-item">2016年度臺灣績效考核</div><div id="_easyui_combobox_i1_3" class="combobox-item">2015年度台灣績效考核</div><div id="_easyui_combobox_i1_4" class="combobox-item">2014年度台灣績效考核</div><div id="_easyui_combobox_i1_5" class="combobox-item">2013年度臺灣績效考核</div><div id="_easyui_combobox_i1_6" class="combobox-item">2012年度臺灣績效考核</div><div id="_easyui_combobox_i1_7" class="combobox-item">2011年度臺灣績效考核</div><div id="_easyui_combobox_i1_8" class="combobox-item">2010年度臺灣績效考核</div></div></div></body></html>

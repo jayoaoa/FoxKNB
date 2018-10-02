@@ -1,0 +1,193 @@
+.icon-blank{
+	background:url('icons/blank.gif') no-repeat center center;
+}
+.icon-add{
+	background:url('icons/edit_add.png') no-repeat center center;
+}
+.icon-edit{
+	background:url('icons/pencil.png') no-repeat center center;
+}
+.icon-clear{
+	background:url('icons/clear.png') no-repeat center center;
+}
+.icon-remove{
+	background:url('icons/edit_remove.png') no-repeat center center;
+}
+.icon-save{
+	background:url('icons/filesave.png') no-repeat center center;
+}
+.icon-cut{
+	background:url('icons/cut.png') no-repeat center center;
+}
+.icon-ok{
+	background:url('icons/ok.png') no-repeat center center;
+}
+.icon-no{
+	background:url('icons/no.png') no-repeat center center;
+}
+.icon-cancel{
+	background:url('icons/cancel.png') no-repeat center center;
+}
+.icon-reload{
+	background:url('icons/reload.png') no-repeat center center;
+}
+.icon-search{
+	background:url('icons/search.png') no-repeat center center;
+}
+.icon-print{
+	background:url('icons/print.png') no-repeat center center;
+}
+.icon-help{
+	background:url('icons/help.png') no-repeat center center;
+}
+.icon-undo{
+	background:url('icons/undo.png') no-repeat center center;
+}
+.icon-redo{
+	background:url('icons/redo.png') no-repeat center center;
+}
+.icon-back{
+	background:url('icons/back.png') no-repeat center center;
+}
+.icon-sum{
+	background:url('icons/sum.png') no-repeat center center;
+}
+.icon-tip{
+	background:url('icons/tip.png') no-repeat center center;
+}
+.icon-filter{
+	background:url('icons/filter.png') no-repeat center center;
+}
+.icon-man{
+	background:url('icons/man.png') no-repeat center center;
+}
+.icon-lock{
+	background:url('icons/lock.png') no-repeat center center;
+}
+.icon-more{
+	background:url('icons/more.png') no-repeat center center;
+}
+
+
+.icon-mini-add{
+	background:url('icons/mini_add.png') no-repeat center center;
+}
+.icon-mini-edit{
+	background:url('icons/mini_edit.png') no-repeat center center;
+}
+.icon-mini-refresh{
+	background:url('icons/mini_refresh.png') no-repeat center center;
+}
+
+.icon-large-picture{
+	background:url('icons/large_picture.png') no-repeat center center;
+}
+.icon-large-clipart{
+	background:url('icons/large_clipart.png') no-repeat center center;
+}
+.icon-large-shapes{
+	background:url('icons/large_shapes.png') no-repeat center center;
+}
+.icon-large-smartart{
+	background:url('icons/large_smartart.png') no-repeat center center;
+}
+.icon-large-chart{
+	background:url('icons/large_chart.png') no-repeat center center;
+}
+
+
+.icon-add1{background:url('icons/add2.gif') no-repeat center center;}
+.icon-add2{background:url('icons/add.png') no-repeat center center;}
+.icon-Announce{background:url('icons/Announce.gif') no-repeat center center;}
+.icon-application{background:url('icons/application.png') no-repeat center center;}
+.icon-application_cascade{background:url('icons/application_cascade.png') no-repeat center center;}
+.icon-application_tile_horizontal{background:url('icons/application_tile_horizontal.png') no-repeat center center;}
+.icon-application_tile_vertical{background:url('icons/application_tile_vertical.png') no-repeat center center;}
+.icon-barcode1{background:url('icons/barcode.gif') no-repeat center center;}
+.icon-barcode2{background:url('icons/barcode.png') no-repeat center center;}
+.icon-basket{background:url('icons/basket.png') no-repeat center center;}
+.icon-book_edit{background:url('icons/book_edit.png') no-repeat center center;}
+.icon-book_open{background:url('icons/book_open.png') no-repeat center center;}
+.icon-calculator{background:url('icons/calculator.png') no-repeat center center;}
+.icon-calendar{background:url('icons/calendar.gif') no-repeat center center;}
+.icon-cart_put{background:url('icons/cart_put.png') no-repeat center center;}
+.icon-chart_bar{background:url('icons/chart_bar.png') no-repeat center center;}
+.icon-clock{background:url('icons/clock.png') no-repeat center center;}
+.icon-coins{background:url('icons/coins.png') no-repeat center center;}
+.icon-coins_add{background:url('icons/coins_add.png') no-repeat center center;}
+.icon-color_wheel{background:url('icons/color_wheel.png') no-repeat center center;}
+.icon-comments{background:url('icons/comments.png') no-repeat center center;}
+.icon-coms{background:url('icons/coms.gif') no-repeat center center;}
+.icon-connect{background:url('icons/connect.png') no-repeat center center;}
+.icon-database{background:url('icons/database.png') no-repeat center center;}
+.icon-database_edit{background:url('icons/database_edit.png') no-repeat center center;}
+.icon-database_gear{background:url('icons/database_gear.png') no-repeat center center;}
+.icon-database_go{background:url('icons/database_go.png') no-repeat center center;}
+.icon-del{background:url('icons/del.gif') no-repeat center center;}
+.icon-delete{background:url('icons/delete.png') no-repeat center center;}
+.icon-Department{background:url('icons/Department.gif') no-repeat center center;}
+.icon-detail{background:url('icons/detail.png') no-repeat center center;}
+.icon-disconnect{background:url('icons/disconnect.png') no-repeat center center;}
+.icon-disk{background:url('icons/disk.png') no-repeat center center;}
+.icon-door_out{background:url('icons/door_out.png') no-repeat center center;}
+.icon-dot{background:url('icons/dot.gif') no-repeat center center;}
+.icon-DownArrow{background:url('icons/DownArrow.gif') no-repeat center center;}
+.icon-eye{background:url('icons/eye.gif') no-repeat center center;}
+.icon-email{background:url('icons/email.png') no-repeat center center;}
+.icon-emoticon_smile{background:url('icons/emoticon_smile.png') no-repeat center center;}
+.icon-excel{background:url('icons/excel.gif') no-repeat center center;}
+.icon-expand{background:url('icons/expand.gif') no-repeat center center;}
+.icon-face{background:url('icons/face.ico') no-repeat center center;}
+.icon-find{background:url('icons/find.gif') no-repeat center center;}
+.icon-flag_green{background:url('icons/flag_green.png') no-repeat center center;}
+.icon-flag_red{background:url('icons/flag_red.png') no-repeat center center;}
+.icon-folder{background:url('icons/folder.gif') no-repeat center center;}
+.icon-folder_table{background:url('icons/folder_table.png') no-repeat center center;}
+.icon-font{background:url('icons/font.png') no-repeat center center;}
+.icon-go{background:url('icons/go.gif') no-repeat center center;}
+.icon-heart{background:url('icons/heart.png') no-repeat center center;}
+.icon-help1{background:url('icons/help.gif') no-repeat center center;}
+.icon-hot{background:url('icons/hot.gif') no-repeat center center;}
+.icon-house{background:url('icons/house.png') no-repeat center center;}
+.icon-img{background:url('icons/img.gif') no-repeat center center;}
+.icon-key1{background:url('icons/key.gif') no-repeat center center;}
+.icon-key2{background:url('icons/key.png') no-repeat center center;}
+.icon-list{background:url('icons/list.png') no-repeat center center;}
+.icon-lock{background:url('icons/lock.png') no-repeat center center;}
+.icon-lock_open{background:url('icons/lock_open.png') no-repeat center center;}
+.icon-magnify{background:url('icons/magnify.png') no-repeat center center;}
+.icon-monitor{background:url('icons/monitor.gif') no-repeat center center;}
+.icon-new_3{background:url('icons/new_3.gif') no-repeat center center;}
+.icon-of3{background:url('icons/of3.gif') no-repeat center center;}
+.icon-page{background:url('icons/page.gif') no-repeat center center;}
+.icon-pageset{background:url('icons/pageset.gif') no-repeat center center;}
+.icon-page_copy{background:url('icons/page_copy.png') no-repeat center center;}
+.icon-pencil_add{background:url('icons/pencil_add.png') no-repeat center center;}
+.icon-Preview{background:url('icons/Preview.gif') no-repeat center center;}
+.icon-print1{background:url('icons/print.gif') no-repeat center center;}
+.icon-printer{background:url('icons/printer.png') no-repeat center center;}
+.icon-refresh{background:url('icons/refresh.gif') no-repeat center center;}
+.icon-report{background:url('icons/report.png') no-repeat center center;}
+.icon-resultset_first{background:url('icons/resultset_first.png') no-repeat center center;}
+.icon-resultset_last{background:url('icons/resultset_last.png') no-repeat center center;}
+.icon-resultset_next{background:url('icons/resultset_next.png') no-repeat center center;}
+.icon-resultset_previous{background:url('icons/resultset_previous.png') no-repeat center center;}
+.icon-save1{background:url('icons/save.gif') no-repeat center center;}
+.icon-set{background:url('icons/set.gif') no-repeat center center;}
+.icon-setting{background:url('icons/setting.png') no-repeat center center;}
+.icon-spellCheck{background:url('icons/spellCheck.gif') no-repeat center center;}
+.icon-star{background:url('icons/star.png') no-repeat center center;}
+.icon-tag_pink{background:url('icons/tag_pink.png') no-repeat center center;}
+.icon-text{background:url('icons/text.gif') no-repeat center center;}
+.icon-textfolder{background:url('icons/textfolder.gif') no-repeat center center;}
+.icon-tick{background:url('icons/tick.png') no-repeat center center;}
+.icon-tool{background:url('icons/tool.gif') no-repeat center center;}
+.icon-undo1{background:url('icons/undo.gif') no-repeat center center;}
+.icon-UpArrow{background:url('icons/UpArrow.gif') no-repeat center center;}
+.icon-user_add{background:url('icons/user_add.png') no-repeat center center;}
+.icon-user_green{background:url('icons/user_green.png') no-repeat center center;}
+.icon-user_orange{background:url('icons/user_orange.png') no-repeat center center;}
+.icon-vssver2{background:url('icons/vssver2.scc') no-repeat center center;}
+.icon-wlink{background:url('icons/wlink.gif') no-repeat center center;}
+.icon-word{background:url('icons/word.gif') no-repeat center center;}
+.icon-wrench{background:url('icons/wrench.png') no-repeat center center;}

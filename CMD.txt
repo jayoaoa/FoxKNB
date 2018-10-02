@@ -7,6 +7,8 @@
 #C2050	
 	git clone ssh://BMC/others/microsoft/c2050
 
+#SSIF
+	init.sh init i2c
 
 #G50 build
 	PATH=/opt/git/v2.11.4/bin:$PATH
@@ -172,8 +174,7 @@
 		Received:
 		  0x1 0x0 0x1 0xc 0x1b 0x0 0x0 0xd7 0x1 0xb 0x14 0xe0 0x4d 0x31 0x30 0x36 0x35 0x31 0x36 0x33 0x2d 0x30 0x30 0x31 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0xe0 0x58 0x58 0x58 0x58 0x58 0x58 0x58 0x58 0x58 0x2d 0x58 0x58 0x58 0x2d 0x47 0x5f 0x58 0x58 0x58 0x5f 0x58 0x58 0x58 0x58 0x5f 0x31 0x32 0x33 0x0 0x0 0x0 0x0 0xc8 0x33 0x2e 0x30 0x0 0x0 0x0 0x0 0x0 0xc3 0x42 0x0 0x0 0xc1 0x0 0x0 0x0 0x0 0xb4 0x1 0xf 0x19 0x0 0x0 0x0 0xd0 0x46 0x6f 0x78 0x63 0x6f 0x6e 0x6e 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0xc8 0x47 0x35 0x30 0x42 0x30 0x0 0x0 0x0 0xe0 0x58 0x58 0x58 0x58 0x58 0x58 0x58 0x58 0x58 0x2d 0x58 0x58 0x58 0x2d 0x47 0x5f 0x58 0x58 0x58 0x5f 0x58 0x58 0x58 0x58 0x5f 0x58 0x58 0x58 0x0 0x0 0x0 0x0 0xe0 0x4d 0x31 0x30 0x36 0x35 0x31 0x34 0x31 0x2d 0x30 0x30 0x31 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0xca 0x46 0x72 0x75 0x20 0x76 0x30 0x2e 0x30 0x39 0x0 0xc6 0x30 0x41 0x0 0x0 0x0 0x0 0xc1 0x0 0x0 0x7f 0x1 0x10 0x19 0xd0 0x46 0x78 0x78 0x63 0x6f 0x6e 0x6e 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0xc8 0x47 0x35 0x30 0x42 0x31 0x0 0x0 0x0 0xd0 0x4d 0x31 0x30 0x36 0x35 0x31 0x36 0x36 0x2d
 
-########################################################## Warmreset test ###################
-
+########################################################## Warmreset test ###################done;
 while [ 1 ];do date; top -b -d 1 -n 1; sleep 0.5; done;
 while [ 1 ];do date; ps fax; sleep 0.3; done;
 while [ 1 ];do echo "-----------"; cat /proc/uptime; cat /proc/*[0-9]*/stat | grep -e daemon -e IPMIMain -e processmanager -e S[0-9][0-9] -e K[0-9][0-9]; sleep 0.2; done;
@@ -198,6 +199,8 @@ inotifywait -m --timefmt '%F %T' --format '%T %w %e' /usr/local/bin/IPMIMain &
 
 while [ 1 ];do cat SystemDCCycle_20180912.log | grep -irn sub; sleep 5; clear; done;
 while [ 1 ];date; do ipmitool -I lanplus -H 10.32.2.203 -U admin -P admin sdr list | grep Temp_CPU; echo "-----------"; done;
+while [ 1 ];do gpiotool --get-data 62; sleep 1; done;
+while [ 1 ];do ps -ax; sleep 1; done;
 ################################################################################################
 
 	read psu mfr id (loop)
@@ -330,9 +333,52 @@ while [ 1 ];date; do ipmitool -I lanplus -H 10.32.2.203 -U admin -P admin sdr li
 	/MDS/3710/MDS/spx/utils/BuildPRJ/BuildPRJ.py /AMI_AST2500_RR11/configs/ast2500evb.PRJ /AMI_AST2500_RR11/packages/ /AMI_AST2500_RR11/workspace/ BUILD
 
 #C2050
+	#BIOS control GPIO
+		1. Enter BIOS shell
+		2. Run cvmrundiag
+		3. choose: (4) GPIO options
+			=========================================
+			 GPIO Menu
+			=========================================
+			1) 2-socket board, Specify which CPU to be tested.     0
+			2) Exclude some GPIO pins from testing....
+			3) GPIO Output Test, with all 1's.
+			4) GPIO Output Test, with all 0's.
+			5) GPIO Output Test, with user's pattern...
+			6) GPIO Input  Test, keep GPIO pins unconnected.
+			7) Access GPIO.
+			8) Go back to main menu.
+		
+		4. choose: (7) Access GPIO
+		5. config: (1) Specify which CPU to be accessed
+		6. choose action
+			=========================================
+			 GPIO Access Menu
+			=========================================
+			1) Specify which CPU to be accessed.  0
+			2) Specify which IO to be accessed. 41
+			3) GPIO Direction - output (output 1 /input 0)
+			4) GPIO level - Low (High 1 / Low 0)
+			5) Set GPIO.
+			6) Read GPIO.
+			7) Verbosity  0.
+			8) Display IO configuration.
+			99) Go back to upper menu.
+
+
+	#Flash BIOS name 123 (0x31 0x32 0x33)
+		ipmitool -H 127.0.0.1 -U admin -P admin raw 0x38 0x84 0x21 0x01 0x01 0x31 0x32 0x33
+	#Get BIOS version
+		ipmitool -H 127.0.0.1 -U admin -P admin raw 0x38 0x0b 0x00
+
+	#KS environment
+		10.62.32.92
+		edward/edward1234
+		microcom -p /dev/ttyUSB1 -s 115200
+		microcom kill sudo rm /var/lock/LCK..ttyUSB1
 	#HSC AC cycle: P12_AUX HSC
 		ipmitool -I lanplus -H 10.32.2.203 -U admin -P admin i2c bus=7 0x22 0x00 0xd9
-
+		ipmitool -I lanplus -H 127.0.0.1 -U admin -P admin i2c bus=7 0x22 0x00 0xd9
 	#Build step
 		git clone https://azurecsi.visualstudio.com/C2050/_git/BMC
 		cd BMC/
@@ -354,10 +400,12 @@ while [ 1 ];date; do ipmitool -I lanplus -H 10.32.2.203 -U admin -P admin sdr li
 		0x0e60000 - 0x1ff0000 : *******FREE*******
 		0x1ff0000 - 0x2000000 :  ast2500 : Ver 2.02
 		---------------------------------------------------
-	
+	#doyle
+		>ipmitool.exe -H 192.168.0.100 -I lanplus -U admin -P admin raw  0x38 0x84 0x41 0x01 0x01 0x74 0x2e 0x62 0x69 0x6e
 	#Flash BMC
 		Yafuflash.exe -nw -ip 10.32.3.223 -u admin -p admin -f -non-interactive -mse 3 -netfn 0x34 C2050.BC.02.03.00_unsigned.bin
-		
+		./Yafuflash -nw -fb -ip 192.168.0.100 -u admin -p admin -netfn 0x34 -mse 2 ./C2050.BC.02.06.00.bin
+
 	#GIT Account
 		https://azurecsi.visualstudio.com/C2050/_git/BMC
 		alvis.hc.cheng@fii-foxconn.com
@@ -383,30 +431,101 @@ while [ 1 ];date; do ipmitool -I lanplus -H 10.32.2.203 -U admin -P admin sdr li
 
 	#KS auto build
 		export PATH=$PATH:/MDS/402/MDS/spx/utils/BuildPRJ/
-		git clone ssh://BMC/others/microsoft/c2050
-		cd c2050/
-		rm -rf packages
-		mkdir packages
-		scripts/SpxConv.sh -c packages/ source/
-		BuildPRJ.py configs/C2050_unsigned.PRJ packages/ workspace/ REBUILD
-		BuildPRJ.py configs/C2050_unsigned.PRJ packages/ workspace/ REPACK packages/libipmipdk-1.0.0-ARM-AST2500-MtOlympus-src.spx
+git clone ssh://BMC/others/microsoft/c2050
+cd c2050/
+rm -rf packages
+mkdir packages
+scripts/SpxConv.sh -c packages/ source/
+BuildPRJ.py configs/C2050_unsigned.PRJ packages/ workspace/ BUILD
+	BuildPRJ.py configs/C2050_unsigned.PRJ packages/ workspace/ REPACK packages/libipmipdk-1.0.0-ARM-AST2500-MtOlympus-src.spx
+		BuildPRJ.py configs/C2050_unsigned.PRJ packages/ workspace/ REPACK packages/oempdk_dev-1.0.0-ARM-MtOlympus-src.spx
+		BuildPRJ.py configs/C2050_unsigned.PRJ packages/ workspace/ REPACK packages/ipmi_dev-3.160.0-src.spx
 		scripts/SpxConv.sh -x packages/ source/
 
 		
-#git remote cp 
+#git remote cp - Sync MS to KS
+	git clone ssh://BMC/others/microsoft/c2050
 	git remote add msft https://azurecsi.visualstudio.com/C2050/_git/BMC
 	git fetch msft
+	git cherry-pick [commit number]
+	...
+	
 	git push origin HEAD:refs/for/master
 
+#git remote cp - Sync KS to MS
+	git clone https://azurecsi.visualstudio.com/C2050/_git/BMC
+	git remote add ks ssh://BMC/others/microsoft/c2050
+	git fetch ks
+	git co -b [branch_name]
+	git cherry-pick [commit number]
+	...
+
+	git push origin HEAD:[branch_name]
+
+	----------------------------------------------------------------------
+	git remote -v
+	gti remote rm ks
+	git remote add ks ssh://BMC/others/microsoft/c2050
+	git fetch ks
+		From ssh://BMC/others/microsoft/c2050
+		 * [new branch]      AddBattStatOfChargeSensor -> kss/AddBattStatOfChargeSensor
+		 * [new branch]      AddPSUFanSensors -> kss/AddPSUFanSensors
+		 * [new branch]      ChangeI2C7ClockTo400kHz -> kss/ChangeI2C7ClockTo400kHz
+		 * [new branch]      SDRTable   -> kss/SDRTable
+		 * [new branch]      TFSCodeSyncUp -> kss/TFSCodeSyncUp
+		 * [new branch]      master     -> kss/master
+
+	git checkout -b commit1
+	git branch
+		  UpdateSPI2Failed
+		* commit1
+		  master
+
+	git log remotes/ks/master
+		commit 9987dede9f50cc2e3ea0dcfd9b69db619a8c05a4
+		Author: Willen Lee <willen.cp.lee@mail.foxconn.com>
+		Date:   Fri Sep 21 16:29:46 2018 +0800
+			.......
+
+		commit 333064f65c901e2c19b05dcfae368e3efe58bc06
+		Author: Willen Lee <willen.cp.lee@mail.foxconn.com>
+		Date:   Fri Sep 21 17:06:32 2018 +0800
+			......
+
+			
+	git cp 9987dede9f50cc2e3ea0dcfd9b69db619a8c05a4
+
+	git checkout -b commit2
+	git branch
+		  UpdateSPI2Failed
+		  commit1
+		* commit2
+		  master
+
+			
+	git cp 333064f65c901e2c19b05dcfae368e3efe58bc06
+
+	git checkout commit1
+	git push origin HEAD:commit1
+
+	git checkout commit2
+	git push origin HEAD:commit2
+	----------------------------------------------------------------------
+
+	
+#git 比較
+git diff --name-only HEAD~1 HEAD~2	
+	
 #git
 	#Pretty
 	git log --pretty=oneline
+	git log --pretty=format:"%h %G?%d %s [%an]"
 	
 	#CP
 	git cherry-pick 5c97eeaa3716f2e91b3f00af39f47f0170697130
 	
 	#Change commit author
-	git commit --amend --author="Edward Wu <edward.sh.wu@mail.foxconn.com>"
+	git commit -s --amend --author="Edward Wu <edward.sh.wu@mail.foxconn.com>"
 	
 	#push
 	git push origin HEAD:refs/for/master
@@ -425,6 +544,9 @@ while [ 1 ];date; do ipmitool -I lanplus -H 10.32.2.203 -U admin -P admin sdr li
 
 	#rebase continue
 	git rebase --continue
+	
+	#Change-id
+	scp -p -P 29418 edward@gerrit.bmc-ks.xyz:hooks/commit-msg ./git/hooks/
 
 		
 #edge server:
@@ -495,3 +617,12 @@ svn co https://svnsm.ami.com.tw/svn/SPX/projects-x/legacy/customers/Cavium-Saber
 [packages]
 oemsvnspxex.py --co --sp="projects-x/legacy/customers/AMI_AST2500_RR11-5-Plus/packages" --workspace=packages/
 oemsvnspxex.py --co --sp="projects-x/legacy/customers/Cavium-Saber-AST2500-RR11-6/packages" --workspace=packages/
+
+
+
+https://vstf-us-wa-07.partners.extranet.microsoft.com:8443/tfs/
+Account: Partners\TYin
+Tom@Sep03
+
+ipmitool -H 127.0.0.1 -U admin -P admin sensor
+ipmitool -H 127.0.0.1 -U admin -P admin power off

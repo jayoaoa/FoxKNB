@@ -1,0 +1,13 @@
+	Merge the webui feature to Zaius
+	https://github.com/openbmc/phosphor-webui
+	
+	1. Add the phospor-webui to 
+		openbmc/meta-ibm/meta-witherspoon/recipes-phosphor/packagegroups/packagegroup-obmc-apps.bbappend
+
+		!!! Encounter build problem, because we need to bump it to commit 6bcd6cff96ec88f71b93774418949f765d77411b !!
+
+	2. Bump phosphor-webui revision code to the latest version
+		openbmc/meta-phosphor/common/recipes-phosphor/webui/phosphor-webui.bb
+		https://github.com/openbmc/openbmc/issues/3200
+		https://github.com/openbmc/phosphor-webui/commit/6bcd6cff96ec88f71b93774418949f765d77411b
+		

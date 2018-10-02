@@ -1,0 +1,1206 @@
+﻿$(function () {
+    //JS多語言
+    $.getScript('/Kpi/EmpKpiB/GetJsLanguage');
+    InitEmpAttInfo();//載入員工基本信息
+    /****************獲取員工分數**********************/
+    //獲取員工分數
+    function LoadEmpScoreData() {
+        $.post('/Kpi/EmpKpiB/InitEmpScoreInfo',
+                     { Act: "SysScore" }, function (ScoreValue) {
+                         if ($.parseJSON(ScoreValue)["total"] != 0) {
+                             var empSysScore = $.parseJSON(ScoreValue)["rows"][0]["Score"];
+                             $('#lb_system').html(empSysScore);
+                         }
+                         else {
+                             $('#lb_system').html("0");
+                         }
+                     });
+        InitialContent();//載入員工考評內容 
+    }
+
+    function InitEmpAttInfo() {
+        var empNo = $("input[id*='hidempNo']:first").val();
+        $.post('/Kpi/EmpKpiB/InitEmpBasicsInfo',
+               { Act: "empItemAttList", EmpNo: empNo }, function (empItemAttList) {
+                   if (empItemAttList != null) {
+                       //顯示數據  
+                       $('#dgList').datagrid({
+                           data: $.parseJSON(empItemAttList),
+                           onClickRow: function (index, data) { ShowData(); }
+                       });
+                   }
+               });
+        $.post('/Kpi/EmpKpiB/InitEmpBasicsInfo',
+              { Act: "empItemAttListOut", EmpNo: empNo }, function (empItemAttList) {
+                  if (empItemAttList != null) {
+                      //顯示數據  
+                      $('#dgListOut').datagrid({
+                          data: $.parseJSON(empItemAttList),
+                          onClickRow: function (index, data) { ShowData(); }
+                      });
+                  }
+              });
+        $.post('/Kpi/EmpKpiB/InitEmpBasicsInfo',
+            { Act: "empItemJCListPlus", EmpNo: empNo }, function (empItemJCList) {
+                if (empItemJCList != null) {
+                    //顯示數據  
+                    $('#dgListJCPlus').datagrid({
+                        data: $.parseJSON(empItemJCList),
+                        onClickRow: function (index, data) { ShowData(); }
+                    });
+                }
+            });
+        $.post('/Kpi/EmpKpiB/InitEmpBasicsInfo',
+         { Act: "empItemJCList", EmpNo: empNo }, function (empItemJCList) {
+             if (empItemJCList != null) {
+                 //顯示數據  
+                 $('#dgListJC').datagrid({
+                     data: $.parseJSON(empItemJCList),
+                     onClickRow: function (index, data) { ShowData(); }
+                 });
+             }
+         });
+        $.post('/Kpi/EmpKpiB/InitEmpBeforeKPIData',
+        { Act: "empBeforeKPIData", EmpNo: empNo, YearCode: getlastyear() }, function (empBeforeKpiDataList) {
+            if (empBeforeKpiDataList != null && empBeforeKpiDataList != "") {
+                //顯示數據  
+                $('#dgListKpiData').datagrid({
+                    data: $.parseJSON(empBeforeKpiDataList),
+                    onClickRow: function (index, data) { ShowData(); }
+                });
+            }
+        });
+        $.post('/Kpi/EmpKpiB/InitEmpBeforeKPIData',
+       { Act: "empSupervisorKpiData", EmpNo: empNo, YearCode: getlastyear() }, function (empSupervisorKpiDataList) {
+           if (empSupervisorKpiDataList != null) {
+               //顯示數據  
+               $('#dgListSupervisor').datagrid({
+                   data: $.parseJSON(empSupervisorKpiDataList),
+                   onClickRow: function (index, data) { ShowData(); }
+               });
+           }
+           LoadEmpScoreData();//載入員工層級分  
+       });
+    }
+    var statusCode = $("#hidStatus").val();
+    if (statusCode == "") {
+        $.messager.alert('info', GetLang('Mess1189', '該人員未配置績效表簽核層級，請聯繫貴單位人資處理！'));
+    }
+    if (statusCode == "0") {
+        $("#divSuperviosrComment").hide();
+    }
+    else {
+        if (statusCode == "1") {
+            $("#divSuperviosrComment").hide();
+            $("#saveDraftButton").linkbutton('disable');
+        }
+        else {
+            $("#saveDraftButton").linkbutton('disable');
+            $("#saveButton").linkbutton('disable');
+            $(".editTextArea").attr('readonly', 'readonly');
+            $(".assignField").attr('disable', 'disable');
+            if (statusCode != "2") {
+                $("#btn_approve").linkbutton('disable');
+                $("#btn_Interview").linkbutton('disable');
+            }
+        }
+    }
+});
+
+function getlastyear() {
+    var yearversion = $('#YearCode').val();
+    yearversion = (parseInt(yearversion.substr(0, 4)) - 1) + '_TW';
+    return yearversion;
+}
+
+function Search() {
+    $('#frmSearch').form('submit', {
+        url: '/Kpi/EmpKpiB/InitEmpBeforeKPIData',
+        onSubmit: function (param) {
+            param.Act = "empBeforeKPIData";
+            param.EmpNo = $('#hidempNo').val();
+            param.YearCode = $('#YearCode').val();
+            return true;
+        },
+        success: function (empBeforeKpiDataList) {
+
+            //顯示數據  
+            $('#dgListKpiData').datagrid({
+                data: $.parseJSON(empBeforeKpiDataList)
+            });
+
+
+            $.ajax({
+                url: '/Kpi/EmpKpiB/InitEmpBeforeKPIData',
+                type: 'post',
+                dataType: 'json',
+                data: { Act: 'empSupervisorKpiData', YearCode: $('#YearCode').val(), EmpNo: $('#hidempNo').val() },
+                success: function (data) {
+                    //顯示數據  
+                    $('#dgListSupervisor').datagrid({
+                        data: data
+                    });
+
+                }
+            });
+        }
+    });
+}
+
+
+function OpenEmpInterview() {
+    empNo = $("#hidempNo").val();
+    kpiUrl = '/Kpi/EmpAdvice?empNo=' + empNo;
+    $('#winNewPage').window({
+        title: GetLang('Mess1190', '員工意見'),
+        iconCls: 'icon-magnify',
+        modal: true,
+        href: kpiUrl,
+        onLoad: function () {
+
+        }
+    });
+}
+/*******************************************加載考評內容begin***********************************************/
+
+//加載考評內容
+function InitialContent()
+{
+    InitialHContent();
+    HidePageLoading();
+}
+
+//加載H型考評內容
+function InitialHContent() {
+
+    var tableList = $("table[id*='detailH']");
+    var empNo = $("input[id*='hidempNo']:first").val();
+    var curAssignId = $("input[id*='hidassignId']:first").val();
+    var curPersonLevelId = $("input[id*='hidPersonLevelId']:first").val();
+
+    if (tableList.length > 0) {
+        for (var i = 0; i < tableList.length; i++) {
+            var theTable = tableList.get(i);
+            var theTableId = theTable.id;
+            var curGroupId = theTableId.replace("detailH_", "");
+            groupObj = "";
+            var groupScore = "";
+            var groupFormula = "";
+            // LIUYAN 20170731 判斷員工是否已經存儲資料
+            $.post('/Kpi/EmpKpiB/GetEmpGroupContents',
+                { Act: "GetEmpGroup", curGroupId: curGroupId, empNo: empNo }, function (EmpGroup) {
+                    if (EmpGroup != null) {
+                        groupObj = $.parseJSON(EmpGroup)["rows"][0];
+                        groupScore = 100 * parseInt($.parseJSON(EmpGroup)["rows"][0]["ScoreRate"]) / 100;
+                        groupFormula = $.parseJSON(EmpGroup)["rows"][0]["Formula"] == "" ? "1" : $.parseJSON(EmpGroup)["rows"][0]["Formula"];
+                    }
+                });
+            var currentCount = "";
+            var contentList = null;
+
+            $.post('/Kpi/EmpKpiB/GetEmpContents',
+              { Act: "GetEmpContentNum", empNo: empNo, curAssignId: curAssignId, curGroupId: curGroupId }, function (EmpContentNum) {
+                  if (EmpContentNum != null) {
+                      currentCount = $.parseJSON(EmpContentNum)["total"];
+                  }
+              });
+
+            if (currentCount != "0" || curAssignId == "8" || curAssignId == "5" || curAssignId == "3")
+                // LIUYAN 20170731 若暫存表中有記錄，取暫存的，否則取提交的
+                $.post('/Kpi/EmpKpiB/GetEmpContents',
+             { Act: "GetEmpContents", empNo: empNo, curAssignId: curAssignId, curGroupId: curGroupId }, function (EmpContents) {
+                 if (EmpContents != null) {
+                     contentList = $.parseJSON(EmpContents)["rows"];
+                     LoadHContents(contentList, curGroupId, groupScore, groupFormula, curPersonLevelId);
+                 }
+             });
+            else
+                $.post('/Kpi/EmpKpiB/GetEmpContents',
+               { Act: "GetCopyContents", empNo: empNo, curAssignId: curAssignId, curGroupId: curGroupId }, function (EmpContents) {
+                   if (EmpContents != null) {
+                       contentList = $.parseJSON(EmpContents)["rows"];
+                       LoadHContents(contentList, curGroupId, groupScore, groupFormula, curPersonLevelId);
+                   }
+               });
+        }
+    }
+}
+//載入文本框內容
+function LoadHContents(contentList, curGroupId, groupScore, groupFormula, curPersonLevelId) {
+    if (contentList != null) {
+        for (var contIndex = 0; contIndex < contentList.length; contIndex++) {
+            var theContent = contentList[contIndex];
+            var classID = theContent.ClassCode;
+            var itemNum = parseInt(theContent.ItemNumber) - 1;
+            var assingID = theContent.AssignId;
+            var isScore = theContent.IsScore;
+            var contentText = theContent.Contents;
+            var personLevelId = theContent.PersonLevelId;
+            if (isScore == "Y") {
+                var controlId = "select_" + classID + "_" + itemNum;
+                var control = $("#" + controlId);
+                control.attr("name", theContent.ContentId);
+                if (personLevelId == curPersonLevelId) {
+                    control.val(contentText);
+                } else {
+                    var colId = classID + "_" + assingID + "_" + personLevelId + "_" + itemNum;
+                    $("#" + colId).html(contentText);
+                }
+            } else {
+                var controlId = "txt_" + classID + "_" + itemNum;
+                var control = $("#" + controlId);
+                control.val(contentText);
+                control.attr("name", theContent.ContentId);
+                if (control.hasClass("RateClass")) {
+                    JqueryCreateDropDownList(controlId, itemNum, curGroupId, groupScore, groupFormula);
+                }
+            }
+        }
+    }
+    InitialSelectedContent();
+    InitialGroupXiaoJiFen();
+    InitialVTableContent();
+}
+
+function CreateRoleDropDownList(controlId) {
+    var jddlobj = $("#" + controlId);
+    jddlobj.empty();
+    jddlobj.append("<option value=''>" + GetLang('Mess1164', '請選擇') + "</option>");
+    var defaultValue = [GetLang('Mess1191', '執行者'), GetLang('Mess1192', '管理者'), GetLang('Mess1193', '經營者'), GetLang('Mess1194', '開創者')];
+    for (var i = 0; i < defaultValue.length; i++) {
+        jddlobj.append("<option value='" + i + "'>" + defaultValue(i) + "</option>");
+    }
+}
+//加載Selected內容
+function InitialSelectedContent() {
+    var tableList = $("table[id*='detailS']");
+    var empNo = $("input[id*='hidempNo']:first").val();
+    var curAssignId = $("input[id*='hidassignId']:first").val();
+    var curPersonLevelId = $("input[id*='hidPersonLevelId']:first").val();
+    if (tableList.length > 0) {
+        for (var i = 0; i < tableList.length; i++) {
+            var theTable = tableList.get(i);
+            var theTableId = theTable.id;
+            var curGroupId = theTableId.replace("detailS_", "");
+            var currentCount = "";
+            var contentList = null;
+
+            $.post('/Kpi/EmpKpiB/GetEmpContents',
+              { Act: "GetEmpContentNum", empNo: empNo, curAssignId: curAssignId, curGroupId: curGroupId }, function (EmpContentNum) {
+                  if (EmpContentNum != null) {
+                      currentCount = $.parseJSON(EmpContentNum)["total"];
+                  }
+              });
+
+            if (currentCount != "0" || curAssignId == "8" || curAssignId == "5" || curAssignId == "3")
+                // LIUYAN 20170731 若暫存表中有記錄，取暫存的，否則取提交的
+                $.post('/Kpi/EmpKpiB/GetEmpContents',
+             { Act: "GetEmpContents", empNo: empNo, curAssignId: curAssignId, curGroupId: curGroupId }, function (EmpContents) {
+                 if (EmpContents != null) {
+                     contentList = $.parseJSON(EmpContents)["rows"];
+                     LoadSelectedContents(contentList, curPersonLevelId);
+                 }
+             });
+            else
+                $.post('/Kpi/EmpKpiB/GetEmpContents',
+               { Act: "GetCopyContents", empNo: empNo, curAssignId: curAssignId, curGroupId: curGroupId }, function (EmpContents) {
+                   if (EmpContents != null) {
+                       contentList = $.parseJSON(EmpContents)["rows"];
+                       LoadSelectedContents(contentList, curPersonLevelId);
+                   }
+               });
+
+        }
+    }
+}
+
+///載入下拉框內容
+function LoadSelectedContents(contentList, curPersonLevelId) {
+    if (contentList != null) {
+        for (var contIndex = 0; contIndex < contentList.length; contIndex++) {
+            var theContent = contentList[contIndex];
+            var itemId = theContent.ItemId;
+            var contentText = theContent.Contents;
+            var assingID = theContent.AssignId;
+            var personLevelId = theContent.PersonLevelId;
+            var controlId = "txt_" + itemId;
+            var control = $("#" + controlId);
+            control.attr("name", theContent.ContentId);
+            if (curPersonLevelId == personLevelId) {
+                control.attr("value", contentText);
+                $("input[name='" + itemId + "'][value=" + contentText + "]").attr("checked", true);
+            } else {
+                var colId = itemId + "_" + assingID + "_" + personLevelId;
+                $("#" + colId).html(contentText);
+            }
+        }
+    }
+
+}
+
+function InitialGroupXiaoJiFen() {
+    var empNo = $("input[id*='hidempNo']:first").val();
+    var curAssignId = $("input[id*='hidassignId']:first").val();
+    var currentList = null;
+    var currentCount = "";
+
+    //debugger;
+    $.post('/Kpi/EmpKpiB/GetEmpAssignContents',
+           { Act: "GetEmpAssignScore", empNo: empNo, curAssignId: curAssignId }, function (EmpContentNum) {
+               if (EmpContentNum != null) {
+                   currentCount = $.parseJSON(EmpContentNum)["total"];
+                   currentList = $.parseJSON(EmpContentNum)["rows"];
+                   LoadInitalSocre(currentList);
+               }
+           });
+    if (currentCount == "0" && curAssignId == "7")
+        $.post('/Kpi/EmpKpiB/GetEmpAssignContents',
+             { Act: "GetEmpLastAssignScore", empNo: empNo, curAssignId: "8" }, function (EmpContents) {
+                 if (EmpContents != null) {
+                     currentList = $.parseJSON(EmpContents)["rows"];
+                     LoadInitalSocre(currentList);
+                 }
+             });
+    else if (currentCount == "0" && curAssignId == "23")
+        $.post('/Kpi/EmpKpiB/GetEmpAssignContents',
+            { Act: "GetEmpLastAssignScore", empNo: empNo, curAssignId: "7" }, function (EmpContents) {
+                if (EmpContents != null) {
+                    currentList = $.parseJSON(EmpContents)["rows"];
+                    LoadInitalSocre(currentList);
+                }
+            });
+}
+
+///載入小積分
+function LoadInitalSocre(currentList) {
+    if (currentList != null) {
+        for (var i = 0; i < currentList.length; i++) {
+            var dscore = currentList[i];
+            var groupId = dscore.GroupCode;
+            var score = dscore.Sumscore;
+            var controlId = "xiaoji_" + groupId;
+            score = score == null ? 0 : score;
+            var v = $("#" + controlId);
+            v.val(score);
+        }
+        jqueryCalculateSumAll();
+    }
+}
+
+function InitialVTableContent() {
+    //debugger;
+    var tableList = $("table[id*='detailV']");
+    var empNo = $("input[id*='hidempNo']:first").val();
+    var curAssignId = $("input[id*='hidassignId']:first").val();
+    var curPersonLevelId = $("input[id*='hidPersonLevelId']:first").val();
+    if (tableList.length > 0) {
+        for (var i = 0; i < tableList.length; i++) {
+            var theTable = tableList.get(i);
+            var theTableId = theTable.id;
+            var curGroupId = theTableId.replace("detailV_", "");
+            var currentCount = "";
+            var contentList = null;
+            $.post('/Kpi/EmpKpiB/GetEmpContents',
+              { Act: "GetEmpContentNum", empNo: empNo, curAssignId: curAssignId, curGroupId: curGroupId }, function (EmpContentNum) {
+                  if (EmpContentNum != null) {
+                      currentCount = $.parseJSON(EmpContentNum)["total"][0];
+                  }
+              });
+
+            if (currentCount != "0" || curAssignId == "8" || curAssignId == "5" || curAssignId == "3")
+                $.post('/Kpi/EmpKpiB/GetEmpContents',
+             { Act: "GetEmpContents", empNo: empNo, curAssignId: curAssignId, curGroupId: curGroupId }, function (EmpContents) {
+                 if (EmpContents != null) {
+                     contentList = $.parseJSON(EmpContents)["rows"];
+                     LoadVContents(contentList, curPersonLevelId, curAssignId);
+                     // LIUYAN 1225 若暫存表中有記錄，取暫存的，否則取提交的
+                 }
+             });
+            else
+                $.post('/Kpi/EmpKpiB/GetEmpContents',
+               { Act: "GetCopyContents", empNo: empNo, curAssignId: curAssignId, curGroupId: curGroupId }, function (EmpContents) {
+                   if (EmpContents != null) {
+                       contentList = $.parseJSON(EmpContents)["rows"];
+                       LoadVContents(contentList, curPersonLevelId, curAssignId);
+                   }
+               });
+        }
+    }
+}
+
+//載入評語欄內容
+function LoadVContents(contentList, curPersonLevelId, curAssignId) {
+    var classId;
+    if (contentList != null) {
+        for (var contIndex = 0; contIndex < contentList.length; contIndex++) {
+            var theContent = contentList[contIndex];
+            classId = theContent.ClassCode;
+            var contentText = theContent.Contents;
+
+            var assingID = theContent.AssignId;
+            var personLevelId = theContent.PersonLevelId;
+            var controlId = "txt_" + classId + "_0";
+            var control = $("#" + controlId);
+            control.attr("name", theContent.ContentId);
+            if (curPersonLevelId == personLevelId) {
+                control.val(contentText);
+            } else if (assingID != curAssignId) {
+                var oldCorol = $("#txt_" + classId);
+                if (oldCorol.length > 0) {
+                    var oldContent = oldCorol.val();
+                    if (oldContent.length > 0) {
+                        oldContent += "\r\n" + contentText;
+                    } else {
+                        oldContent += contentText;
+                    }
+                    oldCorol.val(oldContent);
+                }
+
+            }
+        }
+    }
+    HidePageLoading();
+}
+
+function InitialRTableContent() {
+    var tableList = $("table[id*='detailR']");
+    var empNo = $("input[id*='hidempNo']:first").val();
+    var curAssignId = $("input[id*='hidassignId']:first").val();
+    if (tableList.length > 0) {
+        for (var i = 0; i < tableList.length; i++) {
+            var theTable = tableList.get(i);
+            var theTableId = theTable.id;
+            var curGroupId = theTableId.replace("detailR_", "");
+            var currentCount = "";
+            var contentList = null;
+            $.post('/Kpi/EmpKpiB/GetEmpContents',
+              { Act: "GetEmpContentNum", empNo: empNo, curAssignId: curAssignId, curGroupId: curGroupId }, function (EmpContentNum) {
+                  if (EmpContentNum != null) {
+                      currentCount = $.parseJSON(EmpContentNum)["total"][0];
+                  }
+              });
+
+            if (currentCount != "0" || curAssignId == "8" || curAssignId == "5" || curAssignId == "3")
+                $.post('/Kpi/EmpKpiB/GetEmpContents',
+             { Act: "GetEmpContents", empNo: empNo, curAssignId: curAssignId, curGroupId: curGroupId }, function (EmpContents) {
+                 if (EmpContents != null) {
+                     contentList = $.parseJSON(EmpContents)["rows"];
+                     //contentList = AchievementDetailJquerySplit.GetContentList(empNo, curAssignId, curGroupId).value;
+                     // LIUYAN 1225 若暫存表中有記錄，取暫存的，否則取提交的
+                 }
+             });
+            else
+                $.post('/Kpi/EmpKpiB/GetEmpContents',
+               { Act: "GetCopyContents", empNo: empNo, curAssignId: curAssignId, curGroupId: curGroupId }, function (EmpContents) {
+                   if (EmpContents != null) {
+                       contentList = $.parseJSON(EmpContents)["rows"];
+                       //contentList = AchievementDetailJquerySplit.GetContentList(empNo, curAssignId, curGroupId).value;
+                       // LIUYAN 1225 若暫存表中有記錄，取暫存的，否則取提交的
+                   }
+               });
+            // LIUYAN 若當前層級沒有資料，即初核或覆核主管還沒有進行考評，則默認綁定上一層級的考評信息
+            //   contentList = AchievementDetailJquerySplit.GetPersonListCopy(empNo, curAssignId, curGroupId).value;
+
+            for (var contIndex = 0; contIndex < contentList.length; contIndex++) {
+                var theContent = contentList[contIndex];
+                var classId = theContent.ClassCode;
+                var contentText = theContent.Contents;
+                var assingID = theContent.AssignId;
+                var controlId = "rb_" + classId;
+                var control = $("#" + controlId);
+                control.attr("value", theContent.ContentId);
+                if (contentText == "Y") {
+                    control.attr("checked", true);
+                }
+                else {
+                    control.attr("checked", false);
+
+                }
+            }
+        }
+    }
+}
+var content = "";
+function jqueryOpenWindow(groupId, assignName, textControlId) {
+
+    this.returnAction = function (strResult) {
+        if (strResult != null) {
+            if (textControlId == undefined) {
+                var testList = $("#detailV_" + groupId).find("textarea[class='editTextArea']");
+                if (testList.length > 0) {
+                    textControlId = testList.get(0).id;
+                }
+            }
+            if (textControlId != undefined) {
+                var control = $("#" + textControlId);
+
+                var oldValue = control.attr("value");
+                //                        var tmp = oldValue.replace(/(\n$)/g, "");
+                if (oldValue == "") {
+                    oldValue = assignName + ":\n";
+                }
+                oldValue = oldValue.replace(/(\n$)/g, "");
+                var newValue = oldValue + "\n" + strResult;
+                control.attr("value", newValue);
+            }
+        }
+    }
+    var _width = 550;
+    var _height = 320;
+    var _left = (window.screen.width - _width) / 2 + 20;
+    var _top = (window.screen.height - _height) / 2;
+    var _url = 'ShowAdviceMessage.aspx?PageSrcTag=New&groupId=' + groupId;
+    var _para = 'top=' + _top + 'px,left=' + _left + 'px,menubar=no,toolbar=no,location=no,scrollbars=yes,status=no,modal=yes,width=' + _width + 'px,height=' + _height + 'px';
+
+    window.open(_url, GetLang('Mess1171', '評語庫'), _para);  //var content =window.showModalDialog(_url, '評語庫', _para);
+
+}
+
+
+function jqueryAddAssignName(textId, assingName) {
+    var control = $("#" + textId);
+    var oldValue = control.attr("value");
+    var tmp = oldValue.replace(/(\n$)/g, "");
+    if (tmp == "") {
+        var newContent = assingName + ":\n";
+        var newValue = tmp == '' ? newContent : tmp + '\n' + newContent;
+        control.attr("value", newValue);
+        var txt = control.setCurPos(newValue.length);
+        content = "";
+    }
+}
+
+/*******************************************加载页面end***********************************************/
+
+
+
+/*******************************************判斷輸入框字符個數end***********************************************/
+
+/*******************************************Key入分数判断事件begion***********************************************/
+var defaultSelect = GetLang('Mess1164', '請選擇');
+function JqueryCreateDropDownList(txtControlId, rowid, groupId, groupScore, groupFormula) {
+
+
+    var oSource = $("#" + txtControlId);
+    var ovalue = $("#" + txtControlId).val();
+
+    var jddlobj = $("select[id$='_" + rowid + "'][class='ddl_" + groupId + "']");
+    var ddlid = jddlobj.attr('id');
+    if (JqueryCheckRateSum(txtControlId, ddlid)) {
+        if (groupScore > 0) {
+            var cc = groupId;
+            //            var jddlobj = $("#" + ddlid);
+            if (ovalue == "" && jddlobj != null) {
+                jddlobj.empty();
+            }
+
+            if (oSource != null && ovalue != "" && jddlobj != null) {
+                jddlobj.empty();
+                var rate = parseFloat(ovalue);
+
+                if (isNaN(rate)) {
+                    rate = 0;
+                }
+                jddlobj.append("<option value=''>" + defaultSelect + "</option>");
+
+                var maxZiping = rate * groupScore / 100;
+                tempNum = maxZiping.toString();
+                if (tempNum.indexOf('.') > -1) {
+                    var tempInteger = tempNum.substr(0, (tempNum.indexOf('.')));
+                    var tempDecimal = tempNum.substr(((tempNum.indexOf('.')) + 1), 1);
+                    maxZiping = tempInteger + "." + tempDecimal;
+                    jddlobj.append("<option value='" + maxZiping + "'>" + maxZiping + "</option>");
+
+                }
+                for (var i = maxZiping; i >= 0; i--) {
+                    jddlobj.append("<option value='" + parseInt(i) + "'>" + parseInt(i) + "</option>");
+                }
+            }
+            else {
+                jddlobj.append("<option value=''>" + defaultSelect + "</option>");
+            }
+            //JquerySumDDlScore(groupId, groupFormula);
+        }
+    }
+}
+
+function KeyPress(evt) {
+    var keycode = evt.keyCode || evt.charCode;
+    if (keycode < 48 || keycode > 57) {
+        if (window.event) //IE
+        {
+            if (keycode == 0x8 || keycode == 46) {
+            } else {
+                event.returnValue = false;
+            }
+        }
+        else //Firefox
+        {
+            if (keycode == 0x8 || keycode == 46) {
+            } else {
+                evt.preventDefault();
+            }
+        }
+    }
+
+}
+
+function GetRateSum() {
+    var rateList = $(".RateClass");
+    var sum = 0;
+    var count = rateList.length;
+    for (var i = 0; i < count; i++) {
+        var sub = rateList[i].value//attr('value');
+        var numRate = parseFloat(sub);
+        if (!isNaN(numRate)) {
+            sum += numRate;
+        }
+    }
+    return sum;
+}
+// 檢查權重是否大于100
+function JqueryCheckRateSum(curRateId, ddlid) {
+    var sum = GetRateSum();
+    if (sum > 100) {
+        $.messager.alert('info', GetLang('Mess1165', '所有權重之和必須等於100'));
+        $('#pnlBtnList').unmask();
+        var curRate = $("#" + curRateId);
+        var curDdl = $("#" + ddlid);
+        curRate.attr("value", "");
+        curDdl.empty();
+        return false;
+    }
+    return true;
+}
+
+//計算dropDownList的總分
+function JquerySumDDlScore(groupId, groupFormula) {
+    var groupValue = 0;
+    var ddlList = $(".ddl_" + groupId);
+    if (ddlList.length > 0) {
+        for (var i = 0; i < ddlList.length; i++) {
+            var control = ddlList[i];
+            if (control != null && control.value != "") {
+                if (!isNaN(control.value)) {
+                    var num = parseFloat(control.value);
+                    groupValue += num;
+                }
+            }
+        }
+    }
+    var txtId = "xiaoji_" + groupId;
+    var v = $("#" + txtId);
+    //頁面總分*（groupFormula/100）
+    v.val(Round45(groupValue * groupFormula));
+}
+//四捨五入保留2位小數
+function Round45(point) {
+    return ((Math.round(point * 100)) / 100).toString();
+}
+
+//計算總分
+function jqueryCalculateSumAll() {
+    var groupSumList = $(".txtGroupSumScore");
+    var sum = 0;
+    var allsum;
+    if (groupSumList.length > 0) {
+        for (var i = 0; i < groupSumList.length; i++) {
+            var control = groupSumList[i];
+            var ctrValue = control.value;
+            if (control != null && ctrValue != "" && ctrValue != null) {
+                var num = parseFloat(control.value);
+                sum += num;
+            }
+        }
+    }
+    if ($("input[id*='allRate']").length > 0) {
+        $("input[id*='allRate']")[0].value = Round45(sum);
+    }
+    var jiangcheng = $("span[id*='lb_system']:first").text();
+
+    if (jiangcheng != "") {
+        allsum = sum + parseFloat(jiangcheng);
+    } else {
+        allsum = sum;
+    }
+    $("input[id*='lbScore']")[0].value = Round45(allsum);
+}
+
+function JqueryCheckInputValue(controlId) {
+    var controlObj = $("#" + controlId);
+    var value = controlObj.attr('value');
+    var rbIdString = controlId.replace("txt_", "rb_");
+    var rbList = $("input[id*='" + rbIdString + "']");
+    var maxId = rbList[0].id;
+    var maxInputValue = maxId.substring(maxId.lastIndexOf("_") + 1);
+    if (value > maxInputValue) {
+        $.messager.alert('info', GetLang('Mess1195', '輸入的值大於最大值:') + maxInputValue);
+        controlObj.attr("value", "");
+    }
+}
+
+/*****************************************判斷輸入框字符個數begin***********************************************/
+
+//返回val的字节长度
+function getByteLen(val) {
+    //debugger;
+    var len = 0;
+    for (var i = 0; i < val.length; i++) {
+
+        len += 1;
+    }
+    return len;
+}
+//返回val在规定字节长度max内的值
+function getByteVal(val, max) {
+    //debugger;
+    var returnValue = '';
+    var byteValLen = 0;
+    for (var i = 0; i < val.length; i++) {
+        //                if (val[i].match(/[^\x00-\xff]/ig) != null)
+        //                    byteValLen += 2;
+        //                else
+        byteValLen += 1;
+        if (byteValLen > max)
+            break;
+        returnValue += val[i];
+    }
+    return returnValue;
+}
+function JqueryCheckInputMaxLength(areaId, spandId) {
+    //debugger;
+    var _area = $("#" + areaId);
+    var _info = $("#" + spandId);
+    var _max = 200000000;
+    var _val;
+    _area.bind('keyup change', function () { //绑定keyup和change事件 
+        if (_info.find('span').size() < 1) {//避免每次弹起都会插入一条提示信息 
+            //_info.append("最多可輸入2000個字，剩余字數：" + _max); JquerySumDDlScore
+        }
+        _val = $(this).val();
+        _cur = getByteLen(_val);
+        if (_cur == 0) {//当默认值长度为0时,可输入数为默认maxlength值
+         //   _info.text("最多可輸入2000個字，剩余字數：" + _max);
+        } else if (_cur < _max) {//当默认值小于限制数时,可输入数为max-cur
+          //  _info.text("最多可輸入2000個字，剩余字數：" + (_max - _cur));
+        } else {//当默认值大于等于限制数时 
+            _info.text(0);
+            $(this).val(getByteVal(_val, _max)); //截取指定字节长度内的值 
+        }
+    });
+}
+/*******************************************判斷輸入框字符個數end***********************************************/
+
+
+/*******************************************Key入分数判断事件end***********************************************/
+
+
+/*******************************************保存事件事件Begin***********************************************/
+
+
+//HTable遍歷取值  isSave 是否提交，
+// isShowSaveAlert 是否提示保存結果
+// isdraft是否保存草稿
+function jquerySaveContent(isSave, isShowSaveAlert, isdraft) {
+    $('#pnlBtnList').mask(GetLang('Mess1019', '正在保存數據, 請稍候...'));
+    var tableList = $("table[id*='detail']");
+    var contentArry = '[';
+    var returnString;
+    var canSubmit = true;
+    var hContent, Vcontent, Scontent, Rcontent;
+    for (var i = 0; i < tableList.length; i++) {
+        var objTable = tableList.get(i);
+        var theTableId = objTable.id;
+        var curGroupId = theTableId.replace("detail", "");
+        var tablTyple = curGroupId.substring(0, curGroupId.indexOf('_'));
+        switch (tablTyple) {
+            case 'H':
+                returnString = GetHtableContent(objTable, isSave, contentArry);  //    
+
+                break;
+            case 'V':
+                //eturnString = GetVTableContent(objTable, isSave, contentArry);
+
+                break;
+            case 'S':
+                returnString = GetSelectTableContent(objTable, isSave, contentArry);
+
+                break;
+            case 'R':
+                returnString = GetRTableContent(objTable, isSave, contentArry);
+
+                break;
+        }
+        if (returnString == "false") {
+            canSubmit = false;
+            if (isSave) {
+                // $("input[id*='saveDraftButton']:first").attr("disabled", "disabled");
+                //  $("input[id*='saveButton']:first").attr("disabled", "disabled");
+            }
+            break;
+        }
+        else {
+            contentArry += returnString;
+        }
+    }
+    if (isSave) {
+        var sum = GetRateSum();
+        if (sum != 100) {
+            $.messager.alert('info', GetLang('Mess1165', '所有權重之和必須等於100'));
+            $('#pnlBtnList').unmask();
+            return false;
+        }
+    }
+    if (canSubmit) {
+        contentArry = contentArry.substring(0, contentArry.length - 1) + ']';
+        var empNo = $("input[id*='hidempNo']:first").val();
+        var curAssignId = $("input[id*='hidassignId']:first").val();
+        var levelFalg = $("input[id*='hidlevelFalg']:first").val();
+        var allRate = $("input[id*='allRate']")[0].value;
+        var sumScore = $("input[id*='lbScore']")[0].value;
+        encodeURIComponent(contentArry);
+        $.post('/Kpi/EmpKpiB/SaveEmpContents',
+                   {
+                       Act: "SaveContentValue", empNo: empNo, curAssignId: curAssignId, levelFalg: levelFalg, allRate: allRate, sumScore: sumScore,
+                       contentArry: contentArry, isdraft: isdraft, isSave: isSave
+                   }, function (saveSuccess) {
+                       if (saveSuccess != null) {
+                           if (saveSuccess) {
+                               if (isShowSaveAlert) {
+                                   if (isSave) {
+                                       $("input[id*='saveDraftButton']:first").attr("disabled", "disabled");
+                                       $("input[id*='saveButton']:first").attr("disabled", "disabled");
+                                       $.messager.alert('info', GetLang('Mess1160', '提交成功'));
+                                   } else {
+                                       $.messager.alert('info', GetLang('Mess1015', '保存成功!'));
+                                   }
+                               }
+                               InitialContent();
+                           } else {
+                               if (isShowSaveAlert) {
+                                   $.messager.alert('info', GetLang('Mess1014', '保存失敗!'));
+                               }
+                           }
+                           if (isSave) {
+                               //   window.parent.parent.CloseRefresh(true);
+                           }
+                       }
+                       $('#pnlBtnList').unmask();
+                   });
+    }
+
+    $("input[id*='saveDraftButton']:first").removeAttr("disabled");
+    $("input[id*='saveButton']:first").removeAttr("disabled");
+    if (isSave) {
+        $("input[id*='saveDraftButton']:first").attr("disabled", "disabled");
+    }
+    return false;
+}
+
+
+
+function GetHtableContent(theTable, isSave, contents) {
+    var contentArry = "";
+    var theTableId = theTable.id;
+    var curGroupId = theTableId.replace("detailH_", "");
+    var isContinue = true;
+    var classId, itemNum, isScore, isNull = 0;
+    var groupName = "";
+    var empNo = $("input[id*='hidempNo']:first").val();//20170731 LIUYAN  獲取當前考評員工工號
+    var hidHtcCode = $("input[id*='hidHtcCode']:first").val();
+    //根據GROUPID和當前考評員工工號獲取大標頭名稱
+    $.post('/Kpi/EmpKpiB/GetEmpContentsName',
+                { Act: "GetGroupName", HtcCode: "H10002", curGroupId: curGroupId }, function (GroupName) {
+                    if (GroupName != null && GroupName != "") {
+                        groupName = $.parseJSON(GroupName)["rows"][0]["GroupName"];
+                    }
+                });
+
+    var isNullType = "N";   // N內容為空，Y分數為空
+
+    $("#" + theTableId).find("tr").each(function () {
+        var trtControl = $(this).find("textarea[class='editTextArea']");
+        var selectControl = $(this).find("select");
+        var trinputControl = $(this).find("input[class*='editTextArea']");
+        var editControlCount = trtControl.length + selectControl.length + trinputControl.length;
+        isScore = "N";
+
+        isNull = 0;
+        if (trtControl.length > 0) {
+            for (var ci = 0; ci < trtControl.length; ci++) {
+                var theControl = trtControl[ci];
+                var controlId = theControl.id.replace("txt_", "");
+                var itemIndex = parseInt(controlId.substring(controlId.lastIndexOf("_") + 1));
+                itemNum = itemIndex + 1;
+                classId = controlId.substring(0, controlId.lastIndexOf("_"));
+                var contentId = theControl.name;
+                var content = theControl.value.replace("[", "【").replace("]", "】").replace("{", "『").replace("}", "』").replace("(", "（").replace(")", "）").replace("\"", "“");
+                if (isSave) {
+                    if (content == "") {
+                        isNull++;
+                    }
+                }
+                var jsonContent = '{"contentId":\"' + contentId + '\","groupId": \"' + curGroupId + '\", "classId": \"' + classId + '\","itemNum": \"'
+                    + itemNum + '\","ItemId":"","IsScore":\"' + isScore + '\","contentText":\"' + content + '\"},';
+                contentArry += jsonContent;
+            }
+        }
+        if (trinputControl.length > 0) {
+            for (var ci = 0; ci < trinputControl.length; ci++) {
+                var theControl = trinputControl[ci];
+                var controlId = theControl.id.replace("txt_", "");
+                var itemIndex = parseInt(controlId.substring(controlId.lastIndexOf("_") + 1));
+                itemNum = itemIndex + 1;
+                classId = controlId.substring(0, controlId.lastIndexOf("_"));
+                var contentId = theControl.name;
+                var content = theControl.value.replace("[", "【").replace("]", "】").replace("{", "『").replace("}", "』").replace("(", "（").replace(")", "）").replace("\"", "“").replace("'", "‘");
+                if (isSave) {
+                    if (content == "") {
+                        isNull++;
+                        //alert(curGroupId);
+                    }
+                }
+                var jsonContent = '{"contentId":\"' + contentId + '\","groupId": \"' + curGroupId + '\", "classId": \"' + classId + '\","itemNum": \"'
+                    + itemNum + '\","ItemId":"","IsScore":\"' + isScore + '\","contentText":\"' + content + '\"},';
+                contentArry += jsonContent;
+            }
+        }
+        if (selectControl.length > 0) {
+            isScore = "Y";
+            for (var ci = 0; ci < selectControl.length; ci++) {
+                var theControl = selectControl[ci];
+                var controlId = theControl.id.replace("select_", "");
+                var itemIndex = parseInt(controlId.substring(controlId.lastIndexOf("_") + 1));
+                //用來獲取當前欄位的類別
+                //debugger;
+                var contentTypeScore = "";
+                var contentTypeNull = "";
+                itemNum = itemIndex + 1;
+                classId = controlId.substring(0, controlId.lastIndexOf("_"));
+                var contentId = theControl.name;
+                var content = theControl.value.replace("[", "【").replace("]", "】").replace("{", "『").replace("}", "』").replace("(", "（").replace(")", "）").replace("\"", "“").replace("'", "‘");
+                if (content == defaultSelect) {
+                    content = "";
+
+                }
+                if (isSave) {
+                    if (content == "") {
+                        isNull++;
+                        isNullType = "Y";
+                        //alert(classId);
+                        if (editControlCount == 1 && theControl.options.length == 1) {
+                            isNull--;
+                        }
+                    }
+
+                }
+                var jsonContent = '{"contentId":\"' + contentId + '\","groupId": \"' + curGroupId + '\", "classId": \"' + classId + '\","itemNum": \"'
+                    + itemNum + '\","ItemId":"","IsScore":\"' + isScore + '\","contentText":\"' + content + '\"},';
+                contentArry += jsonContent;
+            }
+        }
+        if (isSave && isNull > 0 && (isNull < editControlCount || editControlCount == 1)) {
+            //debugger;
+            if (isNullType == "Y") {
+                $.messager.alert('info', groupName + GetLang('Mess1166', '分數為空'));
+                $('#pnlBtnList').unmask();
+            } else {
+                $.messager.alert('info', groupName + GetLang('Mess1196', '尚有內容未填寫完畢，請檢查後重新提交!'));
+                $('#pnlBtnList').unmask();
+                //需要修改
+            }
+            isContinue = false;
+            return false;
+        }
+    });
+    return !isContinue ? "false" : contentArry;
+}
+
+function GetSelectTableContent(theTable, isSave, contents) {
+    var contentArry = "";
+    var isNull = false;
+    var theTableId = theTable.id;
+    var curGroupId = theTableId.replace("detailS_", "");
+    var empNo = $("input[id*='hidempNo']:first").val();//20121227 LIUYAN  獲取當前考評員工工號
+    //var groupName = AchievementDetailJquerySplit.GetGroupNameById(curGroupId, empNo).value;
+    var groupName = "";//根據GROUPID和當前考評員工工號獲取大標頭名稱
+    $.post('/Kpi/EmpKpiB/GetEmpContentsName',
+              { Act: "GetGroupName", HtcCode: "H10002", curGroupId: curGroupId }, function (GroupName) {
+                  if (GroupName != null && GroupName != "") {
+                      groupName = $.parseJSON(GroupName)["rows"][0]["GroupName"];
+                      // $.messager.alert('info', groupName);
+                  }
+              });
+    var classId, itemId, isContinue = true;
+    $("#" + theTableId).find("tr").each(function () {
+        $(this).find("td").each(function () {
+            var td = $(this);
+            if (td.hasClass("itemClass")) {
+                classId = td.attr('id');
+            }
+            else if (td.hasClass("item")) {
+                itemId = td.attr('id');
+            }
+        });
+
+        if (itemId != "" && itemId != undefined) {
+            var scoreControl = $("#txt_" + itemId);
+            var content = scoreControl.val().replace("[", "【").replace("]", "】").replace("{", "『").replace("}", "』");
+            var contentId = scoreControl.attr("name");
+            if (isSave) {
+                if (content == "") {
+                    //debugger;
+                    //alert("<%=Foxconn.Resources.Messages.ScoreIsNull %>");
+                    $.messager.alert('info', groupName + GetLang('Mess1166', '分數為空'))
+                    $('#pnlBtnList').unmask();
+                    isContinue = false;
+                    return false;
+                }
+            }
+            var jsonContent = '{"contentId":\"' + contentId + '\","groupId": \"' + curGroupId + '\", "classId": \"' + classId
+            + '\", "itemNum": "", "ItemId":\"' + itemId + '\","IsScore":"Y","contentText":\"' + content + '\"},';
+            contentArry += jsonContent;
+
+        }
+    });
+    return !isContinue ? "false" : contentArry;;
+}
+
+function GetVTableContent(theTable, isSave, contents) {
+    var contentArry = "";
+    var isNull = false;
+    var theTableId = theTable.id;
+    var curGroupId = theTableId.replace("detailV_", "");
+    var empNo = $("input[id*='hidempNo']:first").val();//20121227 LIUYAN  獲取當前考評員工工號
+    //var groupName = AchievementDetailJquerySplit.GetGroupNameById(curGroupId, empNo).value;//根據GROUPID和當前考評員工工號獲取大標頭名稱
+    var groupName = "";//根據GROUPID和當前考評員工工號獲取大標頭名稱
+    $.post('/Kpi/EmpKpiB/GetEmpContentsName',
+           { Act: "GetGroupName", HtcCode: "H10002", curGroupId: curGroupId }, function (GroupName) {
+               if (GroupName != null && GroupName != "") {
+                   groupName = $.parseJSON(GroupName)["rows"][0]["GroupName"];
+                   // $.messager.alert('info', groupName);
+               }
+           });
+    var textareaList = $("#" + theTableId).find("textarea[class='editTextArea']");      //[readonly='false']
+    for (var index = 0; index < textareaList.length; index++) {
+        var theText = textareaList[index];
+        var controlId = theText.id.replace("txt_", "");
+        var classId = controlId.substring(0, controlId.lastIndexOf("_"));
+        var contentId = theText.name;
+        var content = theText.value.replace("[", "【").replace("]", "】").replace("{", "『").replace("}", "』");
+
+        if (isSave) {
+            if (content == "") {
+
+                $.messager.alert('info', groupName + GetLang('Mess1197', '尚有評語未填寫完畢，請檢查後重新提交!'));
+                $('#pnlBtnList').unmask();
+                return "false";
+            }
+        }
+        var jsonContent = '{"contentId":\"' + contentId + '\","groupId": \"' + curGroupId + '\", "classId": \"' + classId + '\", "itemNum": \"'
+                    + 0 + '\", "ItemId":\"\","IsScore":"N","contentText":\"' + content + '\"},';
+        contentArry += jsonContent;
+    }
+    return contentArry;
+}
+
+function GetRTableContent(theTable, isSave, contents) {
+    var contentArry = "";
+    var isNull = true;
+    //            if (tableList.length > 0) {
+    //                for (var i = 0; i < tableList.length; i++) {
+    //                    var theTable = tableList.get(i);
+    var theTableId = theTable.id;
+    var curGroupId = theTableId.replace("detailR_", "");
+    $("#" + theTableId).find("tr").each(function () {
+        $(this).find("td").each(function () {
+            var td = $(this);
+            if (td.hasClass("RadioClass")) {
+                classId = td.attr('id');
+                var raido = $("#rb_" + classId);
+                var contentId = raido.val() == "on" ? "" : raido.val();
+                var content = raido.attr("checked") ? "Y" : "N";
+                if (content == "Y" && isSave) {
+                    isNull = false;
+                }
+                var jsonContent = '{"contentId":\"' + contentId + '\","groupId": \"' + curGroupId + '\", "classId": \"' + classId + '\", "itemNum": \"'
+                    + 0 + '\", "ItemId":\"\","IsScore":"N","contentText":\"' + content + '\"},';
+                contentArry += jsonContent;
+            }
+        });
+    });
+    if (isSave) {
+        if (isNull) {
+            $.messager.alert('info', GetLang('Mess1169', '請至少選擇一個'));
+            $('#pnlBtnList').unmask();
+            return "false";
+        }
+    }
+    //                }
+    //            }                        
+    return contentArry;
+}
+
+
+function aa(index, row) {
+    //  $.messager.alert('info', index);
+    //  $.messager.alert('info', row.ItemDesc + row.Numbers);
+
+    $('#ifmNewPage').attr("action", "/SystemSafety/Role");
+    //  $('#frmFunPage').attr("action", url).submit();
+
+    $('#newPage').window({
+        width: 600,
+        height: 400,
+        modal: true,
+        resizable: false
+    })
+}
+
+/*******************************************保存事件事件end***********************************************/
+//顯示數據
+function ShowData() {
+    tabSelected();
+    LoadFormData();
+}
+
+//tab頁選擇事件處理
+function tabSelected() {
+    var tab = $('#tabManage').tabs('getSelected');
+    switch (tab.panel('options').title) {
+
+    }
+}
+
+//導入表單數據
+function LoadFormData() {
+
+}
+
+//點擊同意主管考評
+function EmpApprove() {
+    // $.messager.alert('info', $("#hidempNo").val());
+    $.post('/Kpi/EmpKpiB/SaveEmpAdvice',
+                {
+                    empNo: $("#hidempNo").val(), empAdvice: $("#txt_interview").val()
+                }, function (saveSuccess) {
+                    if (saveSuccess) {
+                        $.messager.alert('info', GetLang('Mess1160', '提交成功'));
+                        $('#winNewPage').window("close", {});
+                    }
+                    else {
+                        $.messager.alert('info', GetLang('Mess1014', '保存失敗!'));
+                        $('#winNewPage').window("close", {});
+                    }
+                    $('#pnlBtnList').unmask();
+                });
+}
+
+function closeWindow() {
+    $('#winNewPage').window("close", {});
+}
+
+
+
+
+
