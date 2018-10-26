@@ -1,3 +1,268 @@
+(new_web)
+https://file.bmc-ks.xyz
+帳號 tecfw-data
+密碼 |c<MYVxD
+
+https://bug.bmc-ks.xyz
+帳號 = edward
+密碼 = 14kWo{[3
+
+
+[20181021]
+	[Peter]
+		15. OEM command crash dump retrieve
+		-> 問BIOS怎麼產生第二組 -> code裡面可以產生
+		->  Byte Length要over 255
+	[Doyle]
+		1. WDT1接錯嗎? -> 下Register看看
+		2. HW WDT event會發嗎? -> 下Reg和看Code
+		3. GUID issue -> test 1000times -> 有空再測 -> 跑跑看Windows吧
+			-> 周末再來跑 -> 可能跟BIOS有關係 
+			-> Set CPU info 覆蓋Set NIC -> 幾乎done
+		--------------
+		v 1. BMC update complete -> Doing -> done
+		10. Check FRU empty issuee.
+			----> SIT的FRU data有誤, 換Anna的試試便知.
+		4. CPLD update 沒有complete 
+			-> 判斷錯誤 -> done
+		
+	[Alex]
+		1. DHCP event 
+			-> Doing -> done
+		2. 其他Health event檢查看看,可能回報issue 
+			-> done
+		12. check C2010 update 4 device 有沒有跟C2050上的一樣
+			----> 已開 Alex
+
+	[ED]
+		#TODO
+			3. Report CPLD register to TACO
+			- NBU ERROR
+		#Analyze
+			# Check一下host_spi_recovery能不能用https://bug.bmc-ks.xyz/view.php?id=897
+				----> Low priority  -> GPIO 200 GPIO_FM_BIOS_SPI_BMC_CTRL 改out即可
+				----> report/commit -> 等下版
+			7. Check Code sync branch NVDIMM
+				----> Next release?
+			11. 增加mantis一條check i2c nonack 會不會拿錯誤的值來用
+				----> 已開 Edward -> Check中 -> 請Doyle check
+		#WaitForResp
+			14. Update FSC table & offset & sdr table 
+				-> 等Thermal回信,跟著改
+				2. Thrshold FSC update push alan
+		#Pending
+			13. 開AMI EIP => i2c 400K不準的問題
+		-----------------------------------------------
+		#DONE 
+			v 2. 把MSFT搬過來然後bump version
+			v 1. 調查一下spec是不是有power on/off event -----> 無
+			v 1. Check SOLSSH feature
+				----> 等客人回吧 -> v2.09要 -> 原因:沒有enable CPLD offset 0x05 value 0x04
+				----> commit / report -> done
+			v 2. Change P3V_BAT to 86400s 
+				-> 已開Mantis -> change it and test
+				-> report / commit -> done
+			v 3. 全面統一MDS版本 -> done
+				----> 試試 -> already commit & report -> need to VSTS
+			v 4. Forgot unlock share memory for NVDIMM-SW SEL
+				-> report/commit -> done
+		v # 測第二顆能否刷地一顆-> 可以->為何? 不知.	
+		v 9. Code review crash dump
+		v 1. 看Crash Dump WD拉了後, SSIF會不會吐東西回來	
+			-> CRASH_DUMP_V8_R_N 58, 沒用
+			-> CRASH_DUMP_M3_R_N 59, 沒用 ----> 用InjectError -> HB stuck 有用!
+			-> Done.
+		v 1. Check Artesyn PSU FW 有沒在branch
+			-> 無
+		3. RAS NBU Error要加入 -> 看mail
+[20181017]
+	[Doyle]
+		1. BMC update complete -> Doing -> done
+		2. WDT1接錯嗎? -> 下Register看看
+		3. HW WDT event會發嗎? -> 下Reg和看Code
+		
+	[Alex]
+		1. DHCP event -> Doing
+		2. 其他Health event檢查看看,可能回報issue -> done
+			
+		
+	[ED]
+		v 1. 看Crash Dump WD拉了後, SSIF會不會吐東西回來	
+			-> CRASH_DUMP_V8_R_N 58, 沒用
+			-> CRASH_DUMP_M3_R_N 59, 沒用 ----> 用InjectError -> HB stuck 有用!
+			-> Done.
+
+		2. GUID issue -> test 1000times -> 有空再測 -> 跑跑看Windows吧
+			-> 周末再來跑 -> 可能跟BIOS有關係
+
+		6. Check一下host_spi_recovery能不能用https://bug.bmc-ks.xyz/view.php?id=897
+			----> 試試.
+		7. Check Code sync branch NVDIMM
+			----> Next release?
+		8. 全面統一MDS版本
+			----> 試試
+		9. Code review crash dump
+		10. Check FRU empty issuee.
+			----> SIT的FRU data有誤, 換Anna的試試便知.
+		11. 增加mantis一條check i2c nonack 會不會拿錯誤的值來用
+			----> 已開 Edward
+		12. check C2010 update 4 device 有沒有跟C2050上的一樣
+			----> 已開 Alex
+		13. 開AMI EIP => i2c 400K不準的問題
+[20181016]
+	v1. PSU clear fault 時機是? -> AfterCreatingTask + Check PSU per sec + Check Bat per sec
+	2. GUID issue -> test 1000times -> 有空再測
+
+[等實作]
+	3. Update FSC table & offset & sdr table -> 等Thermal回信,跟著改
+	v 4. P3V enable/disable -> 上傳gerrit : Aandon等客戶給Duration值 3600s ->DONE VSTS
+[等上Gerrit]
+	v SSIF failed -> 限定i2c sda low timeout 在bus 9 & 11以外才能用-> 跑測試: ->DONE ->VSTS
+[等Review]
+	v 6. I2C bus recovery -> 上傳gerrit : 等Review -> DONE VSTS
+[上VSTS]
+	v 7. PSU failure event correct -> sensor type to 0xD3 
+		-> 燒code, 燒PSU -> ok! -> Gerrit :記得上VSTS ->DONE VSTS
+	v 8. NVDIMM要加Start & Complete -> DONE VSTS
+
+[Doyle]
+	BMC update complete -> Doing
+	
+[Alex]
+	DHCP event -> Doing
+
+[20181015]
+
+Edward:
+[Reproduce]
+4. M.2 stress, HSC Temp critcal event temp > 94 degree C
+	-> Need to reproduce
+5. Unexpected PSU remaining charge event. 
+	-> Need to reproduce
+
+[Wait for implement]
+1. PSU failure event correct -> sensor type to 0xD3 
+	-> 燒code, 燒PSU -> ok! -> Gerrit
+2. Polling P3V_BATTERY後要disable FM_BATTERY_SENSE_EN_N ,以免耗電太快 
+	-> polling duration? -> 好像有既有code喔!
+	
+-----
+3. Add two Cavium RAS NBU Error and USB Error discrete sensor https://bug.bmc-ks.xyz/view.php?id=849
+	->Need Cavium update spec?
+	
+[20181011]
+
+Alex:
+v 0000847: TFS#145812 [C2050 BMC] OEM_Configure Firmware Updateto to update BMC firmware will be rejected
+https://bug.bmc-ks.xyz/view.php?id=847tecfw-data 
+	-> merge CodeSync 
+
+Doyle:
+v Fan critical but show OK 
+	-> Assert mask錯了!0x0004 -> 0x2004
+
+Edward:
+[Reproduce]
+4. M.2 stress, HSC Temp critcal event temp > 94 degree C
+	-> Need to reproduce
+5. Unexpected PSU remaining charge event. 
+	-> Need to reproduce
+
+[Wait for implement]
+1. PSU failure event correct -> sensor type to 0xD3 
+	-> 燒code, 燒PSU -> ok! -> Gerrit
+2. Polling P3V_BATTERY後要disable FM_BATTERY_SENSE_EN_N ,以免耗電太快 
+	-> polling duration? -> 好像有既有code喔!
+	
+-----
+3. Add two Cavium RAS NBU Error and USB Error discrete sensor https://bug.bmc-ks.xyz/view.php?id=849
+	->Need Cavium update spec?
+
+--
+
+v 1. CATERR LED再EVT1一ˊ發warning -> Board ID確認清楚! -> OK EVT1 000, EVT2 001 -> DONE
+v 2. 確認FPGA_NIC temperate->確認無誤, 需要修改! ->DONE
+v 3. NVDIMM要加Start & Complete -> Review玩, 準備上VSTS
+---------------------------------------------------------------
+Doyle
+(Fan critical but OK)
+	1. Serverity 1 問題要快解, 先看Fan
+	2. SDR elist 是由Getsensorreading來填nr/cr/nc..
+	
+Edward
+(修正CATERR LED)
+- EVT2以上才能執行 ->Board ID多少?
+- 拿掉Warning message
+- SetGPIO前先ReadGPIO
+
+(研究FPGA_NIC)
+- TMP421 like chip
+- 只讀整數需讀幾個byte?
+- 跑FPGA_NIC測試
+
+[20181009]
+Alex:
+0000847: TFS#145812 [C2050 BMC] OEM_Configure Firmware Updateto to update BMC firmware will be rejected
+https://bug.bmc-ks.xyz/view.php?id=847
+
+Doyle:
+Fan critical but show OK
+
+Edward:
+1. NVDIMM要加Start & Complete
+2. Polling P3V_BATTERY後要disable FM_BATTERY_SENSE_EN_N ,以免耗電太快
+3. CATERR LED再EVT1一ˊ發warning
+4. M.2 stress, HSC Temp出現瞬間critcal event temp>94度
+5. 確認FPGA_NIC temperate
+
+(上傳所有VSTS)
+ok
+
+(寫所有Unit-test文件)
+
+(跑Redhat HSC temp測試)
+(更新Mantis)
+(Daily report)
+
+
+3. 研究MDS排版
+4. 研究MDS ddf source path
+
+[20181008]
+1. Update all code to gerrit & review.
+2. Complete NVDIMM SEL
+3. COmplete AVIN_7 P3V_BAT enable/disable
+
+[20181005]
+1. Tom拿ISO Win ARM
+2. Check web update method
+3. 看Source sync for NVDIMM feature
+4. 裝Windows ARM
+5. Check FPGA 的sample code
+
+1. 解掉bug
+2. 上傳fix
+	v 1. I2C speed 0000838
+	v 2. IPMB low hang 0000805 0000564
+	v 3. Time sync clock 0000809
+	4. I2C recovery 0000812	0000800
+	
+	//////////////////////////////////////////////////////
+	5. Code review 	0000813
+	6. FM_BATTERY_SENSE_EN_N should keep high 0000820
+	7. HSC 94 degree C 000081
+
+	
+[20181003]
+1. I2C recovery 多久記一次Log
+2. 為何conn4掛了? 
+	-> 導致MUX無法切,且無法recovery. -> Conn3也一樣X
+3. 拿掉conn4就好了??  
+	-> 應該是要好 -> no, 還是出現 -> 看看analyzerX
+4. 為何conn4掛了後, 其他bus還是照樣傳回reading? 
+	-> 不應該return code 0 -> 
+5. Update TFS上Mantis!!
+	
 [20181001]
 
 	----------------------------------------------------------------------------------------------------------------------------------------
@@ -7,15 +272,23 @@
 		1. 請威廉問SIT有沒辦法抓到waveform X
 		2. 用Louis的機器先跑看看(不過不能保證是SIT的環境) -> 待確認
 		-> Bus 0 = M.2 & PCIe slot
-		0xD4看起來有時出錯 -> 再跑一晚確定config看看 (Louis機台)
+		0xD4看起來有時出錯 -> 再跑一晚確定config看看 (Louis機台) -> 
+		看看EV1這台會不會發生
+		1. //printk("I2C%d: data or clock low by another device\n",bus);
+			/* data is pulled low by a slave on the bus */
+			然後recovery也失敗, 表示是被Slave拉住 
+		2. aa0083 = Write NACK -> 表示Slave根本沒回應
 		
 	P1 [IPMB stuck issue]
 		1. merge新code, 用ev2去跑 -> Pass -> 
 		2. 確定是哪個patch可解 改speed or SDA low timeout
 		3. speed -> 量量看是否100khz
 		-> 只留sda low timeout再跑一晚看看 (Louis機台) -> 失敗, 是不適因為print太多?
-		------> 拿掉print續測一天看看
+		------> 拿掉print續測一天(Louis)看看
 
+		
+	P1 [3]
+		Compare code 把solution抓出來用	
 	----------------------------------------------------------------------------------------------------------------------------------------
 	----------------------------------------------------------------------------------------------------------------------------------------
 	P2 [P5V issue]

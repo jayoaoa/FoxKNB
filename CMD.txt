@@ -175,6 +175,11 @@
 		  0x1 0x0 0x1 0xc 0x1b 0x0 0x0 0xd7 0x1 0xb 0x14 0xe0 0x4d 0x31 0x30 0x36 0x35 0x31 0x36 0x33 0x2d 0x30 0x30 0x31 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0xe0 0x58 0x58 0x58 0x58 0x58 0x58 0x58 0x58 0x58 0x2d 0x58 0x58 0x58 0x2d 0x47 0x5f 0x58 0x58 0x58 0x5f 0x58 0x58 0x58 0x58 0x5f 0x31 0x32 0x33 0x0 0x0 0x0 0x0 0xc8 0x33 0x2e 0x30 0x0 0x0 0x0 0x0 0x0 0xc3 0x42 0x0 0x0 0xc1 0x0 0x0 0x0 0x0 0xb4 0x1 0xf 0x19 0x0 0x0 0x0 0xd0 0x46 0x6f 0x78 0x63 0x6f 0x6e 0x6e 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0xc8 0x47 0x35 0x30 0x42 0x30 0x0 0x0 0x0 0xe0 0x58 0x58 0x58 0x58 0x58 0x58 0x58 0x58 0x58 0x2d 0x58 0x58 0x58 0x2d 0x47 0x5f 0x58 0x58 0x58 0x5f 0x58 0x58 0x58 0x58 0x5f 0x58 0x58 0x58 0x0 0x0 0x0 0x0 0xe0 0x4d 0x31 0x30 0x36 0x35 0x31 0x34 0x31 0x2d 0x30 0x30 0x31 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0xca 0x46 0x72 0x75 0x20 0x76 0x30 0x2e 0x30 0x39 0x0 0xc6 0x30 0x41 0x0 0x0 0x0 0x0 0xc1 0x0 0x0 0x7f 0x1 0x10 0x19 0xd0 0x46 0x78 0x78 0x63 0x6f 0x6e 0x6e 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0x0 0xc8 0x47 0x35 0x30 0x42 0x31 0x0 0x0 0x0 0xd0 0x4d 0x31 0x30 0x36 0x35 0x31 0x36 0x36 0x2d
 
 ########################################################## Warmreset test ###################done;
+
+while [ 1 ]; do date +"%Y-%m-%d %H:%M.%S"; ipmitool -I lanplus -H 10.32.2.203 -U admin -P admin sdr elist | grep Temp_CPU; sleep 10; done;
+while [ 1 ]; do date +"%Y-%m-%d %H:%M.%S"; gpiotool --get-data 52; sleep 1; done;
+while [ 1 ]; do cat /proc/uptime; i2c-test -b 4 --scan; i2c-test -b 10 --scan; sleep 5; done;
+date +"%Y-%m-%d %H:%M.%S" 
 while [ 1 ];do date; top -b -d 1 -n 1; sleep 0.5; done;
 while [ 1 ];do date; ps fax; sleep 0.3; done;
 while [ 1 ];do echo "-----------"; cat /proc/uptime; cat /proc/*[0-9]*/stat | grep -e daemon -e IPMIMain -e processmanager -e S[0-9][0-9] -e K[0-9][0-9]; sleep 0.2; done;
@@ -219,7 +224,7 @@ while [ 1 ];do ps -ax; sleep 1; done;
 		while [ 1 ];do i2craw.exe -f 4 0x50 -r 255 -w '0x0 0x0'; done;
 		while [ 1 ];do i2craw.exe -f 4 0x50 -r 1 -w '0x0 0x0'; sleep 1; done;
 		while [ 1 ];do i2craw.exe -f 4 0x50 -r 255 -w '0x0 0x0'; devmem 0x1e78a144; devmem 0x1e78a148; done;
-	
+	while [ 1 ];do ipmitool -H 127.0.0.1 -U admin -P admin power cycle; sleep 180; done;
 #obmc full sel
 	while [ 1 ];do eventctl.exe add Critical 0x08 0x11 0x6f 0x82; done;
 	
@@ -236,6 +241,16 @@ while [ 1 ];do ps -ax; sleep 1; done;
 	devmem 0x1e785004 32 0x03c00000
 	devmem 0x1e785008 32 0x4755
 	devmem 0x1e78500c 32 0x13
+
+# Disable WDT2 in uboot -> 這樣uboot不會一直被重開
+AST2500EVB>mw 1e78502c 00000000
+# Disable WDT1 in uboot
+AST2500EVB>mw 1e78500c 00000000
+	
+# WDT
+regmemapp -w -a 0x1e785004 -l 0x04 -d 0x00000000
+regmemapp -w -a 0x1e785008 -l 0x04 -d 0x00004755
+regmemapp -w -a 0x1e78500C -l 0x04 -d 0x00000013	
 	
 #Read NTP Address
 	ntp_eeprom.py --read-ntp
@@ -317,6 +332,16 @@ while [ 1 ];do ps -ax; sleep 1; done;
 		devmem 0x1e78a148 32 0x00000000
 		devmem 0x1e78a140 32 0x00000001
 
+		
+	Disable bus 7 & Change valuee & Enable bus 7
+	devmem 0x1E78A300 32 0x00000000	
+	devmem 0x1E78A304 32 0xFFFEE301	
+	devmem 0x1E78A300 32 0x00000001
+
+regmemapp -w -a 0x1E78A304 -l 0x04 -d 0x00000000
+regmemapp -w -a 0x1e785008 -l 0x04 -d 0x00004755
+regmemapp -w -a 0x1e78500C -l 0x04 -d 0x00000013			
+		
 #Remove unused windows garbage, Enter Powershell with Administartor
 	##Execute below commands in Power Shell with admin right
 		Get-AppxPackage *bingsports* | Remove-AppxPackage
@@ -333,7 +358,17 @@ while [ 1 ];do ps -ax; sleep 1; done;
 	/MDS/3710/MDS/spx/utils/BuildPRJ/BuildPRJ.py /AMI_AST2500_RR11/configs/ast2500evb.PRJ /AMI_AST2500_RR11/packages/ /AMI_AST2500_RR11/workspace/ BUILD
 
 #C2050
-	#BIOS control GPIO
+	# BIOS Set GPIO, EFI shell, cmd: mm
+		1. Boot to EFI Shell
+		2. Type cmd: mm 0x402000128 -w 4
+		   
+		3. Type value to set high/low
+
+		bit 7~9 --> CPU0 GPIO 39~41 (CPU0_ERR0_N ~ CPU0_ERR2_N)
+
+		1: high, 0: low
+		
+	#BIOS control GPIO EFI
 		1. Enter BIOS shell
 		2. Run cvmrundiag
 		3. choose: (4) GPIO options
@@ -429,11 +464,11 @@ while [ 1 ];do ps -ax; sleep 1; done;
 	
 		git clone ssh://data.bmc-ks.xyz/others/microsoft/c2050
 
-	#KS auto build
-		export PATH=$PATH:/MDS/402/MDS/spx/utils/BuildPRJ/
+#KS auto build
+export PATH=$PATH:/MDS/401/MDS/spx/utils/BuildPRJ/
 git clone ssh://BMC/others/microsoft/c2050
 cd c2050/
-rm -rf packages
+rm -rf packages workspace
 mkdir packages
 scripts/SpxConv.sh -c packages/ source/
 BuildPRJ.py configs/C2050_unsigned.PRJ packages/ workspace/ BUILD
@@ -442,6 +477,11 @@ BuildPRJ.py configs/C2050_unsigned.PRJ packages/ workspace/ BUILD
 		BuildPRJ.py configs/C2050_unsigned.PRJ packages/ workspace/ REPACK packages/ipmi_dev-3.160.0-src.spx
 		scripts/SpxConv.sh -x packages/ source/
 
+####################TEST MDS401#####################
+rm -rf packages workspace
+mkdir packages
+scripts/SpxConv.sh -c packages/ source/
+scripts/BuildPRJ/BuildPRJ.py configs/C2050_unsigned.PRJ packages/ workspace/ BUILD
 		
 #git remote cp - Sync MS to KS
 	git clone ssh://BMC/others/microsoft/c2050
@@ -462,7 +502,22 @@ BuildPRJ.py configs/C2050_unsigned.PRJ packages/ workspace/ BUILD
 
 	git push origin HEAD:[branch_name]
 
+		Web
+		louis.kc.chen@fii-foxconn.com
+		Louis@Aug22
+		GIT
+		louis.kc.chen@fii-foxconn.com
+		Louis@Aug01
+
+		
+	#Cavium crash dump/ error injectio/ InjectError
+	InjectError -dram_ce 0 0 0  --> err0
+	InjectError -dram_ue 0 0 0  --> err1
+	InjectError -ccpi -ueu -e 28 -n 0 -i 0  --> err2
+	
 	----------------------------------------------------------------------
+	
+	
 	git remote -v
 	gti remote rm ks
 	git remote add ks ssh://BMC/others/microsoft/c2050
@@ -493,6 +548,7 @@ BuildPRJ.py configs/C2050_unsigned.PRJ packages/ workspace/ BUILD
 			......
 
 			
+			
 	git cp 9987dede9f50cc2e3ea0dcfd9b69db619a8c05a4
 
 	git checkout -b commit2
@@ -513,6 +569,16 @@ BuildPRJ.py configs/C2050_unsigned.PRJ packages/ workspace/ BUILD
 	----------------------------------------------------------------------
 
 	
+
+#git brach delete	
+add & force update branch
+git push origin HEAD:refs/heads/wip/doyle/fwupdate_event_t -f
+
+--------
+delete branch
+git push origin :refs/heads/wip/doyle/ssif_fix	
+	
+
 #git 比較
 git diff --name-only HEAD~1 HEAD~2	
 	
@@ -529,6 +595,7 @@ git diff --name-only HEAD~1 HEAD~2
 	
 	#push
 	git push origin HEAD:refs/for/master
+	git push --no-thin origin HEAD:refs/for/master
 	
 	#edit git config
 	vim ~/.gitconfig
@@ -626,3 +693,94 @@ Tom@Sep03
 
 ipmitool -H 127.0.0.1 -U admin -P admin sensor
 ipmitool -H 127.0.0.1 -U admin -P admin power off
+
+edward/edward623
+host:fox-vpn.vpnazure.net
+port:443
+Virtual name:VPN
+Uname:
+Pass: 
+
+
+台北Windows
+10.32.3.223
+Administrator/Louis@Oct11
+
+
+--------------------------指令取值, returnnn-------------
+	UpdateStatus=`ipmitool -H 10.32.2.203 -U admin -P admin raw 0x38 0x84 0x11 1 3 0x42 0x2e 0x68 0x65 0x78 | awk '{print $1 }'`
+	if [ $UpdateStatus == 04 ]
+	then
+		echo "Complete!!" >> $Outputfile
+		break
+	else
+		echo "PSU updating .." >> $Outputfile
+		echo "Status: $UpdateStatus"
+	fi
+	
+----------------------------------------------------------------
+Get sensor event enable
+ipmitool -H 10.32.2.203 -U admin -P admin raw 0x04 0x29 0xF5
+
+Get Clock buffer value
+ipmitool -I lanplus -H 10.32.2.203 -U admin -P admin i2c bus=3 0xD0 0x01 0x0c
+
+void I2CHealthTask(int BMCInst){
+
+sed 1d configs/C2050_unsigned.PRJ | md5sum ==> 產生 PRJ中的 mds numbe
+
+
+# BIOS Set GPIO, EFI shell, mm
+1. Boot to EFI Shell
+2. Type cmd: mm 0x402000128 -w 4
+   
+3. Type value to set high/low
+
+bit 7~9 --> CPU0 GPIO 39~41 (CPU0_ERR0_N ~ CPU0_ERR2_N)
+
+1: high, 0: low
+
+======================================================================================================
+Update CPLD (Out-of-Band)
+
+	1. OEM command to see CPLD version
+	ipmitool -H IP_Address -U admin -P admin -I lanplus raw 0x38 0x0b 0x01
+	2. Power off the system
+	ipmitool -H IP_Address -U admin -P admin -I lanplus power off
+	3. Set GPIO 39, 194 to low
+	ipmitool -H IP_Address -U admin -P admin -I lanplus raw 0x30 0xe0 0x27 0x01 0x00
+	ipmitool -H IP_Address -U admin -P admin -I lanplus raw 0x30 0xe0 0xC2 0x01 0x00
+	4. Use Yafuflash to update, First time command maybe failed, use command twice can pass
+	Yafuflash -nw -ip IP_Address -U admin -P admin -d 4 -netfn 0x34 C50_CPLD_v1.1_20171208.jed
+	5. AC cycle then used OEM command to see CPLD version
+	ipmitool -H IP_Address -U admin -P admin -I lanplus i2c bus=7 0x22 0x00 0xd9
+	ipmitool -H IP_Address -U admin -P admin -I lanplus raw 0x38 0x0b 0x01
+
+Update CPLD (In-Band)
+	ipmitool raw 0x30 0xe0 0x27 0x01 0x00
+	ipmitool raw 0x30 0xe0 0xC2 0x01 0x00
+	Yafuflash -netfn 0x34  -d 4 -cd C50_CPLD_v1.1_20171208.jed
+
+Need to AC cycle to see the new CPLD version
+	
+======================================================================================================
+
+#switch to SPI1
+	ipmitool -I lanplus -H 10.32.2.203 -U admin -P admin raw 0x34 0x8f 0xa
+	ipmitool -I lanplus -H 10.32.2.203 -U admin -P admin raw 0x6 0x2
+
+#switch to SPI2
+	ipmitool -I lanplus -H 10.32.2.203 -U admin -P admin raw 0x34 0x8f 0x1 0x2
+	ipmitool -I lanplus -H 10.32.2.203 -U admin -P admin raw 0x6 0x2
+	
+#get boot selector
+	ipmitool -I lanplus -H 10.32.2.203 -U admin -P admin raw 0x34 0x8f 0x7 
+	
+#Get SOL UART select from CPLD
+	i2c-test -b 3 -s 0x09 -m 1 -rc 1 -d 0x05
+
+#Set SOL UART select to BMC
+	i2c-test -b 3 -s 0x09 -w -d 5 4
+#Set SOL UART select to CPU
+	i2c-test -b 3 -s 0x09 -w -d 5 0
+	
